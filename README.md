@@ -4,9 +4,16 @@
 
 ## Getting started
 
-To make it easy for you to get started with GitLab, here's a list of recommended next steps.
+Install platformIO, and then run the following command in your program directory:
+```
+pio home
+```
+If everything is OK, you should see a browser window open with the platformIO home page.
+Here, you can find project info, connected boards and installable libraries.
 
-Already a pro? Just edit this README.md and make it your own. Want to make it easy? [Use the template at the bottom](#editing-this-readme)!
+Take a look at the platformio.ini config file and make sure you understand what everything does.
+
+IMPORTANT: This project is configured especially for the CLION IDE. It is recommended to use the CLION IDE for developing this project.
 
 ## Add your files
 
