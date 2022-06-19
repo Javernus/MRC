@@ -15,6 +15,14 @@ Take a look at the platformio.ini config file and make sure you understand what 
 
 IMPORTANT: This project is configured especially for the CLION IDE. It is recommended to use the CLION IDE for developing this project.
 
+
+
+## Uploading project to the board
+first, make sure platformIO is correctly installed and the configuration is correct. Then, run the following command in your program directory:
+```
+pio run -t upload
+```
+
 ## Add your files
 
 - [ ] [Create](https://docs.gitlab.com/ee/user/project/repository/web_editor.html#create-a-file) or [upload](https://docs.gitlab.com/ee/user/project/repository/web_editor.html#upload-a-file) files
