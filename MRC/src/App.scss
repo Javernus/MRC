@@ -1,3 +1,7 @@
-.header {
-  color: red;
+@import 'colours.scss';
+
+body {
+  background-color: $surface-strongest;
+  padding: 0;
+  margin: 0;
 }

@@ -1,0 +1,51 @@
+@import '../../colours.scss';
+
+.group-item {
+  display: flex;
+  align-items: center;
+  justify-content: start;
+  width: 100%;
+  padding: 0.5rem 0;
+  background-color: $surface-strongest;
+  border-bottom: 1px solid #e6e6e6;
+  cursor: pointer;
+
+  &:hover {
+    background-color: $surface-weak;
+  }
+
+  &__image {
+    width: 2rem;
+    height: 2rem;
+    background-color: $cyan-light;
+    border-radius: 50%;
+    margin-right: 0.5rem;
+    position: relative;
+  }
+
+  &__indicator {
+    width: 0.5rem;
+    height: 0.5rem;
+    border-radius: 50%;
+    position: relative;
+    left: calc(100% - 0.55rem);
+    top: calc(100% - 0.55rem);
+    margin: 0;
+
+    &--red {
+      background-color: $red-normal;
+    }
+
+    &--yellow {
+      background-color: $yellow-normal;
+    }
+
+    &--green {
+      background-color: $green-normal;
+    }
+  }
+
+  &__text {
+    color: $white-strong;
+  }
+}
