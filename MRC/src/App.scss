@@ -4,4 +4,33 @@ body {
   background-color: $surface-strongest;
   padding: 0;
   margin: 0;
+  height: 100vh;
+  overflow: hidden;
+
+  div#root {
+    display: flex;
+  }
+}
+
+.top-bar {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.5rem;
+}
+
+.icon {
+  width: 2.5rem;
+  height: 2.5rem;
+  background-color: $purple-normal;
+  border-radius: 50%;
+}
+
+.navigation-bar {
+  display: flex;
+  flex-direction: column;
+  width: 20rem;
+  height: 100vh;
+  border-right: solid 1px $white-moderate;
 }

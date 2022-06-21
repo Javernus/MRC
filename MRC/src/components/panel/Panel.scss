@@ -1,0 +1,14 @@
+@import '../../colours.scss';
+
+.panel {
+  display: flex;
+  flex-direction: column;
+  width: 20rem;
+  height: 100vh;
+  border-right: solid 1px $white-moderate;
+
+  &--right {
+    border-right: none;
+    border-left: solid 1px $white-moderate;
+  }
+}

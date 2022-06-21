@@ -1,0 +1,58 @@
+@import '../../colours.scss';
+
+.terminal {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  flex-grow: 1;
+  height: 100vh;
+  font-family: $chat-font-family;
+  box-sizing: border-box;
+
+  &__chat {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: end;
+    flex-grow: 1;
+    font-family: $chat-font-family;
+    box-sizing: border-box;
+    width: 100%;
+  }
+
+  &__inputs {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    margin-top: 0.25rem;
+    font-family: $chat-font-family;
+    box-sizing: border-box;
+    border-top: solid 1px $white-moderate;
+  }
+
+  &__command {
+    color: $green-normal;
+    font-size: 1.2rem;
+    font-family: $chat-font-family;
+    padding: 0;
+    margin: 0 0.5rem 0.125rem 0.5rem;
+  }
+
+  &__input {
+    width: 100%;
+    height: 2rem;
+    border: none;
+    padding: 0.25rem;
+    font-size: 1.2rem;
+    font-family: $chat-font-family;
+    background-color: $surface-strongest;
+    color: $white-strongest;
+
+    &:focus {
+      outline: none;
+    }
+  }
+}
