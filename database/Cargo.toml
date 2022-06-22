@@ -1,0 +1,16 @@
+[package]
+name = "src-tauri"
+version = "0.1.0"
+edition = "2021"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+
+# Copied from https://github.com/tauri-apps/tauri-plugin-sql#rust
+
+[dependencies.tauri-plugin-sql]
+git = "https://github.com/tauri-apps/tauri-plugin-sql"
+features = ["sqlite"] # or "postgres", or "mysql"
+#branch = "main"
+
