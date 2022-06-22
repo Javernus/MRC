@@ -6,22 +6,25 @@ import { GroupItem, Panel, Search, Terminal } from './components'
 let activeGroups = [1]
 
 let groups = [
-  { name: 'MRC Alliance', lastChat: 'Jake : Time to work.', id: 1 },
+  { name: 'MRC Alliance', lastChat: 'Jake : Time to work.', bio: 'This is the official MRC Alliance chat. Bugs, feature requests and general questions can be asked here.', id: 1 },
   { name: 'IRC Sucks', lastChat: 'Bob : I prefer MRC.', id: 2 },
   { name: 'USSR Revitalised', lastChat: 'Alexander : I don\'t agree.', id: 3 },
   { name: 'NOP', lastChat: 'Scott : Not our problem.', id: 4 },
 ]
 
+
 let chats = [
-  { text: '12:01 <Scott> LoRa is easy.', id: 3, time: 987654320 },
-  { text: '12:02 <Ilya> I want everything to be private.', id: 2, time: 987654322 },
-  { text: '13:01 <Merijn> I don\'t agree.', id: 3, time: 987654321 },
-  { text: '14:20 <Jake> Time to work.', id: 1, time: 987654323 },
+  { name: 'Scott', message: 'LoRa is easy.', id: 3, time: 987654320 },
+  { name: 'Ilya', message: 'I want everything to be private.', id: 2, time: 987654322 },
+  { name: 'Jake', message: 'Time to work.', id: 1, time: 987654323 },
+  { name: 'Merijn', message: 'I do not agree.', id: 4, time: 987654321 },
 ]
 
 const App: Component = () => {
   let [search, setSearch] = createSignal('')
   let [shownGroups, setShownGroups] = createSignal(groups)
+  let [openGroup, setOpenGroup] = createSignal(groups[0])
+  let [showGroupInfo, setShowGroupInfo] = createSignal(true)
   setShownGroups(groups)
 
   function searchGroups(event) {
@@ -34,7 +37,7 @@ const App: Component = () => {
 
   return (
     <>
-      <Panel>
+      <Panel visible>
         <div class='top-bar'>
           <div class='icon' />
           <Search oninput={searchGroups}></Search>
@@ -49,10 +52,17 @@ const App: Component = () => {
       </Panel>
 
       <Terminal chats={chats.sort((a, b) => a.time - b.time)} />
-      <Panel right>
+      <Panel right visible={showGroupInfo()}>
+        <div class='toggle-group-info' onclick={() => setShowGroupInfo(!showGroupInfo())} />
         <div class='top-bar'>
           <div class='icon' />
-          <Search oninput={searchGroups}></Search>
+          <p class='group-name'>{openGroup().name}</p>
+        </div>
+        <div class='bio'>
+          <p>{openGroup().bio}</p>
+        </div>
+        <div class='leave-group' onclick={() => setOpenGroup(null)}>
+          <p>Leave Group</p>
         </div>
       </Panel>
     </>

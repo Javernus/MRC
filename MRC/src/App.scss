@@ -15,7 +15,7 @@ body {
 .top-bar {
   display: flex;
   flex-direction: row;
-  justify-content: space-between;
+  justify-content: start;
   align-items: center;
   padding: 0.5rem;
 }
@@ -33,4 +33,66 @@ body {
   width: 20rem;
   height: 100vh;
   border-right: solid 1px $white-moderate;
+}
+
+.group-name {
+  color: $white-strongest;
+  font-family: 'Roboto', sans-serif;
+  font-size: 1.5rem;
+  font-weight: bold;
+  margin: 0;
+  padding-left: 1rem;
+}
+
+.bio {
+  color: $white-strong;
+  font-family: $chat-font-family;
+  font-size: 0.9rem;
+  font-weight: bold;
+  margin: 0;
+  padding: 0 1.5rem 0 1.5rem;
+  position: relative;
+
+  &:before {
+    position: absolute;
+    content: ' ';
+    height: 80%;
+    border-left: dashed 2px $white-weak;
+    left: 0.75rem;
+    top: 10%;
+  }
+}
+
+.group-info {
+  position: relative;
+}
+
+.toggle-group-info {
+  position: absolute;
+  left: -3.5rem;
+  top: 0;
+  margin: 0.5rem;
+  width: 2.5rem;
+  height: 2.5rem;
+  background-color: $purple-normal;
+  border-radius: 50%;
+}
+
+.leave-group {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  padding: 0.25rem;
+  width: 100%;
+  height: 2rem;
+  color: $red-normal;
+  font-family: 'Roboto', sans-serif;
+  font-size: 1.2rem;
+  margin-top: auto;
+  border-top: solid 1px $white-weak;
+
+  p {
+    margin: 0;
+  }
 }

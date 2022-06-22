@@ -1,65 +1,27 @@
 @import '../../colours.scss';
 
-.group-item {
+.chat-item {
   display: flex;
-  align-items: center;
   justify-content: start;
+  align-items: start;
+  font-size: 1rem;
+  font-family: $chat-font-family;
+  color: $white-strongest;
   width: 100%;
-  padding: 0.75rem 0 0.75rem 0.5rem;
-  box-sizing: border-box;
-  background-color: $surface-strongest;
-  // border-bottom: 1px solid $white-weak;
-  cursor: pointer;
+  padding: 0.125rem 0 0.125rem 1rem;
+  margin: 0;
 
-  &:hover {
-    background-color: $surface-weak;
-  }
-
-  &__image {
-    width: 2.5rem;
-    height: 2.5rem;
-    background-color: $purple-normal;
-    border-radius: 50%;
-    margin-right: 0.5rem;
-    position: relative;
-  }
-
-  &__indicator {
-    width: 0.5rem;
-    height: 0.5rem;
-    border-radius: 50%;
-    position: relative;
-    left: calc(100% - 0.55rem);
-    top: calc(100% - 0.55rem);
+  &__time {
+    color: $green-normal;
     margin: 0;
-
-    &--red {
-      background-color: $red-normal;
-    }
-
-    &--yellow {
-      background-color: $yellow-normal;
-    }
-
-    &--green {
-      background-color: $green-normal;
-    }
-  }
-
-  &__text {
-    color: $white-strongest;
-    font-family: 'Roboto', sans-serif;
   }
 
   &__name {
-    font-size: 1rem;
     font-weight: bold;
-    padding-bottom: 0.125rem;
+    margin: 0;
   }
 
-  &__last-chat {
-    font-size: 0.75rem;
-    color: $white-strong;
-    font-family: $chat-font-family;
+  &__message {
+    margin: 0;
   }
 }

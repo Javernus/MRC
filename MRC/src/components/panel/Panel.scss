@@ -1,14 +1,43 @@
 @import '../../colours.scss';
 
+.panel-container {
+  display: block;
+  width: 0rem;
+  height: 100vh;
+  overflow: hidden;
+  transition: width 0.25s ease-in-out;
+
+  &--visible {
+    width: 20rem;
+  }
+}
+
 .panel {
+  position: absolute;
   display: flex;
   flex-direction: column;
   width: 20rem;
   height: 100vh;
   border-right: solid 1px $white-moderate;
+  left: calc(-20rem - 1px);
+  top: 0;
+
+  transition: left 0.25s ease-in-out;
 
   &--right {
+    left: unset;
+    right: calc(-20rem - 1px);
+    transition: right 0.25s ease-in-out;
     border-right: none;
     border-left: solid 1px $white-moderate;
+  }
+
+  &--visible {
+    left: 0;
+
+    &.panel--right {
+      left: unset;
+      right: 0;
+    }
   }
 }
