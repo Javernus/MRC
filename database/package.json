@@ -1,0 +1,5 @@
+{
+  "dependencies": {
+    "tauri-plugin-sql-api": "github:tauri-apps/tauri-plugin-sql"
+  }
+}
