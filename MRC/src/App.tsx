@@ -3,21 +3,13 @@ import './App.scss'
 import './colours.scss'
 import { GroupItem, Panel, Search, Terminal } from './components'
 import type { Group, Chat } from './types/types'
-import { loadDb, getGroups, getChats, createGroup, sendChat } from './database/main'
+import DB from './database/main'
 
 let activeGroups = [1]
 
-let groups: Group[] = [
-  { name: 'MRC Alliance', bio: 'This is the official MRC Alliance chat. Bugs, feature requests and general questions can be asked here.', id: 1 },
-  { name: 'IRC Sucks', bio: '', id: 2 },
-  { name: 'USSR Revitalised', bio: '', id: 3 },
-  { name: 'NOP', bio: '', id: 4 },
-]
-
-await createGroup(groups[0])
-// await createGroup(groups[1])
-// const gtest = getGroups()
-// console.log(gtest)
+await DB.connect()
+let groups: Group[] = await DB.getGroups()
+console.log(groups)
 
 let chats: Chat[] = [
   { name: 'Scott', message: 'LoRa is easy.', id: 3, time: 987654320, groupId: 1 },
@@ -26,11 +18,12 @@ let chats: Chat[] = [
   { name: 'Merijn', message: 'I do not agree.', id: 4, time: 987654321, groupId: 1 },
 ]
 
-// await sendChat(chats[0])
-// await sendChat(chats[1])
-// await sendChat(chats[2])
-// const ctest = getChats()
-// console.log(ctest)
+// await DB.sendChat(chats[0])
+// await DB.sendChat(chats[1])
+// await DB.sendChat(chats[2])
+// await DB.sendChat(chats[3])
+// chats = await DB.getChats()
+// console.log(chats)
 
 // Return the chat message with the latest timestamp.
 const lastChat = (chats: Chat[]) => {

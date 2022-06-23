@@ -38,4 +38,24 @@ $pink-light: rgb(223, 129, 207);
 $accent-primary: $purple-normal;
 $accent-secondary: $green-normal;
 
-$chat-font-family: 'Fira Code', monospace;
+$chat-font-family: 'MRCTerminal';
+
+// Fonts from Iosevka
+
+@font-face {
+  font-family: MRCTerminal;
+  src: url(fonts/mrc-terminal-regular.woff2);
+  font-weight: regular;
+}
+
+@font-face {
+  font-family: MRCTerminal;
+  src: url(fonts/mrc-terminal-bold.woff2);
+  font-weight: bold;
+}
+
+@font-face {
+  font-family: MRCTerminal;
+  src: url(fonts/mrc-terminal-italic.woff2);
+  font-style: italic;
+}
