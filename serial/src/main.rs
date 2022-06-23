@@ -1,8 +1,6 @@
-use serde::Serialize;
-use serde::Deserialize;
+use serde::{Serialize, Deserialize};
 use serde_json;
-use chrono::DateTime;
-use chrono::prelude::Utc;
+use chrono::{DateTime, prelude::Utc};
 
 fn format_time(time: DateTime<Utc>, fmt: &str) -> u64 {
     time.format(fmt).to_string().parse::<u64>().unwrap()

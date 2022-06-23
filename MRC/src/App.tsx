@@ -7,6 +7,11 @@ import DB from './database/main'
 
 let activeGroups = [1]
 
+const groups: Group[] = [
+  { name: "Test", bio: "test", id: 1 }
+]
+
+// await DB.connect()
 // let groups: Group[] = await DB.getGroups()
 // console.log(groups)
 
