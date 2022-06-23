@@ -21,9 +21,9 @@ body {
 }
 
 .icon {
-  width: 2.5rem;
-  height: 2.5rem;
-  background-color: $purple-normal;
+  width: 2rem;
+  height: 2rem;
+  background-color: $white-moderate;
   border-radius: 50%;
 }
 
@@ -33,6 +33,36 @@ body {
   width: 20rem;
   height: 100vh;
   border-right: solid 1px $white-moderate;
+}
+
+.group-icon {
+  width: 4rem;
+  height: 4rem;
+  background-color: $purple-normal;
+  border-radius: 50%;
+  position: relative;
+
+  &__indicator {
+    width: 1rem;
+    height: 1rem;
+    border-radius: 50%;
+    position: relative;
+    left: calc(100% - 1.1rem);
+    top: calc(100% - 1.1rem);
+    margin: 0;
+
+    &--red {
+      background-color: $red-normal;
+    }
+
+    &--yellow {
+      background-color: $yellow-normal;
+    }
+
+    &--green {
+      background-color: $green-normal;
+    }
+  }
 }
 
 .group-name {
@@ -57,7 +87,7 @@ body {
     position: absolute;
     content: ' ';
     height: 80%;
-    border-left: dashed 2px $white-weak;
+    border-left: dashed 2px $white-moderate;
     left: 0.75rem;
     top: 10%;
   }
@@ -69,16 +99,16 @@ body {
 
 .toggle-group-info {
   position: absolute;
-  left: -3.5rem;
+  left: -3rem;
   top: 0;
   margin: 0.5rem;
-  width: 2.5rem;
-  height: 2.5rem;
-  background-color: $purple-normal;
+  width: 2rem;
+  height: 2rem;
+  background-color: $white-moderate;
   border-radius: 50%;
 }
 
-.leave-group {
+.delete-group {
   display: flex;
   flex-direction: row;
   justify-content: center;

@@ -3,7 +3,7 @@ import cl from 'clsx'
 
 export default function GroupItem(props) {
   return (
-    <div class='group-item'>
+    <div class={cl('group-item', { 'group-item--active': props.active })}>
       <div class='group-item__image'>
         <div class={cl(`group-item__indicator group-item__indicator--${props.status}`)}></div>
       </div>

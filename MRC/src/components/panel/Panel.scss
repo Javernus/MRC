@@ -18,9 +18,10 @@
   flex-direction: column;
   width: 20rem;
   height: 100vh;
-  border-right: solid 1px $white-moderate;
+  border-right: solid 1px $white-weak;
   left: calc(-20rem - 1px);
   top: 0;
+  background-color: $surface-strong;
 
   transition: left 0.25s ease-in-out;
 
@@ -29,7 +30,7 @@
     right: calc(-20rem - 1px);
     transition: right 0.25s ease-in-out;
     border-right: none;
-    border-left: solid 1px $white-moderate;
+    border-left: solid 1px $white-weak;
   }
 
   &--visible {

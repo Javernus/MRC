@@ -12,7 +12,6 @@ let groups = [
   { name: 'NOP', lastChat: 'Scott : Not our problem.', id: 4 },
 ]
 
-
 let chats = [
   { name: 'Scott', message: 'LoRa is easy.', id: 3, time: 987654320 },
   { name: 'Ilya', message: 'I want everything to be private.', id: 2, time: 987654322 },
@@ -28,7 +27,6 @@ const App: Component = () => {
   setShownGroups(groups)
 
   function searchGroups(event) {
-    console.log(event.target.value)
     setSearch(event.target.value)
     setShownGroups(groups.filter(group => group.name.toLowerCase().includes(search().toLowerCase())))
     console.log(shownGroups)
@@ -47,6 +45,7 @@ const App: Component = () => {
             name={group.name}
             lastChat={group.lastChat}
             status={activeGroups.includes(group.id) ? 'green' : 'yellow'}
+            active={group === openGroup()}
           />
         }</For>
       </Panel>
@@ -55,14 +54,16 @@ const App: Component = () => {
       <Panel right visible={showGroupInfo()}>
         <div class='toggle-group-info' onclick={() => setShowGroupInfo(!showGroupInfo())} />
         <div class='top-bar'>
-          <div class='icon' />
+          <div class='group-icon'>
+            <div class='group-icon__indicator group-icon__indicator--green' />
+          </div>
           <p class='group-name'>{openGroup().name}</p>
         </div>
         <div class='bio'>
           <p>{openGroup().bio}</p>
         </div>
-        <div class='leave-group' onclick={() => setOpenGroup(null)}>
-          <p>Leave Group</p>
+        <div class='delete-group' onclick={() => setOpenGroup(null)}>
+          <p>Delete Group</p>
         </div>
       </Panel>
     </>
