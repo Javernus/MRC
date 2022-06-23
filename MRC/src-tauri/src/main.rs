@@ -6,16 +6,17 @@
 use tauri::{Menu, MenuItem, Submenu};
 
 mod cmd;
+mod serialize;
 
 fn main() {
-  let submenu = Submenu::new("MRC", Menu::new().add_native_item(MenuItem::Quit));
-  let submenu2 = Submenu::new("Settings", Menu::new().add_native_item(MenuItem::Quit));
-  let menu = Menu::new()
-    .add_submenu(submenu)
-    .add_submenu(submenu2);
+    let submenu = Submenu::new("MRC", Menu::new().add_native_item(MenuItem::Quit));
+    let submenu2 = Submenu::new("Settings", Menu::new().add_native_item(MenuItem::Quit));
+    let menu = Menu::new()
+        .add_submenu(submenu)
+        .add_submenu(submenu2);
 
-  tauri::Builder::default()
-    .menu(menu)
-    .run(tauri::generate_context!())
-    .expect("error while running tauri application");
+    tauri::Builder::default()
+        .menu(menu)
+        .run(tauri::generate_context!())
+        .expect("error while running tauri application");
 }
