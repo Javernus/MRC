@@ -1,5 +1,5 @@
 Arguments: 
-  /Users/jakejongejans/.nvm/versions/node/v16.13.1/bin/node /usr/local/bin/yarn add clsx
+  /Users/jakejongejans/.nvm/versions/node/v16.13.1/bin/node /usr/local/bin/yarn
 
 PATH: 
   /Users/jakejongejans/.nvm/versions/node/v16.13.1/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/Library/TeX/texbin:/usr/local/MacGPG2/bin:/Library/Apple/usr/bin:/Users/jakejongejans/.cabal/bin:/Users/jakejongejans/.ghcup/bin:/Users/jakejongejans/.nvm/versions/node/v16.13.1/bin:/Users/jakejongejans/.cargo/bin/bin:/Users/jakejongejans/.cargo/bin
@@ -14,12 +14,16 @@ Platform:
   darwin x64
 
 Trace: 
-  Error: getaddrinfo ENOTFOUND registry.yarnpkg.com
-      at GetAddrInfoReqWrap.onlookup [as oncomplete] (node:dns:71:26)
+  SyntaxError: /Users/jakejongejans/Documents/Programming/University/MM-IOT/mrc/MRC/package.json: Unexpected token } in JSON at position 600
+      at JSON.parse (<anonymous>)
+      at /usr/local/lib/node_modules/yarn/lib/cli.js:1625:59
+      at Generator.next (<anonymous>)
+      at step (/usr/local/lib/node_modules/yarn/lib/cli.js:310:30)
+      at /usr/local/lib/node_modules/yarn/lib/cli.js:321:13
 
 npm manifest: 
   {
-    "name": "MRC",
+    "name": "mrc",
     "version": "0.0.0",
     "description": "",
     "scripts": {
@@ -38,8 +42,10 @@ npm manifest:
     },
     "dependencies": {
       "@tauri-apps/api": "^1.0.1",
+      "clsx": "^1.1.1",
       "solid-js": "^1.4.2",
-      "tauri": "^0.14.1"
+      "tauri": "^0.14.1",
+      "tauri-plugin-sql-api": "github:tauri-apps/tauri-plugin-sql#b13efd1e9d8f6c862b67917f3c62536ed1c64e9c",
     }
   }
 
@@ -410,6 +416,13 @@ Lockfile:
     integrity sha512-4BAffykYOgO+5nzBWYwE3W90sBgLJoUPRWWcL8wlyiM8IB8ipJz3UMJ9KXQd1RKQXpKp8Tutn80HZtWsu2u76w==
     dependencies:
       defer-to-connect "^2.0.0"
+  
+  "@tauri-apps/api@1.0.0":
+    version "1.0.0"
+    resolved "https://registry.yarnpkg.com/@tauri-apps/api/-/api-1.0.0.tgz#944b1faf1cf3f916b4ff5a23b6a49a83d7b60003"
+    integrity sha512-sPnq8/WQumCnyHERTeqKQiryRoM8X4ImMT7K+BJ3zT7bmp/n5162fZS/ZqYIFxKHgQqzwWqT7C96Sb0/CL7WsA==
+    dependencies:
+      type-fest "2.13.1"
   
   "@tauri-apps/api@^1.0.1":
     version "1.0.1"
@@ -1183,6 +1196,11 @@ Lockfile:
     integrity sha512-yjLXh88P599UOyPTFX0POsd7WxnbsVsGohcwzHOLspIhhpalPw1BcqED8NblyZLKcGrL8dTgMlcaZxV2jAD41Q==
     dependencies:
       mimic-response "^1.0.0"
+  
+  clsx@^1.1.1:
+    version "1.1.1"
+    resolved "https://registry.yarnpkg.com/clsx/-/clsx-1.1.1.tgz#98b3134f9abbdf23b2663491ace13c5c03a73188"
+    integrity sha512-6/bPho624p3S2pMyvP5kKBPXnI3ufHLObBFCfgx+LkeR5lg2XYy2hqZqUf45ypD8COn2bhgGJSUE+l5dhNBieA==
   
   coa@^2.0.2:
     version "2.0.2"
@@ -4834,6 +4852,13 @@ Lockfile:
       inherits "^2.0.3"
       readable-stream "^3.1.1"
   
+  "tauri-plugin-sql-api@github:tauri-apps/tauri-plugin-sql":
+    version "0.1.0"
+    resolved "https://codeload.github.com/tauri-apps/tauri-plugin-sql/tar.gz/f5921d026444c1801ae78e8b69508a0e18933ca3"
+    dependencies:
+      "@tauri-apps/api" "1.0.0"
+      tslib "2.4.0"
+  
   tauri@^0.14.1:
     version "0.14.1"
     resolved "https://registry.yarnpkg.com/tauri/-/tauri-0.14.1.tgz#c0d9206d8dcea45113409a48ce90dad86229a5b7"
@@ -4970,6 +4995,11 @@ Lockfile:
     version "9.6.0"
     resolved "https://registry.yarnpkg.com/ts-toolbelt/-/ts-toolbelt-9.6.0.tgz#50a25426cfed500d4a09bd1b3afb6f28879edfd5"
     integrity sha512-nsZd8ZeNUzukXPlJmTBwUAuABDe/9qtVDelJeT/qW0ow3ZS3BsQJtNkan1802aM9Uf68/Y8ljw86Hu0h5IUW3w==
+  
+  tslib@2.4.0:
+    version "2.4.0"
+    resolved "https://registry.yarnpkg.com/tslib/-/tslib-2.4.0.tgz#7cecaa7f073ce680a05847aa77be941098f36dc3"
+    integrity sha512-d6xOpEDfsi2CZVlPQzGeux8XMwLT9hssAsaPYExaQMuYskwb+x1x7J371tWlbBdWHroy99KnVB6qIkUbs5X3UQ==
   
   tslib@^1.9.0:
     version "1.14.1"
