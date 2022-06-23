@@ -19,6 +19,8 @@ s.bind(socket_path)
 s.listen()
 
 
+conn, addr = s.accept()
+
 def onReceive(packet, interface):  # called when a packet arrives
     print("Received message " + str(packet["decoded"]["payload"].decode('utf-8').rstrip('\n')) + " on port " + str(
         packet["decoded"]["portnum"]))
