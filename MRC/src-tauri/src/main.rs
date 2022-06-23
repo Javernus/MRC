@@ -3,28 +3,21 @@
   windows_subsystem = "windows"
 )]
 
+use tauri_plugin_sql::{Migration, MigrationKind, TauriSql};
+
 mod cmd;
 
 fn main() {
-  tauri::AppBuilder::new()
-    .invoke_handler(|_webview, arg| {
-      use cmd::Cmd::*;
-      match serde_json::from_str(arg) {
-        Err(e) => {
-          Err(e.to_string())
-        }
-        Ok(command) => {
-          match command {
-            // definitions for your custom commands from Cmd here
-            MyCustomCommand { argument } => {
-              //  your command code
-              println!("{}", argument);
-            }
-          }
-          Ok(())
-        }
-      }
-    })
-    .build()
-    .run();
+  tauri::Builder::default()
+    .plugin(TauriSql::default().add_migrations(
+      "sqlite:test.db",
+      vec![Migration {
+        version: 1,
+        description: "Create Group and Chat tables",
+        sql: include_str!("../migrations/1.sql"),
+        kind: MigrationKind::Up,
+      }],
+    ))
+    .run(tauri::generate_context!())
+    .expect("error while running tauri application");
 }

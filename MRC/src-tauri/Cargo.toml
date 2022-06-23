@@ -1,26 +1,27 @@
 [package]
-name = "mrc"
+name = "MRC"
 version = "0.1.0"
 description = "A Tauri App"
-authors = [ "you" ]
-license = ""
+authors = [
+  "Ilya Claassen, Jake Jongejans, Merijn Laks, Scott Scherpenzeel"
+]
+license = "GNU Affero PGL"
 repository = ""
-default-run = "mrc"
-edition = "2018"
+default-run = "MRC"
+edition = "2021"
 build = "src/build.rs"
 
 [dependencies]
 serde_json = "1.0"
 serde = { version = "1.0", features = [ "derive" ] }
-tauri = { version = "0.11", features = [ "all-api" ] }
+tauri = { version = "1.0", features = ["api-all"] }
+tauri-plugin-sql = { git = "https://github.com/tauri-apps/tauri-plugin-sql", rev = "d8ea61f2cbe2dfc9bf0947bab87b1547dcc945d4", features = [ "sqlite" ] }
 
 [target."cfg(windows)".build-dependencies]
 winres = "0.1"
 
-[features]
-embedded-server = [ "tauri/embedded-server" ]
-no-server = [ "tauri/no-server" ]
-
 [[bin]]
-name = "mrc"
+name = "MRC"
 path = "src/main.rs"
+
+[build-dependencies]

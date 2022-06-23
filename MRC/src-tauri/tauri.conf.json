@@ -5,15 +5,11 @@
     "beforeDevCommand": "yarn dev",
     "beforeBuildCommand": "yarn build"
   },
-  "ctx": {},
   "tauri": {
-    "embeddedServer": {
-      "active": true
-    },
     "bundle": {
       "active": true,
       "targets": "all",
-      "identifier": "com.tauri.dev",
+      "identifier": "com.mrcalliance.mrc",
       "icon": [
         "icons/32x32.png",
         "icons/128x128.png",
@@ -24,35 +20,30 @@
       "resources": [],
       "externalBin": [],
       "copyright": "",
-      "category": "DeveloperTool",
+      "category": "Communication",
       "shortDescription": "",
       "longDescription": "",
       "deb": {
-        "depends": [],
-        "useBootstrapper": false
+        "depends": []
       },
-      "osx": {
+      "macOS": {
         "frameworks": [],
         "minimumSystemVersion": "",
-        "useBootstrapper": false
-      },
-      "exceptionDomain": ""
+        "exceptionDomain": ""
+      }
     },
     "allowlist": {
       "all": true
     },
-    "window": {
+    "windows": [{
       "title": "MRC - Mesh Relay Chat",
       "width": 1200,
       "height": 800,
       "resizable": true,
       "fullscreen": false
-    },
+    }],
     "security": {
       "csp": "default-src blob: data: filesystem: ws: http: https: 'unsafe-eval' 'unsafe-inline'"
-    },
-    "inliner": {
-      "active": true
     }
   }
 }
