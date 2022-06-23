@@ -4,7 +4,6 @@
 )]
 
 use tauri::{Menu, MenuItem, Submenu};
-use tauri_plugin_sql::{Migration, MigrationKind, TauriSql};
 
 mod cmd;
 
@@ -17,15 +16,6 @@ fn main() {
 
   tauri::Builder::default()
     .menu(menu)
-    .plugin(TauriSql::default().add_migrations(
-      "sqlite:mrc.db",
-      vec![Migration {
-        version: 1,
-        description: "Create Group and Chat tables",
-        sql: include_str!("../migrations/tables.sql"),
-        kind: MigrationKind::Up,
-      }],
-    ))
     .run(tauri::generate_context!())
     .expect("error while running tauri application");
 }
