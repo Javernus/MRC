@@ -8,10 +8,10 @@ interface = meshtastic.serial_interface.SerialInterface()
 
 
 def onReceive(packet, interface):  # called when a packet arrives
-    print(packet)
+    print("Received message " + str(packet["decoded"]["payload"]) + " on port " + str(packet["decoded"]["portnum"]))
 
 
-pub.subscribe(onReceive, "meshtastic.receive")
+pub.subscribe(onReceive, "meshtastic.receive.data")
 
 # interface.sendText("Testing script")
 
