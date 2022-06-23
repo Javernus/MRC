@@ -7,13 +7,7 @@ import DB from './database/main'
 
 let activeGroups = [1]
 
-const groups: Group[] = [
-  { name: "Test", bio: "test", id: 1 }
-]
-
-// await DB.connect()
-// let groups: Group[] = await DB.getGroups()
-// console.log(groups)
+let groups = JSON.parse(await DB.getGroups())
 
 let chats: Chat[] = [
   { name: 'Scott', message: 'LoRa is easy.', id: 3, time: 987654320, groupId: 1 },
