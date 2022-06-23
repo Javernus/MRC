@@ -4,11 +4,8 @@ import { invoke } from "@tauri-apps/api/tauri"
 let db = null
 
 
-const getGroups = async (): Promise<Group[]> => {
-  let groups
-  invoke("get_groups").then((g: string) => groups = JSON.parse(g))
-  console.log(groups)
-  return groups
+const getGroups = async (): Promise<string> => {
+  return invoke("get_groups")
 }
 
 const getChatById = async (id: number): Promise<Chat> => {
