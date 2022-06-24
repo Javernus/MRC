@@ -2,9 +2,9 @@ use serde::{Serialize, Deserialize};
 
 #[derive(Serialize, Deserialize, Debug)]
 pub struct Group {
-    id: u64,
-    name: String,
-    bio: String,
+    pub(crate) id: u64,
+    pub(crate) name: String,
+    pub(crate) bio: String,
 }
 
 impl Group {
@@ -17,34 +17,35 @@ impl Group {
     }
 }
 
-pub fn serialize(group: &Group) -> String {
-    serde_json::to_string(group).unwrap()
+pub fn serialize(groups: &Vec<Group>) -> String {
+    serde_json::to_string(groups).unwrap()
 }
 
-pub fn deserialize(json: &str) -> Group {
-    serde_json::from_str(json).unwrap()
-}
-
-#[test]
-fn test_create_group() {
-    let _group = Group::new(1, "Group", "bio");
+pub fn deserialize(text: &str) -> Vec<Group> {
+    serde_json::from_str(text).unwrap()
 }
 
 #[test]
 fn test_ser_group() {
-    let group: Group = Group::new(1, "Group", "bio");
-    let ser: String = serialize(&group);
+    let group_1: Group = Group::new(1, "Group", "bio");
+    let group_2: Group = Group::new(2, "People", "empty");
+    let groups: Vec<Group> = vec![group_1, group_2];
+    let ser: String = serialize(&groups);
 
-    assert_eq!(ser, "{\"id\":1,\"name\":\"Group\",\"bio\":\"bio\"}");
+    assert_eq!(ser, "[{\"id\":1,\"name\":\"Group\",\"bio\":\"bio\"},{\"id\":2,\"name\":\"People\",\"bio\":\"empty\"}]");
 }
 
 #[test]
 fn test_deser_group() {
-    let group: Group = Group::new(1, "Group", "bio");
-    let ser: String = serialize(&group);
-    let deser: Group = deserialize(&ser);
+    let group_1: Group = Group::new(1, "Group", "bio");
+    let group_2: Group = Group::new(2, "People", "empty");
+    let groups: Vec<Group> = vec![group_1, group_2];
+    let ser: String = serialize(&groups);
+    let deser: Vec<Group> = deserialize(&ser);
 
-    assert_eq!(group.id, deser.id);
-    assert_eq!(group.name, deser.name);
-    assert_eq!(group.bio, deser.bio);
+    for i in 0..2 {
+        assert_eq!(groups[i].bio, deser[i].bio);
+        assert_eq!(groups[i].id, deser[i].id);
+        assert_eq!(groups[i].name, deser[i].name);
+    }
 }

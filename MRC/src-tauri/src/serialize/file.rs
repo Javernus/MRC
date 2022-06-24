@@ -33,12 +33,12 @@ pub fn read_file(filename: &str) -> String {
     }
 }
 
-#[test]
-fn test_file() {
-    let filename: &str = "test_file123.txt";
-    let text: &str = "Hello world 123";
-    write_file(filename, text);
-    let contents: String = read_file(filename);
-
-    assert_eq!(text, contents);
-}
+// #[test]
+// fn test_file() {
+//     let filename: &str = "test_file123.txt";
+//     let text: &str = "Hello world 123";
+//     write_file(filename, text);
+//     let contents: String = read_file(filename);
+//
+//     assert_eq!(text, contents);
+// }
