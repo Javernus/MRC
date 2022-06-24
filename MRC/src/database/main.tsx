@@ -30,17 +30,15 @@ const removeGroup = async (groupId: number): Promise<void> => {
   await db.execute("DELETE FROM groups WHERE id = $1", [groupId])
 }
 
-const sendChat = async (chat: Chat): Promise<Chat> => {
-  const qr = await db.execute("INSERT INTO chats (groupId, name, message) VALUES ($1,$2,$3)", [chat.groupId, chat.name, chat.message])
-
-  console.log("Time: ", (await getChatById(qr.lastInsertId)).time)
+const sendChat = async (message: string, groupId: number): Promise<Chat> => {
+  invoke("send_chat", { message: message, groupId: groupId })
 
   return {
-    id: qr.lastInsertId,
-    groupId: chat.groupId,
-    time: (await getChatById(qr.lastInsertId)).time,
-    name: chat.name,
-    message: chat.message,
+    id: 0,
+    groupId: groupId,
+    time: (new Date()).getTime(),
+    name: "Jake",
+    message: message,
   }
 }
 

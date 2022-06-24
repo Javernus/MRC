@@ -18,7 +18,9 @@
   }
 
   &__image {
+    min-width: 2.5rem;
     width: 2.5rem;
+    min-height: 2.5rem;
     height: 2.5rem;
     background-color: $purple-normal;
     border-radius: 50%;
