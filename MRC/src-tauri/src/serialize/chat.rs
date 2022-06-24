@@ -1,5 +1,4 @@
 use serde::{Serialize, Deserialize};
-// use crate::serialize::IOFile;
 
 #[derive(Serialize, Deserialize, Debug)]
 pub struct Chat {

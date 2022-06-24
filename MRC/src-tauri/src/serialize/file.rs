@@ -1,6 +1,6 @@
 use std::fs::File;
 use std::path::{Display, Path};
-use std::io::{prelude::*, Result, BufRead, BufReader, Lines};
+use std::io::{prelude::*};
 
 pub fn write_file(filename: &str, text: &str) {
     let path: &Path = Path::new(filename);
