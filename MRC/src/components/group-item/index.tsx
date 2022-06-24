@@ -4,6 +4,7 @@ import cl from 'clsx'
 export default function GroupItem(props) {
   return (
     <div
+      tabIndex={0}
       class={cl('group-item', { 'group-item--active': props.active })}
       onclick={() => props.onclick()}
     >

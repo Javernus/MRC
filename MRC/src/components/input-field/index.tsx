@@ -1,15 +1,17 @@
-import './Search.scss'
+import './InputField.scss'
 
-export default function Search(props) {
+export default function InputField(props) {
   return (
     <input
       tabIndex={0}
-      class='search'
-      placeholder='Search'
+      class='input-field'
+      placeholder={props.placeholder}
+      type={props.type || 'text'}
       value={props.value || ''}
       oninput={props.oninput || null}
       onchange={props.onchange || null}
       onclick={props.onclick || null}
+      ref={props.ref || null}
     />
   )
 }

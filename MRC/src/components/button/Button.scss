@@ -1,0 +1,27 @@
+@import '../../colours.scss';
+
+.button {
+  display: flex;
+  width: 100%;
+  margin: 0 0 0 0.5rem;
+  box-sizing: border-box;
+  background-color: $surface-weakest;
+  border: none;
+  color: $white-strong;
+  align-items: center;
+  justify-content: center;
+  height: 2rem;
+  border-radius: 0.5rem;
+  padding: 0.5rem;
+  font-size: 1rem;
+  font-family: 'Roboto', sans-serif;
+  box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.1);
+
+  &:focus {
+    outline: none;
+  }
+
+  &[type=submit] {
+    background-color: $blue-light;
+  }
+}

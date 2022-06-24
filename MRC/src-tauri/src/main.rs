@@ -13,8 +13,18 @@ fn get_groups() -> String {
 }
 
 #[tauri::command]
-fn send_chat(message: String, groupId: i32) {
-  println!("This is where you get the message: {} in group {}", message, groupId);
+fn send_chat(message: String, group_id: i32) {
+  println!("This is where you get the message: {} in group {}", message, group_id);
+}
+
+#[tauri::command]
+fn remove_group(group_id: i32) {
+  println!("This is where you remove the group: {}", group_id);
+}
+
+#[tauri::command]
+fn create_group(name: String, bio: String, password: String) {
+  println!("This is where you add the group: {} with bio {} and password {}", name, bio, password);
 }
 
 fn main() {
@@ -26,7 +36,7 @@ fn main() {
 
   tauri::Builder::default()
     .menu(menu)
-    .invoke_handler(tauri::generate_handler![send_chat, get_groups])
+    .invoke_handler(tauri::generate_handler![send_chat, get_groups, remove_group, create_group])
     .run(tauri::generate_context!())
     .expect("error while running tauri application");
 }

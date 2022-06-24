@@ -37,8 +37,13 @@
     color: $green-normal;
     font-size: 1.2rem;
     font-family: $chat-font-family;
+    font-weight: bold;
     padding: 0;
     margin: 0 0.5rem 0.125rem 0.5rem;
+
+    &--disabled {
+      color: $white-moderate;
+    }
   }
 
   &__input {
@@ -50,6 +55,10 @@
     font-family: $chat-font-family;
     background-color: $surface-strongest;
     color: $white-strongest;
+
+    &[disabled] {
+      cursor: not-allowed;
+    }
 
     &:focus {
       outline: none;

@@ -1,6 +1,7 @@
 import { For } from 'solid-js'
 import './Terminal.scss'
 import ChatItem from '../chat-item'
+import cl from 'clsx'
 
 export default function Terminal(props) {
   const keyPress = (event) => {
@@ -22,9 +23,12 @@ export default function Terminal(props) {
         }</For>
       </div>
       <div class='terminal__inputs'>
-        <p class='terminal__command'>❯ </p>
+        <p class={cl('terminal__command', { 'terminal__command--disabled': props.disabled })}>❯ </p>
         <input
+          disabled={props.disabled}
+          tabIndex={0}
           class='terminal__input'
+          maxlength={256}
           oninput={props.oninput || null}
           onchange={props.onchange || null}
           onclick={props.onclick || null}

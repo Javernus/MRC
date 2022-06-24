@@ -4,13 +4,19 @@
   display: flex;
   align-items: center;
   justify-content: start;
-  width: 100%;
+  width: 20rem;
+  max-width: 100%;
   padding: 0.75rem 0 0.75rem 0.5rem;
   box-sizing: border-box;
   cursor: pointer;
 
   &:hover {
     background-color: $surface-weak;
+  }
+
+  &:focus {
+    outline: solid 1px $blue-normal;
+    outline-offset: -1px;
   }
 
   &--active {
@@ -65,5 +71,9 @@
     font-size: 0.85rem;
     color: $white-strong;
     font-family: $chat-font-family;
+    -webkit-line-clamp: 2;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
   }
 }

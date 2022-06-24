@@ -1,7 +1,8 @@
+import Button from "./button";
 import ChatItem from "./chat-item";
 import GroupItem from "./group-item";
 import Panel from "./panel";
-import Search from "./search";
+import InputField from "./input-field";
 import Terminal from "./terminal";
 
-export { ChatItem, GroupItem, Panel, Search, Terminal };
+export { Button, ChatItem, GroupItem, Panel, InputField, Terminal };

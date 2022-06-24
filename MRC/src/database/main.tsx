@@ -16,18 +16,13 @@ const getChats = async (): Promise<Chat[]> => {
   return await db.select("SELECT * FROM chats")
 }
 
-const createGroup = async (group: Group): Promise<Group> => {
-  const qr = await db.execute("INSERT INTO groups (name, bio) VALUES ($1,$2)", [group.name, group.bio])
-
-  return {
-    id: qr.lastInsertId,
-    name: group.name,
-    bio: group.bio,
-  }
+const createGroup = async (name: string, bio: string, password: string): Promise<Group> => {
+  invoke("create_group", { name: name, bio: bio, password: password })
+  return { name: name, bio: bio, id: 20 }
 }
 
 const removeGroup = async (groupId: number): Promise<void> => {
-  await db.execute("DELETE FROM groups WHERE id = $1", [groupId])
+  invoke("remove_group", { groupId: groupId })
 }
 
 const sendChat = async (message: string, groupId: number): Promise<Chat> => {
