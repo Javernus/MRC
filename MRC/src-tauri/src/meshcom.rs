@@ -10,7 +10,7 @@ use systemstat::{System, Platform};
 
 fn main() {
     let sys = System::new();
-    let mut stream = UnixStream::connect("/home/dvlv/Programming/rust/ipc/ipc.sock").unwrap();
+    let mut stream = UnixStream::connect("../../../interface/ipc.sock").unwrap();
 
     let (tx, rx) = channel();
 
