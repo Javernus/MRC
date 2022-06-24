@@ -1,6 +1,5 @@
 use serde::{Serialize, Deserialize};
-use std::fs::File;
-use std::io::prelude::*;
+// use crate::serialize::IOFile;
 
 #[derive(Serialize, Deserialize, Debug)]
 pub struct Chat {
@@ -9,10 +8,6 @@ pub struct Chat {
     time: u64,
     name: String,
     message: String,
-}
-
-trait CreateFile {
-    fn create_file(path: &str);
 }
 
 impl Chat {
@@ -25,28 +20,38 @@ impl Chat {
             message: String::from(message),
         }
     }
+}
 
-    fn serialize(&self) -> String {
-        serde_json::to_string(&self).unwrap()
-    }
+pub fn serialize(chat: &Chat) -> String {
+    serde_json::to_string(chat).unwrap()
+}
 
-    fn deserialize(json: &str) -> Chat {
-        serde_json::from_str(json).unwrap()
-    }
+pub fn deserialize(json: &str) -> Chat {
+    serde_json::from_str(json).unwrap()
+}
 
-    pub fn create_file(path: &str) -> File {
-        File::create(path)?
-    }
+#[test]
+fn test_create_chat() {
+    let _chat = Chat::new(3, 1, 1000, "Bob", "message");
+}
 
-    pub fn write_to_file(&self, path: &str) {
-        let mut file: File = File::open(path)?;
-        file.write_all(self.serialize().as_bytes())?;
-    }
+#[test]
+fn test_ser_chat() {
+    let chat: Chat = Chat::new(3, 1, 1000, "Bob", "message");
+    let ser: String = serialize(&chat);
 
-    pub fn read_from_file(&self, path: &str) -> String {
-        let mut file: File = File::open(path)?;
-        let mut contents: String = String::new();
-        file.read_to_string(&mut contents)?;
-        contents
-    }
+    assert_eq!(ser, "{\"id\":3,\"group_id\":1,\"time\":1000,\"name\":\"Bob\",\"message\":\"message\"}");
+}
+
+#[test]
+fn test_deser_chat() {
+    let chat: Chat = Chat::new(3, 1, 1000, "Bob", "message");
+    let ser: String = serialize(&chat);
+    let deser: Chat = deserialize(&ser);
+
+    assert_eq!(chat.id, deser.id);
+    assert_eq!(chat.group_id, deser.group_id);
+    assert_eq!(chat.time, deser.time);
+    assert_eq!(chat.name, deser.name);
+    assert_eq!(chat.message, deser.message);
 }

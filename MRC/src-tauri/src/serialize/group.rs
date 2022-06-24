@@ -1,6 +1,7 @@
 use serde::{Serialize, Deserialize};
+use std::io::{Read, Result, Write};
+use std::fs;
 use std::fs::File;
-use std::io::prelude::*;
 
 #[derive(Serialize, Deserialize, Debug)]
 pub struct Group {
@@ -17,28 +18,36 @@ impl Group {
             bio: String::from(bio),
         }
     }
+}
 
-    fn serialize(&self) -> String {
-        serde_json::to_string(&self).unwrap()
-    }
+pub fn serialize(group: &Group) -> String {
+    serde_json::to_string(group).unwrap()
+}
 
-    fn deserialize(json: &str) -> Group {
-        serde_json::from_str(json).unwrap()
-    }
+pub fn deserialize(json: &str) -> Group {
+    serde_json::from_str(json).unwrap()
+}
 
-    pub fn create_file(path: &str) -> File {
-        File::create(path)?
-    }
+#[test]
+fn test_create_group() {
+    let _group = Group::new(1, "Group", "bio");
+}
 
-    pub fn write_to_file(&self, path: &str) {
-        let mut file: File = File::open(path)?;
-        file.write_all(self.serialize().as_bytes())?;
-    }
+#[test]
+fn test_ser_group() {
+    let group: Group = Group::new(1, "Group", "bio");
+    let ser: String = serialize(&group);
 
-    pub fn read_from_file(&self, path: &str) -> String {
-        let mut file: File = File::open(path)?;
-        let mut contents: String = String::new();
-        file.read_to_string(&mut contents)?;
-        contents
-    }
+    assert_eq!(ser, "{\"id\":1,\"name\":\"Group\",\"bio\":\"bio\"}");
+}
+
+#[test]
+fn test_deser_group() {
+    let group: Group = Group::new(1, "Group", "bio");
+    let ser: String = serialize(&group);
+    let deser: Group = deserialize(&ser);
+
+    assert_eq!(group.id, deser.id);
+    assert_eq!(group.name, deser.name);
+    assert_eq!(group.bio, deser.bio);
 }
