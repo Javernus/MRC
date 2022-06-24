@@ -16,12 +16,14 @@ let chats: Chat[] = [
   { name: 'Merijn', message: 'I do not agree.', id: 4, time: 987654321, groupId: 1 },
 ]
 
-// await DB.sendChat(chats[0])
-// await DB.sendChat(chats[1])
-// await DB.sendChat(chats[2])
-// await DB.sendChat(chats[3])
 // chats = await DB.getChats()
 // console.log(chats)
+
+// Send the message using DB and add it to the chats array.
+const sendChat = async (allChats, setAllChats, message: string, groupId: number) => {
+  const chat = await DB.sendChat(message, groupId)
+  setAllChats([...allChats(), chat])
+}
 
 // Return the chat message with the latest timestamp.
 const lastChat = (chats: Chat[]) => {
@@ -31,8 +33,8 @@ const lastChat = (chats: Chat[]) => {
   return ('<' + chat.name + '> ' + chat.message)
 }
 
-const chatsFromGroup = (groupId: number) => {
-  return chats.filter(chat => chat.groupId === groupId)
+const chatsFromGroup = (allChats, groupId: number) => {
+  return (allChats()).filter(chat => chat.groupId === groupId)
 }
 
 const App: Component = () => {
@@ -40,7 +42,7 @@ const App: Component = () => {
   let [shownGroups, setShownGroups] = createSignal(groups)
   let [openGroup, setOpenGroup] = createSignal(groups[0])
   let [showGroupInfo, setShowGroupInfo] = createSignal(true)
-  setShownGroups(groups)
+  let [allChats, setAllChats] = createSignal(chats)
 
   function searchGroups(event) {
     setSearch(event.target.value)
@@ -58,7 +60,7 @@ const App: Component = () => {
         <For each={shownGroups()}>{(group: Group) =>
           <GroupItem
             name={group.name}
-            lastChat={lastChat(chatsFromGroup(group.id))}
+            lastChat={lastChat(chatsFromGroup(allChats, group.id))}
             status={activeGroups.includes(group.id) ? 'green' : 'yellow'}
             active={group === openGroup()}
             onclick={() => setOpenGroup(group)}
@@ -66,7 +68,7 @@ const App: Component = () => {
         }</For>
       </Panel>
 
-      <Terminal chats={chatsFromGroup(openGroup().id).sort((a, b) => a.time - b.time)} />
+      <Terminal chats={chatsFromGroup(allChats, openGroup().id).sort((a, b) => a.time - b.time)} send={(message) => {sendChat(allChats, setAllChats, message, openGroup().id)}} />
       <Panel right visible={showGroupInfo()}>
         <div class='toggle-group-info' onclick={() => setShowGroupInfo(!showGroupInfo())} />
         <div class='top-bar'>
