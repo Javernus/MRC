@@ -61,6 +61,20 @@ pub fn delete_file(filename: &str) {
 
     match remove_file(&path) {
         Ok(_) => println!("successfully deleted {}", display),
-        Err(why) => panic!("couldn't write to {}: {}", display, why),
+        Err(why) => panic!("couldn't delete {}: {}", display, why),
     }
+}
+
+#[test]
+fn test_file() {
+    let filename: String = String::from("test_file.txt");
+    let text: String = String::from("This is a test file.");
+
+    write_file(&filename, &text);
+
+    let read: String = read_file(&filename);
+
+    assert_eq!(text, read);
+
+    delete_file(&filename);
 }

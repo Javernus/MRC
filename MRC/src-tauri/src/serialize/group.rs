@@ -2,7 +2,7 @@ use serde::{Serialize, Deserialize};
 
 #[derive(Serialize, Deserialize, Debug, PartialEq)]
 pub struct Group {
-    pub(crate) id: u64,
+    pub(crate) id: usize,
     pub(crate) name: String,
     pub(crate) bio: String,
 }
@@ -17,7 +17,7 @@ impl Group {
     /// * `bio`: bio of group.
     ///
     /// returns: Group
-    pub fn new(id: u64, name: &str, bio: &str) -> Group {
+    pub fn new(id: usize, name: &str, bio: &str) -> Group {
         Group {
             id,
             name: String::from(name),
@@ -49,21 +49,15 @@ pub fn deserialize(text: &str) -> Vec<Group> {
 }
 
 #[test]
-fn test_ser_group() {
+fn test_group() {
     let group_1: Group = Group::new(1, "Group", "bio");
     let group_2: Group = Group::new(2, "People", "empty");
     let groups: Vec<Group> = vec![group_1, group_2];
+
     let ser: String = serialize(&groups);
 
     assert_eq!(ser, "[{\"id\":1,\"name\":\"Group\",\"bio\":\"bio\"},{\"id\":2,\"name\":\"People\",\"bio\":\"empty\"}]");
-}
 
-#[test]
-fn test_deser_group() {
-    let group_1: Group = Group::new(1, "Group", "bio");
-    let group_2: Group = Group::new(2, "People", "empty");
-    let groups: Vec<Group> = vec![group_1, group_2];
-    let ser: String = serialize(&groups);
     let deser: Vec<Group> = deserialize(&ser);
 
     for i in 0..2 {
