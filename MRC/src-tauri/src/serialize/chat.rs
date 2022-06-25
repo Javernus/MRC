@@ -1,6 +1,6 @@
 use serde::{Serialize, Deserialize};
 
-#[derive(Serialize, Deserialize, Debug)]
+#[derive(Serialize, Deserialize, Debug, PartialEq)]
 pub struct Chat {
     pub(crate) id: u64,
     pub(crate) group_id: u64,
@@ -48,10 +48,6 @@ fn test_deser_chat() {
     let deser: Vec<Chat> = deserialize(&ser);
 
     for i in 0..2 {
-        assert_eq!(chats[i].id, deser[i].id);
-        assert_eq!(chats[i].group_id, deser[i].group_id);
-        assert_eq!(chats[i].time, deser[i].time);
-        assert_eq!(chats[i].name, deser[i].name);
-        assert_eq!(chats[i].message, deser[i].message);
+        assert_eq!(chats[i], deser[i]);
     }
 }

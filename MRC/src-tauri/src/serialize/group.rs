@@ -1,6 +1,6 @@
 use serde::{Serialize, Deserialize};
 
-#[derive(Serialize, Deserialize, Debug)]
+#[derive(Serialize, Deserialize, Debug, PartialEq)]
 pub struct Group {
     pub(crate) id: u64,
     pub(crate) name: String,
@@ -44,8 +44,6 @@ fn test_deser_group() {
     let deser: Vec<Group> = deserialize(&ser);
 
     for i in 0..2 {
-        assert_eq!(groups[i].bio, deser[i].bio);
-        assert_eq!(groups[i].id, deser[i].id);
-        assert_eq!(groups[i].name, deser[i].name);
+        assert_eq!(groups[i], deser[i]);
     }
 }
