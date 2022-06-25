@@ -10,6 +10,17 @@ pub struct Chat {
 }
 
 impl Chat {
+    /// Creates and returns new chat.
+    ///
+    /// # Arguments
+    ///
+    /// * `id`: id of chat.
+    /// * `group_id`: id of group.
+    /// * `time`: time of chat.
+    /// * `name`: name of sender.
+    /// * `message`: message of chat.
+    ///
+    /// returns: Chat
     pub fn new(id: u64, group_id: u64, time: u64, name: &str, message: &str) -> Chat {
         Chat {
             id,
@@ -21,10 +32,24 @@ impl Chat {
     }
 }
 
+/// Serializes vector of chats. Returns string in json format.
+///
+/// # Arguments
+///
+/// * `chats`: reference to vector of chats to serialize.
+///
+/// returns: String
 pub fn serialize(chats: &Vec<Chat>) -> String {
     serde_json::to_string(chats).unwrap()
 }
 
+/// Deserializes string to vector of chats. Returns vector of chats.
+///
+/// # Arguments
+///
+/// * `text`: reference to string to deserialize.
+///
+/// returns: Vec<Chat>
 pub fn deserialize(text: &str) -> Vec<Chat> {
     serde_json::from_str(text).unwrap()
 }

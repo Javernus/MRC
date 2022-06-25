@@ -2,6 +2,14 @@ use std::fs::{File, remove_file};
 use std::path::{Display, Path};
 use std::io::{prelude::*};
 
+/// Creates new file and writes a string to it.
+///
+/// # Arguments
+///
+/// * `filename`: filename of new file.
+/// * `text`: string to write to file.
+///
+/// returns: ()
 pub fn write_file(filename: &str, text: &str) {
     let path: &Path = Path::new(filename);
     let display: Display = path.display();
@@ -17,6 +25,13 @@ pub fn write_file(filename: &str, text: &str) {
     }
 }
 
+/// Reads from file. Returns the content.
+///
+/// # Arguments
+///
+/// * `filename`: filename of file to read.
+///
+/// returns: String
 pub fn read_file(filename: &str) -> String {
     let path: &Path = Path::new(filename);
     let display: Display = path.display();
@@ -33,6 +48,13 @@ pub fn read_file(filename: &str) -> String {
     }
 }
 
+/// Deletes file.
+///
+/// # Arguments
+///
+/// * `filename`: filename of file to delete.
+///
+/// returns: ()
 pub fn delete_file(filename: &str) {
     let path: &Path = Path::new(filename);
     let display: Display = path.display();
@@ -42,13 +64,3 @@ pub fn delete_file(filename: &str) {
         Err(why) => panic!("couldn't write to {}: {}", display, why),
     }
 }
-
-// #[test]
-// fn test_file() {
-//     let filename: &str = "test_file123.txt";
-//     let text: &str = "Hello world 123";
-//     write_file(filename, text);
-//     let contents: String = read_file(filename);
-//
-//     assert_eq!(text, contents);
-// }

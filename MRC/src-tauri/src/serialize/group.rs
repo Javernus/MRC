@@ -8,6 +8,15 @@ pub struct Group {
 }
 
 impl Group {
+    /// Creates and returns new group.
+    ///
+    /// # Arguments
+    ///
+    /// * `id`: id of group.
+    /// * `name`: name of group.
+    /// * `bio`: bio of group.
+    ///
+    /// returns: Group
     pub fn new(id: u64, name: &str, bio: &str) -> Group {
         Group {
             id,
@@ -17,10 +26,24 @@ impl Group {
     }
 }
 
+/// Serializes vector of groups. Returns string in json format.
+///
+/// # Arguments
+///
+/// * `groups`: reference to vector of groups to serialize.
+///
+/// returns: String
 pub fn serialize(groups: &Vec<Group>) -> String {
     serde_json::to_string(groups).unwrap()
 }
 
+/// Deserializes string to vector of groups. Returns vector of groups.
+///
+/// # Arguments
+///
+/// * `text`: reference to string to deserialize.
+///
+/// returns: Vec<Group>
 pub fn deserialize(text: &str) -> Vec<Group> {
     serde_json::from_str(text).unwrap()
 }

@@ -5,26 +5,53 @@ pub mod file;
 pub mod group;
 pub mod chat;
 
+/// Returns string representation of path to groups file in database.
+///
+/// returns: String
 fn groups_path() -> String {
     String::from("database/groups.json")
 }
 
+/// Returns string representation of path to chats file in database.
+///
+/// # Arguments
+///
+/// * `group_id`: id of group.
+///
+/// returns: String
 fn chats_path(group_id: u64) -> String {
     format!("{}{}{}", "database/chats-", group_id, ".json")
 }
 
+/// Saves groups to database in json format.
+///
+/// # Arguments
+///
+/// * `groups`: reference to vector of groups to save.
+///
+/// returns: ()
 pub fn save_groups(groups: &Vec<Group>) {
     let filename: String = groups_path();
     let text: String = group::serialize(groups);
     file::write_file(&filename, &text);
 }
 
+/// Saves chats to database in json format.
+///
+/// # Arguments
+///
+/// * `chats`: reference to vector of chats to save.
+///
+/// returns: ()
 pub fn save_chats(chats: &Vec<Chat>) {
     let filename: String = chats_path(chats[0].group_id);
     let text: String = chat::serialize(chats);
     file::write_file(&filename, &text);
 }
 
+/// Retrieves groups from database. Returns vector of groups.
+///
+/// returns: Vec<Group>
 pub fn get_groups() -> Vec<Group> {
     let filename: String = groups_path();
     let text: String = file::read_file(&filename);
@@ -32,6 +59,13 @@ pub fn get_groups() -> Vec<Group> {
     groups
 }
 
+/// Retrieves chats from database. Returns vector of chats.
+///
+/// # Arguments
+///
+/// * `group_id`: id of group.
+///
+/// returns: Vec<Chat>
 pub fn get_chats(group_id: u64) -> Vec<Chat> {
     let filename: String = chats_path(group_id);
     let text: String = file::read_file(&filename);
@@ -39,11 +73,25 @@ pub fn get_chats(group_id: u64) -> Vec<Chat> {
     chats
 }
 
+/// Deletes chats file in database.
+///
+/// # Arguments
+///
+/// * `group_id`: id of group.
+///
+/// returns: ()
 pub fn delete_chats(group_id: u64) {
     let filename: String = chats_path(group_id);
     file::delete_file(&filename);
 }
 
+/// Deletes all chats with given group_id and deletes groups.
+///
+/// # Arguments
+///
+/// * `group_ids`: vector of ids of all groups to delete.
+///
+/// returns: ()
 pub fn delete_groups(group_ids: Vec<u64>) {
     for group_id in group_ids {
         delete_chats(group_id);
