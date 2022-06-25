@@ -1,6 +1,11 @@
 [package]
 name = "hello_world" # the name of the package
 version = "0.1.0"    # the current version, obeying semver
+
+
+[dependencies]
+event-listener = "2.5.2"
+
 [[bin]]
 name = "interface"
-path = "main.rs"
+path = "interface.rs"
