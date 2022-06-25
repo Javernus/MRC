@@ -19,7 +19,7 @@ fn groups_path() -> String {
 /// * `group_id`: id of group.
 ///
 /// returns: String
-fn chats_path(group_id: usize) -> String {
+fn chats_path(group_id: i32) -> String {
     format!("{}{}{}", "database/chats-", group_id, ".json")
 }
 
@@ -74,7 +74,7 @@ pub fn get_groups() -> Vec<Group> {
 /// * `group_id`: id of group.
 ///
 /// returns: Vec<Chat>
-pub fn get_chats(group_id: usize) -> Vec<Chat> {
+pub fn get_chats(group_id: i32) -> Vec<Chat> {
     let chats_file: String = chats_path(group_id);
     let text: String = file::read_file(&chats_file);
     chat::deserialize(&text)
@@ -93,7 +93,7 @@ pub fn get_chats(group_id: usize) -> Vec<Chat> {
 /// * `group_id`: id of group.
 ///
 /// returns: ()
-pub fn delete_chats(group_id: usize) {
+pub fn delete_chats(group_id: i32) {
     let filename: String = chats_path(group_id);
     file::delete_file(&filename);
 }

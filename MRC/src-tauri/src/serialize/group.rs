@@ -2,7 +2,7 @@ use serde::{Serialize, Deserialize};
 
 #[derive(Serialize, Deserialize, Debug, PartialEq)]
 pub struct Group {
-    pub(crate) id: usize,
+    pub(crate) id: i32,
     pub(crate) name: String,
     pub(crate) bio: String,
 }
@@ -17,7 +17,7 @@ impl Group {
     /// * `bio`: bio of group.
     ///
     /// returns: Group
-    pub fn new(id: usize, name: &str, bio: &str) -> Group {
+    pub fn new(id: i32, name: &str, bio: &str) -> Group {
         Group {
             id,
             name: String::from(name),
