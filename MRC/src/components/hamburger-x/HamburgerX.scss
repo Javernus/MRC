@@ -7,13 +7,12 @@
   display: flex;
   padding: 0;
 
-
   &__line {
     fill: none;
     stroke: $white-strong;
     stroke-width: 6;
     transition: stroke-dasharray 400ms cubic-bezier(0.4, 0, 0.2, 1),
-      stroke-dashoffset 400ms cubic-bezier(0.4, 0, 0.2, 1);
+                stroke-dashoffset 400ms cubic-bezier(0.4, 0, 0.2, 1);
   }
 
   &__line1 {

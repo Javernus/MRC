@@ -7,11 +7,9 @@
   overflow: hidden;
   transition: width 0.25s ease-in-out;
 
-  // &--visible {
-    width: 20rem;
-    min-width: 20rem;
-    max-width: 20rem;
-  // }
+  width: 20rem;
+  min-width: 20rem;
+  max-width: 20rem;
 
   &--fit-content {
     height: fit-content;
@@ -45,7 +43,8 @@
   top: 0;
   background-color: $surface-strong;
 
-  transition: left 0.25s ease-in-out;
+  transition: left 0.25s ease-in-out,
+              height 0.25s ease-in-out;
 
   &--right {
     left: unset;
