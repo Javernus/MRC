@@ -5,6 +5,11 @@ pub mod file;
 pub mod group;
 pub mod chat;
 
+fn format_filename(group_id: u64) -> String {
+    // path: database/chats/<<group_id>>.json
+    format!("{}{}{}", "database/chats/group-", group_id, ".json")
+}
+
 pub fn save_groups(groups: &Vec<Group>) {
     // path: database/groups.json
     let filename: &str = "database/groups.json";
@@ -13,8 +18,7 @@ pub fn save_groups(groups: &Vec<Group>) {
 }
 
 pub fn save_chats(chats: &Vec<Chat>) {
-    // path: database/chats/<<group_id>>.json
-    let filename: String = format!("{}{}{}", "database/chats/group-", chats[0].group_id, ".json");
+    let filename: String = format_filename(chats[0].group_id);
     let text: String = chat::serialize(chats);
     file::write_file(&filename, &text);
 }
@@ -28,16 +32,14 @@ pub fn get_groups() -> Vec<Group> {
 }
 
 pub fn get_chats(group_id: u64) -> Vec<Chat> {
-    // path: database/chats/<<group_id>>.json
-    let filename: String = format!("{}{}{}", "database/chats/group-", group_id, ".json");
+    let filename: String = format_filename(group_id);
     let text: String = file::read_file(&filename);
     let chats: Vec<Chat> = chat::deserialize(&text);
     chats
 }
 
 pub fn delete_group(group_id: u64) {
-    // path: database/chats/<<group_id>>.json
-    let filename: String = format!("{}{}{}", "database/chats/group-", group_id, ".json");
+    let filename: String = format_filename(group_id);
     file::delete_file(&filename);
 }
 
