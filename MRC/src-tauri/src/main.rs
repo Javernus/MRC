@@ -6,7 +6,7 @@
 use tauri::{Menu, MenuItem, Submenu};
 
 mod cmd;
-mod serialize;
+mod database;
 
 #[tauri::command]
 fn get_groups() -> String {

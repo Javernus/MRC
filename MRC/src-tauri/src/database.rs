@@ -1,5 +1,5 @@
-use crate::serialize::group::Group;
-use crate::serialize::chat::Chat;
+use crate::database::group::Group;
+use crate::database::chat::Chat;
 
 pub mod file;
 pub mod group;
