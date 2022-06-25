@@ -1,4 +1,4 @@
-use std::fs::File;
+use std::fs::{File, remove_file};
 use std::path::{Display, Path};
 use std::io::{prelude::*};
 
@@ -30,6 +30,16 @@ pub fn read_file(filename: &str) -> String {
     match file.read_to_string(&mut contents) {
         Ok(_) => return contents,
         Err(why) => panic!("couldn't read {}: {}", display, why),
+    }
+}
+
+pub fn delete_file(filename: &str) {
+    let path: &Path = Path::new(filename);
+    let display: Display = path.display();
+
+    match remove_file(&path) {
+        Ok(_) => println!("successfully deleted {}", display),
+        Err(why) => panic!("couldn't write to {}: {}", display, why),
     }
 }
 
