@@ -7,19 +7,39 @@
   overflow: hidden;
   transition: width 0.25s ease-in-out;
 
-  &--visible {
+  // &--visible {
     width: 20rem;
     min-width: 20rem;
     max-width: 20rem;
+  // }
+
+  &--fit-content {
+    height: fit-content;
+    max-height: fit-content;
+    position: absolute;
+    top: 0;
+    left: 0;
+    overflow: unset;
+
+    .panel {
+      height: fit-content;
+      border-radius: 0 0 0 1rem;
+    }
+
+    &.panel-container--right {
+      left: unset;
+      right: 0;
+    }
   }
 }
 
+
 .panel {
-  position: absolute;
+  position: relative;
   display: flex;
   flex-direction: column;
   width: 20rem;
-  height: 100vh;
+  height: 100%;
   border-right: solid 1px $white-weak;
   left: calc(-20rem - 1px);
   top: 0;

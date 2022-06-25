@@ -1,7 +1,7 @@
 import { Component, createSignal, For } from 'solid-js'
 import './App.scss'
 import './colours.scss'
-import { Button, GroupItem, Panel, InputField, Terminal } from './components'
+import { Button, GroupItem, HamburgerX, Panel, InputField, Settings, Terminal } from './components'
 import type { Group, Chat } from './types/types'
 import DB from './database/main'
 import cl from 'clsx'
@@ -82,8 +82,8 @@ const App: Component = () => {
     <>
       <Panel visible>
         <div class='top-bar'>
-          <div
-            class='add-icon'
+          <HamburgerX
+            size='2rem'
             onclick={() => {
                 if (showCreateGroup()) {
                   setPlusMenu(false)
@@ -129,8 +129,8 @@ const App: Component = () => {
       <Terminal chats={openGroup() && chatsFromGroup(allChats, openGroup().id).sort((a, b) => a.time - b.time)} disabled={!openGroup()} send={(message) => {sendChat(allChats, setAllChats, message, openGroup().id)}} />
       {
         !!openGroup() &&
-        <Panel right visible={showGroupInfo()}>
-          <div class='toggle-group-info' onclick={() => setShowGroupInfo(!showGroupInfo())} />
+        <Panel right fitContent visible={showGroupInfo()}>
+          <Settings size='2rem' onclick={() => setShowGroupInfo(!showGroupInfo())} />
           <div class='top-bar'>
             <div class='group-icon'>
               <div class='group-icon__indicator group-icon__indicator--green' />

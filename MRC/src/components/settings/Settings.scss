@@ -1,0 +1,13 @@
+@import '../../colours.scss';
+
+.settings {
+  display: block;
+  stroke: $white-strong;
+  fill: none;
+  transform-origin: 50% 50%;
+  transition: transform 0.75s ease-in-out;
+
+  &--opened {
+    transform: rotate(180deg);
+  }
+}

@@ -1,0 +1,51 @@
+@import '../../colours.scss';
+
+.hamburger-x {
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  padding: 0;
+
+
+  &__line {
+    fill: none;
+    stroke: $white-strong;
+    stroke-width: 6;
+    transition: stroke-dasharray 400ms cubic-bezier(0.4, 0, 0.2, 1),
+      stroke-dashoffset 400ms cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  &__line1 {
+    stroke-dasharray: 60 207;
+    stroke-width: 6;
+  }
+  &__line2 {
+    stroke-dasharray: 60 60;
+    stroke-width: 6;
+  }
+  &__line3 {
+    stroke-dasharray: 60 207;
+    stroke-width: 6;
+  }
+
+  &--opened .hamburger-x {
+    &__line1 {
+      stroke-dasharray: 90 207;
+      stroke-dashoffset: -134;
+      stroke-width: 6;
+    }
+
+    &__line2 {
+      stroke-dasharray: 1 60;
+      stroke-dashoffset: -30;
+      stroke-width: 6;
+    }
+
+    &__line3 {
+      stroke-dasharray: 90 207;
+      stroke-dashoffset: -134;
+      stroke-width: 6;
+    }
+  }
+}
