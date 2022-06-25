@@ -5,41 +5,51 @@ pub mod file;
 pub mod group;
 pub mod chat;
 
-fn format_filename(group_id: u64) -> String {
-    // path: database/chats/<<group_id>>.json
-    format!("{}{}{}", "database/chats/group-", group_id, ".json")
+fn groups_path() -> String {
+    String::from("database/groups.json")
+}
+
+fn chats_path(group_id: u64) -> String {
+    format!("{}{}{}", "database/chats-", group_id, ".json")
 }
 
 pub fn save_groups(groups: &Vec<Group>) {
-    // path: database/groups.json
-    let filename: &str = "database/groups.json";
+    let filename: String = groups_path();
     let text: String = group::serialize(groups);
-    file::write_file(filename, &text);
+    file::write_file(&filename, &text);
 }
 
 pub fn save_chats(chats: &Vec<Chat>) {
-    let filename: String = format_filename(chats[0].group_id);
+    let filename: String = chats_path(chats[0].group_id);
     let text: String = chat::serialize(chats);
     file::write_file(&filename, &text);
 }
 
 pub fn get_groups() -> Vec<Group> {
-    // path: database/groups.json
-    let filename: &str = "database/groups.json";
-    let text: String = file::read_file(filename);
+    let filename: String = groups_path();
+    let text: String = file::read_file(&filename);
     let groups: Vec<Group> = group::deserialize(&text);
     groups
 }
 
 pub fn get_chats(group_id: u64) -> Vec<Chat> {
-    let filename: String = format_filename(group_id);
+    let filename: String = chats_path(group_id);
     let text: String = file::read_file(&filename);
     let chats: Vec<Chat> = chat::deserialize(&text);
     chats
 }
 
-pub fn delete_group(group_id: u64) {
-    let filename: String = format_filename(group_id);
+pub fn delete_chats(group_id: u64) {
+    let filename: String = chats_path(group_id);
+    file::delete_file(&filename);
+}
+
+pub fn delete_groups(group_ids: Vec<u64>) {
+    for group_id in group_ids {
+        delete_chats(group_id);
+    }
+
+    let filename: String = groups_path();
     file::delete_file(&filename);
 }
 
@@ -52,9 +62,7 @@ fn test_groups() {
     let from_file: Vec<Group> = get_groups();
 
     for i in 0..2 {
-        assert_eq!(groups[i].bio, from_file[i].bio);
-        assert_eq!(groups[i].id, from_file[i].id);
-        assert_eq!(groups[i].name, from_file[i].name);
+        assert_eq!(groups[i], from_file[i]);
     }
 }
 
@@ -67,10 +75,25 @@ fn test_chats() {
     let from_file: Vec<Chat> = get_chats(1);
 
     for i in 0..2 {
-        assert_eq!(chats[i].id, from_file[i].id);
-        assert_eq!(chats[i].group_id, from_file[i].group_id);
-        assert_eq!(chats[i].time, from_file[i].time);
-        assert_eq!(chats[i].name, from_file[i].name);
-        assert_eq!(chats[i].message, from_file[i].message);
+        assert_eq!(chats[i], from_file[i]);
     }
+}
+
+#[test]
+fn test_delete() {
+    save_groups(&vec![
+        Group::new(1, "Group", "bio"),
+        Group::new(2, "People", "empty")]);
+
+    save_chats(&vec![
+        Chat::new(1, 1, 1000, "Alice", "Hi Bob!"),
+        Chat::new(2, 1, 1200, "Bob", "Hi Alice!")
+    ]);
+
+    save_chats(&vec![
+        Chat::new(1, 2, 4000, "Charlie", "Hi David!"),
+        Chat::new(2, 2, 4200, "David", "Hi Charlie!")
+    ]);
+
+    delete_groups(vec![1, 2]);
 }
