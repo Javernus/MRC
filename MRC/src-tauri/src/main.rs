@@ -17,8 +17,7 @@ fn get_groups() -> Vec<Group> {
 
 #[tauri::command]
 fn send_chat(group_id: i32, time: i64, message: String) -> Chat {
-  let chat = Chat::new(group_id, time, "TBImplemented", &message);
-
+  let chat: Chat = Chat::new(group_id, time, "TBImplemented", &message);
   database::save_chat(chat)
 }
 
@@ -29,7 +28,7 @@ fn remove_group(group_id: i32) {
 
 #[tauri::command]
 fn create_group(name: String, bio: String, password: String) -> Group {
-  let group = Group::new(8, &name, &bio);
+  let group: Group = Group::new(8, &name, &bio);
   database::save_group(group)
 }
 
@@ -44,9 +43,9 @@ fn get_chats(group_id: i32) -> Vec<Chat> {
 }
 
 fn main() {
-  let submenu = Submenu::new("MRC", Menu::new().add_native_item(MenuItem::Quit));
-  let submenu2 = Submenu::new("Settings", Menu::new().add_native_item(MenuItem::Quit));
-  let menu = Menu::new()
+  let submenu: Submenu = Submenu::new("MRC", Menu::new().add_native_item(MenuItem::Quit));
+  let submenu2: Submenu = Submenu::new("Settings", Menu::new().add_native_item(MenuItem::Quit));
+  let menu: Menu = Menu::new()
     .add_submenu(submenu)
     .add_submenu(submenu2);
 

@@ -23,15 +23,11 @@ fn chats_path(group_id: i32) -> String {
     format!("{}{}{}", "../database/chats-", group_id, ".json")
 }
 
-/// Saves groups to database in json format.
-///
-/// # Important
-///
-/// Any existing file will be overwritten.
+/// Appends group to database in json format.
 ///
 /// # Arguments
 ///
-/// * `groups`: reference to vector of groups to save.
+/// * `g`: group to save.
 ///
 /// returns: ()
 pub fn save_group(g: Group) -> Group {
@@ -43,18 +39,13 @@ pub fn save_group(g: Group) -> Group {
     g
 }
 
-/// Saves chats to database in json format.
-///
-/// # Important
-///
-/// All chats have to be in the same group.
-/// Any existing file will be overwritten.
+/// Appends chat to database in json format. Returns chat.
 ///
 /// # Arguments
 ///
-/// * `chats`: reference to vector of chats to save.
+/// * `c`: chat to save.
 ///
-/// returns: ()
+/// returns: Chat
 pub fn save_chat(c: Chat) -> Chat {
     let chats_file: String = chats_path(c.group_id);
     // TODO: if chat file does not exist, create it and add empty vector to it.
@@ -90,10 +81,15 @@ pub fn get_chats(group_id: i32) -> Vec<Chat> {
     chat::deserialize(&text)
 }
 
+/// Retrieves last chat from database. Returns chat.
+///
+/// # Arguments
+///
+/// * `group_id`: id of group.
+///
+/// returns: Chat
 pub fn get_last_chat(group_id: i32) -> Chat {
-    let chats_file: String = chats_path(group_id);
-    let text: String = file::read_file(&chats_file);
-    let chats: Vec<Chat> = chat::deserialize(&text);
+    let chats: Vec<Chat> = get_chats(group_id);
     // Find the chat with the highest time.
     let mut last_chat: Chat = Chat::new(0, 0, "", "");
     for c in chats {
@@ -153,8 +149,8 @@ fn test_serialize() {
     }
 
     let chats_1: Vec<Chat> = vec![
-        Chat::new(1, 1, 1000, "Alice", "Hi Bob!"),
-        Chat::new(2, 1, 1200, "Bob", "Hi Alice!")
+        Chat::new(1, 1000, "Alice", "Hi Bob!"),
+        Chat::new(1, 1200, "Bob", "Hi Alice!")
     ];
 
     save_chats(&chats_1);
@@ -164,8 +160,8 @@ fn test_serialize() {
     }
 
     let chats_2: Vec<Chat> = vec![
-        Chat::new(1, 2, 4000, "Charlie", "Hi David!"),
-        Chat::new(2, 2, 4200, "David", "Hi Charlie!")
+        Chat::new(2, 4000, "Charlie", "Hi David!"),
+        Chat::new(2, 4200, "David", "Hi Charlie!")
     ];
 
     save_chats(&chats_2);

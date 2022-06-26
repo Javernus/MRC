@@ -54,8 +54,8 @@ pub fn deserialize(text: &str) -> Vec<Chat> {
 
 #[test]
 fn test_chat() {
-    let chat_1: Chat = Chat::new(1, 1, 1000, "Alice", "Hi Bob!");
-    let chat_2: Chat = Chat::new(2, 1, 1200, "Bob", "Hi Alice!");
+    let chat_1: Chat = Chat::new(1, 1000, "Alice", "Hi Bob!");
+    let chat_2: Chat = Chat::new(1, 1200, "Bob", "Hi Alice!");
     let chats: Vec<Chat> = vec![chat_1, chat_2];
 
     let ser: String = serialize(&chats);
