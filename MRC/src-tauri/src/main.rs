@@ -43,6 +43,16 @@ fn get_chats(group_id: i32) -> Vec<Chat> {
   database::get_chats(group_id).into()
 }
 
+#[tauri::command]
+fn set_username(username: String) {
+  println!("This is where you set your username: {}", username);
+}
+
+#[tauri::command]
+fn get_username() {
+  println!("This is where you send the username back");
+}
+
 fn main() {
   let submenu = Submenu::new("MRC", Menu::new().add_native_item(MenuItem::Quit));
   let submenu2 = Submenu::new("Settings", Menu::new().add_native_item(MenuItem::Quit));
