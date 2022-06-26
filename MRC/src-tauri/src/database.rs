@@ -9,7 +9,7 @@ pub mod chat;
 ///
 /// returns: String
 fn groups_path() -> String {
-    String::from("database/groups.json")
+    String::from("../database/groups.json")
 }
 
 /// Returns string representation of path to chats file in database.
@@ -20,7 +20,7 @@ fn groups_path() -> String {
 ///
 /// returns: String
 fn chats_path(group_id: i32) -> String {
-    format!("{}{}{}", "database/chats-", group_id, ".json")
+    format!("{}{}{}", "../database/chats-", group_id, ".json")
 }
 
 /// Saves groups to database in json format.
