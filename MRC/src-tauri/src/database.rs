@@ -1,10 +1,10 @@
-use std::io::Error;
+use crate::file;
 use crate::database::group::Group;
 use crate::database::chat::Chat;
+use std::io::Error;
 
-pub mod file;
-pub mod group;
-pub mod chat;
+pub(crate) mod group;
+pub(crate) mod chat;
 
 /// Returns string representation of path to groups file in database.
 /// Output: ../database/groups.json

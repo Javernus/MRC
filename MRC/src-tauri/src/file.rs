@@ -1,6 +1,8 @@
-use std::fs::{File, remove_file};
-use std::path::{Display, Path};
-use std::io::{Error, prelude::*};
+use std::{
+    fs::{File, remove_file},
+    io::{Error, prelude::*},
+    path::{Display, Path},
+};
 
 /// Creates new file and writes a string to it.
 ///

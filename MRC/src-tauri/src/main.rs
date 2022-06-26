@@ -5,12 +5,13 @@
 
 extern crate core;
 
-use tauri::{Menu, MenuItem, Submenu};
 use crate::database::chat::Chat;
 use crate::database::group::Group;
+use tauri::{Menu, MenuItem, Submenu};
 
-mod cmd;
+pub(crate) mod file;
 mod database;
+mod cmd;
 
 #[tauri::command]
 fn get_groups() -> Vec<Group> {
@@ -32,7 +33,7 @@ fn remove_group(group_id: i32) {
 }
 
 #[tauri::command]
-fn create_group(name: String, bio: String, password: String) -> Group {
+fn create_group(name: String, bio: String, _password: String) -> Group {
   // QUESTION: can String be replaced by &str in the parameters?
   let group: Group = Group::new(8, &name, &bio);
   database::save_group(&group);
