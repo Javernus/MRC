@@ -49,7 +49,7 @@ fn set_username(username: String) {
 }
 
 #[tauri::command]
-fn get_username() {
+fn get_username() -> String {
   println!("This is where you send the username back");
 }
 
