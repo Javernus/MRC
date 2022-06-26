@@ -54,13 +54,14 @@ pub fn deserialize(text: &str) -> Vec<Chat> {
 
 #[test]
 fn test_chat() {
-    let chat_1: Chat = Chat::new(1, 1000, "Alice", "Hi Bob!");
-    let chat_2: Chat = Chat::new(1, 1200, "Bob", "Hi Alice!");
-    let chats: Vec<Chat> = vec![chat_1, chat_2];
+    let chats: Vec<Chat> = vec![
+        Chat::new(1, 1000, "Alice", "Hi Bob!"),
+        Chat::new(1, 1200, "Bob", "Hi Alice!"),
+    ];
 
     let ser: String = serialize(&chats);
 
-    assert_eq!(ser, "[{\"id\":1,\"group_id\":1,\"time\":1000,\"name\":\"Alice\",\"message\":\"Hi Bob!\"},{\"id\":2,\"group_id\":1,\"time\":1200,\"name\":\"Bob\",\"message\":\"Hi Alice!\"}]");
+    assert_eq!(ser, "[{\"group_id\":1,\"time\":1000,\"name\":\"Alice\",\"message\":\"Hi Bob!\"},{\"group_id\":1,\"time\":1200,\"name\":\"Bob\",\"message\":\"Hi Alice!\"}]");
 
     let deser: Vec<Chat> = deserialize(&ser);
 

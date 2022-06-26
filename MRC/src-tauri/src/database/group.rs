@@ -50,9 +50,10 @@ pub fn deserialize(text: &str) -> Vec<Group> {
 
 #[test]
 fn test_group() {
-    let group_1: Group = Group::new(1, "Group", "bio");
-    let group_2: Group = Group::new(2, "People", "empty");
-    let groups: Vec<Group> = vec![group_1, group_2];
+    let groups: Vec<Group> = vec![
+        Group::new(1, "Group", "bio"),
+        Group::new(2, "People", "empty"),
+    ];
 
     let ser: String = serialize(&groups);
 

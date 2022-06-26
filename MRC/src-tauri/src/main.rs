@@ -3,6 +3,8 @@
   windows_subsystem = "windows"
 )]
 
+extern crate core;
+
 use tauri::{Menu, MenuItem, Submenu};
 use crate::database::chat::Chat;
 use crate::database::group::Group;
@@ -17,8 +19,11 @@ fn get_groups() -> Vec<Group> {
 
 #[tauri::command]
 fn send_chat(group_id: i32, time: i64, message: String) -> Chat {
-  let chat: Chat = Chat::new(group_id, time, "TBImplemented", &message);
-  database::save_chat(chat)
+  // QUESTION: can String be replaced by &str in the parameters?
+  let name: &str = "to_be_implemented";
+  let chat: Chat = Chat::new(group_id, time, name, &message);
+  database::save_chat(&chat);
+  chat
 }
 
 #[tauri::command]
@@ -28,8 +33,10 @@ fn remove_group(group_id: i32) {
 
 #[tauri::command]
 fn create_group(name: String, bio: String, password: String) -> Group {
+  // QUESTION: can String be replaced by &str in the parameters?
   let group: Group = Group::new(8, &name, &bio);
-  database::save_group(group)
+  database::save_group(&group);
+  group
 }
 
 #[tauri::command]
@@ -44,12 +51,15 @@ fn get_chats(group_id: i32) -> Vec<Chat> {
 
 #[tauri::command]
 fn set_username(username: String) {
+  // QUESTION: can String be replaced by &str in the parameters?
   println!("This is where you set your username: {}", username);
 }
 
 #[tauri::command]
 fn get_username() -> String {
+  // QUESTION: can String be replaced by &str in the parameters?
   println!("This is where you send the username back");
+  String::from("Alice")
 }
 
 fn main() {

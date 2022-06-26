@@ -1,6 +1,6 @@
 use std::fs::{File, remove_file};
 use std::path::{Display, Path};
-use std::io::{prelude::*};
+use std::io::{Error, prelude::*};
 
 /// Creates new file and writes a string to it.
 ///
@@ -32,19 +32,18 @@ pub fn write_file(filename: &str, text: &str) {
 /// * `filename`: filename of file to read.
 ///
 /// returns: String
-pub fn read_file(filename: &str) -> String {
+pub fn read_file(filename: &str) -> Result<String, Error> {
     let path: &Path = Path::new(filename);
-    let display: Display = path.display();
 
     let mut file: File = match File::open(&path) {
         Ok(file) => file,
-        Err(why) => panic!("couldn't open {}: {}", display, why),
+        Err(why) => return Err(why),
     };
 
     let mut contents: String = String::new();
-    match file.read_to_string(&mut contents) {
-        Ok(_) => return contents,
-        Err(why) => panic!("couldn't read {}: {}", display, why),
+    return match file.read_to_string(&mut contents) {
+        Ok(_) => Ok(contents),
+        Err(why) => Err(why),
     }
 }
 
@@ -72,9 +71,15 @@ fn test_file() {
 
     write_file(&filename, &text);
 
-    let read: String = read_file(&filename);
+    let read: Result<String, Error> = read_file(&filename);
 
-    assert_eq!(text, read);
-
-    delete_file(&filename);
+    match read {
+        Ok(contents) => {
+            assert_eq!(text, contents);
+            delete_file(&filename);
+        },
+        Err(why) => {
+            panic!("couldn't read file: {} {}", filename, why);
+        },
+    }
 }

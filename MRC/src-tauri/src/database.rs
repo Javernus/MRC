@@ -1,3 +1,4 @@
+use std::io::Error;
 use crate::database::group::Group;
 use crate::database::chat::Chat;
 
@@ -32,13 +33,22 @@ fn chats_path(group_id: i32) -> String {
 /// * `g`: group to save.
 ///
 /// returns: ()
-pub fn save_group(g: Group) -> Group {
+pub fn save_group(g: &Group) {
     let groups_file: String = groups_path();
-    let mut current: Vec<Group> = group::deserialize(&file::read_file(&groups_file));
-    current.push(g.clone());
-    let text: String = group::serialize(&current);
+    let read_result:Result<String, Error> = file::read_file(&groups_file);
+    let groups: Vec<Group> = match read_result {
+        Ok(contents) => {
+            let mut current: Vec<Group> = group::deserialize(&contents);
+            current.push(g.clone());
+            current
+        },
+        Err(_) => {
+            vec![g.clone()]
+        }
+    };
+
+    let text: String = group::serialize(&groups);
     file::write_file(&groups_file, &text);
-    g
 }
 
 /// Appends chat to database in json format. Returns chat.
@@ -48,17 +58,22 @@ pub fn save_group(g: Group) -> Group {
 /// * `c`: chat to save.
 ///
 /// returns: Chat
-pub fn save_chat(c: Chat) -> Chat {
+pub fn save_chat(c: &Chat) {
     let chats_file: String = chats_path(c.group_id);
-    // TODO: if chat file does not exist, create it and add empty vector to it.
-    println!("{}", chats_file);
-    let mut current: Vec<Chat> = chat::deserialize(&file::read_file(&chats_file));
-    println!("{}", current.len());
-    current.push(c.clone());
-    println!("{}", current.len());
-    let text: String = chat::serialize(&current);
+    let read_result: Result<String, Error> = file::read_file(&chats_file);
+    let chats: Vec<Chat> = match read_result {
+        Ok(contents) => {
+            let mut current: Vec<Chat> = chat::deserialize(&contents);
+            current.push(c.clone());
+            current
+        },
+        Err(_) => {
+            vec![c.clone()]
+        }
+    };
+
+    let text: String = chat::serialize(&chats);
     file::write_file(&chats_file, &text);
-    c
 }
 
 /// Retrieves groups from database. Returns vector of groups.
@@ -66,8 +81,15 @@ pub fn save_chat(c: Chat) -> Chat {
 /// returns: Vec<Group>
 pub fn get_groups() -> Vec<Group> {
     let groups_file: String = groups_path();
-    let text: String = file::read_file(&groups_file);
-    group::deserialize(&text)
+    let text: Result<String, Error> = file::read_file(&groups_file);
+    match text {
+        Ok(contents) => {
+            group::deserialize(&contents)
+        },
+        Err(_) => {
+            vec![]
+        }
+    }
 }
 
 /// Retrieves chats from database. Returns vector of chats.
@@ -79,8 +101,15 @@ pub fn get_groups() -> Vec<Group> {
 /// returns: Vec<Chat>
 pub fn get_chats(group_id: i32) -> Vec<Chat> {
     let chats_file: String = chats_path(group_id);
-    let text: String = file::read_file(&chats_file);
-    chat::deserialize(&text)
+    let text: Result<String, Error> = file::read_file(&chats_file);
+    match text {
+        Ok(contents) => {
+            chat::deserialize(&contents)
+        },
+        Err(_) => {
+            vec![]
+        }
+    }
 }
 
 /// Retrieves last chat from database. Returns chat.
@@ -138,16 +167,21 @@ pub fn delete_groups() {
 }
 
 #[test]
-fn test_serialize() {
+fn test_database() {
     let groups: Vec<Group> = vec![
         Group::new(1, "Group", "bio"),
         Group::new(2, "People", "empty")
     ];
 
-    save_groups(&groups);
+    for g in groups.clone() {
+        save_group(&g);
+    }
+
     let read_groups: Vec<Group> = get_groups();
     for i in 0..2 {
-        assert_eq!(groups[i], read_groups[i]);
+        dbg!(&groups[i]);
+        dbg!(&read_groups[i]);
+        assert_eq!(&groups[i], &read_groups[i]);
     }
 
     let chats_1: Vec<Chat> = vec![
@@ -155,10 +189,15 @@ fn test_serialize() {
         Chat::new(1, 1200, "Bob", "Hi Alice!")
     ];
 
-    save_chats(&chats_1);
+    for c in chats_1.clone() {
+        save_chat(&c);
+    }
+
     let read_chats_1: Vec<Chat> = get_chats(1);
     for i in 0..2 {
-        assert_eq!(chats_1[i], read_chats_1[i]);
+        dbg!(&chats_1[i]);
+        dbg!(&read_chats_1[i]);
+        assert_eq!(&chats_1[i], &read_chats_1[i]);
     }
 
     let chats_2: Vec<Chat> = vec![
@@ -166,10 +205,15 @@ fn test_serialize() {
         Chat::new(2, 4200, "David", "Hi Charlie!")
     ];
 
-    save_chats(&chats_2);
+    for c in chats_2.clone() {
+        save_chat(&c);
+    }
+
     let read_chats_2: Vec<Chat> = get_chats(2);
     for i in 0..2 {
-        assert_eq!(chats_2[i], read_chats_2[i]);
+        dbg!(&chats_2[i]);
+        dbg!(&read_chats_2[i]);
+        assert_eq!(&chats_2[i], &read_chats_2[i]);
     }
 
     delete_groups();
