@@ -30,7 +30,7 @@ fn send_chat(group_id: i32, time: i64, message: String) -> Chat {
 
 #[tauri::command]
 fn remove_group(group_id: i32) {
-  println!("This is where you remove the group: {}", group_id);
+  database::delete_single_group(group_id);
 }
 
 #[tauri::command]

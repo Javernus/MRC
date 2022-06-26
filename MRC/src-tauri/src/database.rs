@@ -131,22 +131,37 @@ pub fn get_last_chat(group_id: i32) -> Chat {
     last_chat
 }
 
-/// Deletes chats file in database.
-///
-/// # Important
-///
-/// Group file isn't updated.
-/// Run save_groups() with remaining groups.
-/// Tip: when deleting multiple chats, it is efficient to run save_groups() at the end.
+/// Deletes chats file and group item in group file from database.
 ///
 /// # Arguments
 ///
 /// * `group_id`: id of group.
 ///
 /// returns: ()
-pub fn delete_chats(group_id: i32) {
+pub fn delete_single_group(group_id: i32) {
     let filename: String = chats_path(group_id);
     file::delete_file(&filename);
+
+    let groups_file: String = groups_path();
+    let read_result:Result<String, Error> = file::read_file(&groups_file);
+    let groups: Vec<Group> = match read_result {
+        Ok(contents) => {
+            let mut current: Vec<Group> = group::deserialize(&contents);
+            for i in 0..current.len() {
+                if current[i].id == group_id {
+                    current.remove(i);
+                }
+            }
+
+            current
+        },
+        Err(_) => {
+            vec![]
+        }
+    };
+
+    let text: String = group::serialize(&groups);
+    file::write_file(&groups_file, &text);
 }
 
 /// Deletes all chats and groups.
@@ -159,7 +174,8 @@ pub fn delete_chats(group_id: i32) {
 pub fn delete_groups() {
     let groups: Vec<Group> = get_groups();
     for group in groups {
-        delete_chats(group.id);
+        let filename: String = chats_path(group.id);
+        file::delete_file(&filename);
     }
 
     let groups_file: String = groups_path();
