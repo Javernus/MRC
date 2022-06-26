@@ -11,6 +11,7 @@ use tauri::{Menu, MenuItem, Submenu};
 
 pub(crate) mod file;
 mod database;
+mod config;
 mod cmd;
 
 #[tauri::command]
@@ -53,14 +54,13 @@ fn get_chats(group_id: i32) -> Vec<Chat> {
 #[tauri::command]
 fn set_username(username: String) {
   // QUESTION: can String be replaced by &str in the parameters?
-  println!("This is where you set your username: {}", username);
+  config::set_username(&username);
 }
 
 #[tauri::command]
 fn get_username() -> String {
   // QUESTION: can String be replaced by &str in the parameters?
-  println!("This is where you send the username back");
-  String::from("Alice")
+  config::get_username()
 }
 
 fn main() {
