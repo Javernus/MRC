@@ -6,6 +6,7 @@ pub mod group;
 pub mod chat;
 
 /// Returns string representation of path to groups file in database.
+/// Output: ../database/groups.json
 ///
 /// returns: String
 fn groups_path() -> String {
@@ -13,6 +14,7 @@ fn groups_path() -> String {
 }
 
 /// Returns string representation of path to chats file in database.
+/// Output example: ../database/chats-42.json
 ///
 /// # Arguments
 ///
