@@ -30,7 +30,7 @@ pub fn serialize(user: &User) -> String {
 ///
 /// * `text`: reference to string to deserialize.
 ///
-/// returns: Config
+/// returns: User
 pub fn deserialize(text: &str) -> User {
     serde_json::from_str(text).unwrap()
 }

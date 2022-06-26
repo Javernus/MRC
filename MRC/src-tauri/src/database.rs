@@ -26,13 +26,11 @@ fn chats_path(group_id: i32) -> String {
     format!("{}{}{}", "../database/chats-", group_id, ".json")
 }
 
-/// Appends group to database in json format.
+/// Appends group to groups.json in database.
 ///
 /// # Arguments
 ///
 /// * `g`: group to save.
-///
-/// returns: ()
 pub fn save_group(g: &Group) {
     let groups_file: String = groups_path();
     let read_result:Result<String, Error> = file::read_file(&groups_file);
@@ -51,13 +49,11 @@ pub fn save_group(g: &Group) {
     file::write_file(&groups_file, &text);
 }
 
-/// Appends chat to database in json format. Returns chat.
+/// Appends chat to chats-<<id>>.json in database.
 ///
 /// # Arguments
 ///
 /// * `c`: chat to save.
-///
-/// returns: Chat
 pub fn save_chat(c: &Chat) {
     let chats_file: String = chats_path(c.group_id);
     let read_result: Result<String, Error> = file::read_file(&chats_file);
@@ -76,7 +72,7 @@ pub fn save_chat(c: &Chat) {
     file::write_file(&chats_file, &text);
 }
 
-/// Retrieves groups from database. Returns vector of groups.
+/// Returns all groups from database in vector format.
 ///
 /// returns: Vec<Group>
 pub fn get_groups() -> Vec<Group> {
@@ -92,7 +88,7 @@ pub fn get_groups() -> Vec<Group> {
     }
 }
 
-/// Retrieves chats from database. Returns vector of chats.
+/// Returns all chats in group from database in vector format.
 ///
 /// # Arguments
 ///
@@ -112,7 +108,7 @@ pub fn get_chats(group_id: i32) -> Vec<Chat> {
     }
 }
 
-/// Retrieves last chat from database. Returns chat.
+/// Returns last chat in group from database.
 ///
 /// # Arguments
 ///
@@ -131,13 +127,11 @@ pub fn get_last_chat(group_id: i32) -> Chat {
     last_chat
 }
 
-/// Deletes chats file and group item in group file from database.
+/// Deletes chats file and group item in groups file from database.
 ///
 /// # Arguments
 ///
 /// * `group_id`: id of group.
-///
-/// returns: ()
 pub fn delete_single_group(group_id: i32) {
     let filename: String = chats_path(group_id);
     file::delete_file(&filename);
@@ -164,13 +158,7 @@ pub fn delete_single_group(group_id: i32) {
     file::write_file(&groups_file, &text);
 }
 
-/// Deletes all chats and groups.
-///
-/// # Important
-///
-/// Database is wiped completely.
-///
-/// returns: ()
+/// Deletes all chats and groups files from database.
 pub fn delete_groups() {
     let groups: Vec<Group> = get_groups();
     for group in groups {

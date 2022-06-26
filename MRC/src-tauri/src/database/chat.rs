@@ -13,7 +13,6 @@ impl Chat {
     ///
     /// # Arguments
     ///
-    /// * `id`: id of chat.
     /// * `group_id`: id of group.
     /// * `time`: time of chat.
     /// * `name`: name of sender.

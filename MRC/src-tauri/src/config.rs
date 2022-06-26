@@ -19,8 +19,6 @@ fn user_path() -> String {
 /// # Arguments
 ///
 /// * `username`: username to set in config.
-///
-/// returns: ()
 pub fn set_username(username: &str) {
     let user_file: String = user_path();
     let user: User = User::new(username);
@@ -29,7 +27,6 @@ pub fn set_username(username: &str) {
 }
 
 /// Retrieves username from config.
-///
 /// If no username is found, DEFAULT_USERNAME is set as username and gets returned as well.
 ///
 /// returns: String
@@ -48,8 +45,6 @@ pub fn get_username() -> String {
 }
 
 /// Deletes user config file.
-///
-/// returns: ()
 pub fn delete_user() {
     let filename: String = user_path();
     file::delete_file(&filename);

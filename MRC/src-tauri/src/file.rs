@@ -10,8 +10,6 @@ use std::{
 ///
 /// * `filename`: filename of new file.
 /// * `text`: string to write to file.
-///
-/// returns: ()
 pub fn write_file(filename: &str, text: &str) {
     let path: &Path = Path::new(filename);
     let display: Display = path.display();
@@ -27,13 +25,13 @@ pub fn write_file(filename: &str, text: &str) {
     }
 }
 
-/// Reads from file. Returns the content.
+/// Reads from file. Returns the content in result format.
 ///
 /// # Arguments
 ///
 /// * `filename`: filename of file to read.
 ///
-/// returns: String
+/// returns: Result<String, Error>
 pub fn read_file(filename: &str) -> Result<String, Error> {
     let path: &Path = Path::new(filename);
 
@@ -54,8 +52,6 @@ pub fn read_file(filename: &str) -> Result<String, Error> {
 /// # Arguments
 ///
 /// * `filename`: filename of file to delete.
-///
-/// returns: ()
 pub fn delete_file(filename: &str) {
     let path: &Path = Path::new(filename);
     let display: Display = path.display();
