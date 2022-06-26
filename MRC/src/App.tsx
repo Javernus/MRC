@@ -2,7 +2,7 @@ import { Component, createSignal, createResource, For } from 'solid-js'
 import './App.scss'
 import './colours.scss'
 import { Button, ChatItem, GroupItem, HamburgerX, Panel, InputField, Settings, Terminal } from './components'
-import type { Group, Chat } from './types/types'
+import type { Group } from './types/types'
 import DB from './database/main'
 import cl from 'clsx'
 
