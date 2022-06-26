@@ -43,7 +43,7 @@ const App: Component = () => {
   let [showCreateGroup, setShowCreateGroup] = createSignal(false)
   let [search, setSearch] = createSignal('')
   let [openGroup, setOpenGroup] = createSignal(null)
-  let [showGroupInfo, setShowGroupInfo] = createSignal(true)
+  let [showGroupInfo, setShowGroupInfo] = createSignal(false)
   let [allChats, setAllChats] = createSignal(chats)
   let [groupName, setGroupName] = createSignal('')
   let [groupBio, setGroupBio] = createSignal('')
