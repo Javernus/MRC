@@ -47,6 +47,14 @@ pub fn get_username() -> String {
     }
 }
 
+/// Deletes user config file.
+///
+/// returns: ()
+pub fn delete_user() {
+    let filename: String = user_path();
+    file::delete_file(&filename);
+}
+
 #[test]
 fn test_set_username() {
     let username = String::from("Alice");
@@ -57,7 +65,7 @@ fn test_set_username() {
     dbg!(&read_username);
     assert_eq!(&username, &read_username);
 
-    file::delete_file(&user_path());
+    delete_user();
 }
 
 #[test]
@@ -67,5 +75,5 @@ fn test_get_empty_username() {
     dbg!(&read_username);
     assert_eq!(&read_username, DEFAULT_USERNAME);
 
-    file::delete_file(&user_path());
+    delete_user();
 }

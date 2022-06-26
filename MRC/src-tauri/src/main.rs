@@ -22,8 +22,8 @@ fn get_groups() -> Vec<Group> {
 #[tauri::command]
 fn send_chat(group_id: i32, time: i64, message: String) -> Chat {
   // QUESTION: can String be replaced by &str in the parameters?
-  let name: &str = "to_be_implemented";
-  let chat: Chat = Chat::new(group_id, time, name, &message);
+  let name: String = config::get_username();
+  let chat: Chat = Chat::new(group_id, time, &name, &message);
   database::save_chat(&chat);
   chat
 }
