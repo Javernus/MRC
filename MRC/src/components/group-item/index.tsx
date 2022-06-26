@@ -1,7 +1,11 @@
 import './GroupItem.scss'
 import cl from 'clsx'
+import { createResource, createSignal, lazy, Show, Suspense } from 'solid-js'
 
 export default function GroupItem(props) {
+  let [groupId, setGroupId] = createSignal(props.groupId)
+  let [lastChat] = createResource(groupId, props.lastChat)
+
   return (
     <div
       tabIndex={0}
@@ -13,7 +17,7 @@ export default function GroupItem(props) {
       </div>
       <div class='group-item__text'>
         <div class='group-item__name'>{props.name}</div>
-        <div class='group-item__last-chat'>{props.lastChat}</div>
+        <div class='group-item__last-chat'>{lastChat()}</div>
       </div>
     </div>
   )

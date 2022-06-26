@@ -4,19 +4,22 @@
 )]
 
 use tauri::{Menu, MenuItem, Submenu};
+use crate::database::chat::Chat;
+use crate::database::group::Group;
 
 mod cmd;
 mod database;
 
 #[tauri::command]
-fn get_groups() -> String {
-  println!("get_groups");
-  "[{ \"name\": \"MRC Alliance\", \"bio\": \"The official MRC chat for the MRC Alliance. Notify us of bugs, ask questions or give feedback here.\", \"id\": 1 },{ \"name\": \"Just shut up\", \"bio\": \"For the love of fuck.\", \"id\": 2 }]".into()
+fn get_groups() -> Vec<Group> {
+  database::get_groups().into()
 }
 
 #[tauri::command]
-fn send_chat(message: String, group_id: i32) {
-  println!("This is where you get the message: {} in group {}", message, group_id);
+fn send_chat(group_id: i32, time: i64, message: String) -> Chat {
+  let chat = Chat::new(group_id, time, "TBImplemented", &message);
+
+  database::save_chat(chat)
 }
 
 #[tauri::command]
@@ -26,7 +29,19 @@ fn remove_group(group_id: i32) {
 
 #[tauri::command]
 fn create_group(name: String, bio: String, password: String) {
+  let group = Group::new(8, &name, &bio);
+  database::save_group(group);
   println!("This is where you add the group: {} with bio {} and password {}", name, bio, password);
+}
+
+#[tauri::command]
+fn get_newest_chat(group_id: i32) -> Chat {
+  database::get_last_chat(group_id).into()
+}
+
+#[tauri::command]
+fn get_chats(group_id: i32) -> Vec<Chat> {
+  database::get_chats(group_id).into()
 }
 
 fn main() {
@@ -38,7 +53,7 @@ fn main() {
 
   tauri::Builder::default()
     .menu(menu)
-    .invoke_handler(tauri::generate_handler![send_chat, get_groups, remove_group, create_group])
+    .invoke_handler(tauri::generate_handler![send_chat, get_chats, get_groups, get_newest_chat, remove_group, create_group])
     .run(tauri::generate_context!())
     .expect("error while running tauri application");
 }

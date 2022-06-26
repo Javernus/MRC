@@ -22,6 +22,7 @@
     .panel {
       height: fit-content;
       border-radius: 0 0 0 1rem;
+      border-bottom: solid 1px $white-weak;
     }
 
     &.panel-container--right {

@@ -1,9 +1,12 @@
-import { For } from 'solid-js'
+import { For, createSignal, createResource, createEffect } from 'solid-js'
 import './Terminal.scss'
 import ChatItem from '../chat-item'
 import cl from 'clsx'
 
 export default function Terminal(props) {
+  let [groupId, setGroupId] = createSignal(props.groupId)
+  let [chats] = createResource(groupId, props.chats)
+
   const keyPress = (event) => {
     if (event.keyCode === 13) {
       props.send(event.target.value)
@@ -11,14 +14,18 @@ export default function Terminal(props) {
     }
   }
 
+  createEffect(() => {
+    if (props.groupId) {
+      setGroupId(props.groupId)
+    }
+  })
+
   return (
     <div class='terminal'>
       <div class='terminal__chat'>
-        <For each={props.chats}>{(chat) =>
+        <For each={chats()}>{(chat) =>
           <ChatItem
-            time={chat.time}
-            name={chat.name}
-            message={chat.message}
+            chat={chat}
           ></ChatItem>
         }</For>
       </div>

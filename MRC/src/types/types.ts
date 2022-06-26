@@ -5,7 +5,6 @@ export interface Group {
 }
 
 export interface Chat {
-  id: number;
   groupId: number;
   time: number;
   name: string;

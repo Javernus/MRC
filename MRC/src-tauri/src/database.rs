@@ -34,9 +34,11 @@ fn chats_path(group_id: i32) -> String {
 /// * `groups`: reference to vector of groups to save.
 ///
 /// returns: ()
-pub fn save_groups(groups: &Vec<Group>) {
+pub fn save_group(g: Group) {
     let groups_file: String = groups_path();
-    let text: String = group::serialize(groups);
+    let mut current: Vec<Group> = group::deserialize(&file::read_file(&groups_file));
+    current.push(g);
+    let text: String = group::serialize(&current);
     file::write_file(&groups_file, &text);
 }
 
@@ -52,10 +54,17 @@ pub fn save_groups(groups: &Vec<Group>) {
 /// * `chats`: reference to vector of chats to save.
 ///
 /// returns: ()
-pub fn save_chats(chats: &Vec<Chat>) {
-    let chats_file: String = chats_path(chats[0].group_id);
-    let text: String = chat::serialize(chats);
+pub fn save_chat(c: Chat) -> Chat {
+    let chats_file: String = chats_path(c.group_id);
+    // TODO: if chat file does not exist, create it and add empty vector to it.
+    println!("{}", chats_file);
+    let mut current: Vec<Chat> = chat::deserialize(&file::read_file(&chats_file));
+    println!("{}", current.len());
+    current.push(c.clone());
+    println!("{}", current.len());
+    let text: String = chat::serialize(&current);
     file::write_file(&chats_file, &text);
+    c
 }
 
 /// Retrieves groups from database. Returns vector of groups.
@@ -78,6 +87,20 @@ pub fn get_chats(group_id: i32) -> Vec<Chat> {
     let chats_file: String = chats_path(group_id);
     let text: String = file::read_file(&chats_file);
     chat::deserialize(&text)
+}
+
+pub fn get_last_chat(group_id: i32) -> Chat {
+    let chats_file: String = chats_path(group_id);
+    let text: String = file::read_file(&chats_file);
+    let chats: Vec<Chat> = chat::deserialize(&text);
+    // Find the chat with the highest time.
+    let mut last_chat: Chat = Chat::new(0, 0, "", "");
+    for c in chats {
+        if c.time > last_chat.time {
+            last_chat = c;
+        }
+    }
+    last_chat
 }
 
 /// Deletes chats file in database.

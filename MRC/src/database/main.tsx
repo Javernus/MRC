@@ -1,19 +1,16 @@
 import type { Group, Chat } from "../types/types"
 import { invoke } from "@tauri-apps/api/tauri"
 
-let db = null
-
-
-const getGroups = async (): Promise<string> => {
-  return invoke("get_groups")
+const getGroups = async (): Promise<Group[]> => {
+  return await invoke("get_groups")
 }
 
-const getChatById = async (id: number): Promise<Chat> => {
-  return await db.select("SELECT * FROM chats WHERE id = ?", [id])[0]
+const getChats = async (groupId: number): Promise<Chat[]> => {
+  return await invoke("get_chats", { groupId: groupId })
 }
 
-const getChats = async (): Promise<Chat[]> => {
-  return await db.select("SELECT * FROM chats")
+const getLastChat = async (groupId: number): Promise<Chat> => {
+  return await invoke("get_newest_chat", { groupId: groupId })
 }
 
 const createGroup = async (name: string, bio: string, password: string): Promise<Group> => {
@@ -26,12 +23,12 @@ const removeGroup = async (groupId: number): Promise<void> => {
 }
 
 const sendChat = async (message: string, groupId: number): Promise<Chat> => {
-  invoke("send_chat", { message: message, groupId: groupId })
+  let time = new Date().getTime()
+  let chat = invoke("send_chat", { message: message, time: time, groupId: groupId })
 
   return {
-    id: 0,
     groupId: groupId,
-    time: (new Date()).getTime(),
+    time: time,
     name: "Jake",
     message: message,
   }
@@ -40,6 +37,7 @@ const sendChat = async (message: string, groupId: number): Promise<Chat> => {
 export default {
   getGroups,
   getChats,
+  getLastChat,
   createGroup,
   removeGroup,
   sendChat,

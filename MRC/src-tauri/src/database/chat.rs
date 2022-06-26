@@ -1,10 +1,9 @@
 use serde::{Serialize, Deserialize};
 
-#[derive(Serialize, Deserialize, Debug, PartialEq)]
+#[derive(Serialize, Deserialize, Clone, Debug, PartialEq)]
 pub struct Chat {
-    pub(crate) id: i32,
     pub(crate) group_id: i32,
-    pub(crate) time: i32,
+    pub(crate) time: i64,
     pub(crate) name: String,
     pub(crate) message: String,
 }
@@ -21,9 +20,8 @@ impl Chat {
     /// * `message`: message of chat.
     ///
     /// returns: Chat
-    pub fn new(id: i32, group_id: i32, time: i32, name: &str, message: &str) -> Chat {
+    pub fn new(group_id: i32, time: i64, name: &str, message: &str) -> Chat {
         Chat {
-            id,
             group_id,
             time,
             name: String::from(name),
