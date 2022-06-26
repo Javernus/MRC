@@ -14,24 +14,16 @@ const getLastChat = async (groupId: number): Promise<Chat> => {
 }
 
 const createGroup = async (name: string, bio: string, password: string): Promise<Group> => {
-  invoke("create_group", { name: name, bio: bio, password: password })
-  return { name: name, bio: bio, id: 20 }
+  return invoke("create_group", { name: name, bio: bio, password: password })
 }
 
 const removeGroup = async (groupId: number): Promise<void> => {
   invoke("remove_group", { groupId: groupId })
 }
 
-const sendChat = async (message: string, groupId: number): Promise<Chat> => {
+const sendChat = async (message: string, groupId: number) => {
   let time = new Date().getTime()
-  let chat = invoke("send_chat", { message: message, time: time, groupId: groupId })
-
-  return {
-    groupId: groupId,
-    time: time,
-    name: "Jake",
-    message: message,
-  }
+  invoke("send_chat", { message: message, time: time, groupId: groupId })
 }
 
 export default {

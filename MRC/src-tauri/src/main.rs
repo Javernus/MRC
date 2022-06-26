@@ -28,10 +28,9 @@ fn remove_group(group_id: i32) {
 }
 
 #[tauri::command]
-fn create_group(name: String, bio: String, password: String) {
+fn create_group(name: String, bio: String, password: String) -> Group {
   let group = Group::new(8, &name, &bio);
-  database::save_group(group);
-  println!("This is where you add the group: {} with bio {} and password {}", name, bio, password);
+  database::save_group(group)
 }
 
 #[tauri::command]

@@ -34,12 +34,13 @@ fn chats_path(group_id: i32) -> String {
 /// * `groups`: reference to vector of groups to save.
 ///
 /// returns: ()
-pub fn save_group(g: Group) {
+pub fn save_group(g: Group) -> Group {
     let groups_file: String = groups_path();
     let mut current: Vec<Group> = group::deserialize(&file::read_file(&groups_file));
-    current.push(g);
+    current.push(g.clone());
     let text: String = group::serialize(&current);
     file::write_file(&groups_file, &text);
+    g
 }
 
 /// Saves chats to database in json format.
