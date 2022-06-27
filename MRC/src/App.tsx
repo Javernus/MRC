@@ -103,7 +103,7 @@ const App: Component = () => {
 
   DB.receiver()
 
-  const message = listen('custom_event', (event) => {
+  const message = listen('refetch_chat', () => {
     chatRefetch.refetch()
     lastChatsRefetch.refetch()
   })
