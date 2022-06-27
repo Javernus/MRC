@@ -6,7 +6,7 @@ from pubsub import pub
 # By default will try to find a meshtastic device, otherwise provide a devPath like devPath='/dev/ttyUSB0'
 interface = meshtastic.serial_interface.SerialInterface(devPath='/dev/ttyUSB0')
 
-socket_path = "ipc.sock"
+socket_path = "/tmp/ipc.sock"
 
 # remove socket if it already exists
 if os.path.exists(socket_path):
