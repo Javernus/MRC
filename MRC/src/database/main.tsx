@@ -29,6 +29,10 @@ const removeGroup = async (groupId: number): Promise<void> => {
   invoke("remove_group", { groupId: groupId })
 }
 
+const receiver = async () => {
+  invoke("receiver")
+}
+
 const sendChat = async (message: string, groupId: number) => {
   let time = new Date().getTime()
   invoke("send_chat", { message: message, time: time, groupId: groupId })
@@ -42,5 +46,6 @@ export default {
   getLastChat,
   createGroup,
   removeGroup,
+  receiver,
   sendChat,
 }

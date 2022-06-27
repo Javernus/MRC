@@ -5,6 +5,7 @@ import { Button, ChatItem, GroupItem, HamburgerX, Panel, InputField, Settings, T
 import type { Group } from './types/types'
 import DB from './database/main'
 import cl from 'clsx'
+import { listen } from '@tauri-apps/api/event'
 
 let activeGroups = [1]
 
@@ -99,6 +100,13 @@ const App: Component = () => {
   const scrollDown = () => {
     setTimeout(() => chatElement.scrollTop = chatElement.scrollHeight, 25)
   }
+
+  DB.receiver()
+
+  const message = listen('custom_event', (event) => {
+    chatRefetch.refetch()
+    lastChatsRefetch.refetch()
+  })
 
   return (
     <>

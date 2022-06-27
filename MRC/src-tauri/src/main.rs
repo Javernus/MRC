@@ -7,7 +7,7 @@ extern crate core;
 
 use crate::database::chat::Chat;
 use crate::database::group::Group;
-use tauri::{Menu, MenuItem, Submenu};
+use tauri::{Menu, MenuItem, Submenu, Window};
 use std::thread;
 use std::time::Duration;
 
@@ -114,6 +114,13 @@ fn get_username() -> String {
   config::get_username()
 }
 
+#[tauri::command]
+fn receiver(window: Window) {
+  thread::spawn(|| {
+    receiver::start_receiver(window);
+  });
+}
+
 fn main() {
   let submenu: Submenu = Submenu::new("MRC", Menu::new().add_native_item(MenuItem::Quit));
   let submenu2: Submenu = Submenu::new("Settings", Menu::new().add_native_item(MenuItem::Quit));
@@ -121,13 +128,9 @@ fn main() {
     .add_submenu(submenu)
     .add_submenu(submenu2);
 
-  thread::spawn(|| {
-    receiver::start_receiver();
-  });
-
   tauri::Builder::default()
     .menu(menu)
-    .invoke_handler(tauri::generate_handler![set_username, get_username, send_chat, get_chats, get_groups, get_newest_chat, remove_group, create_group])
+    .invoke_handler(tauri::generate_handler![set_username, get_username, send_chat, get_chats, get_groups, get_newest_chat, remove_group, create_group, receiver])
     .run(tauri::generate_context!())
     .expect("error while running tauri application");
 }
