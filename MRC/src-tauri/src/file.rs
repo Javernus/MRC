@@ -25,6 +25,8 @@ fn get_directory(filename: &str) -> String {
 ///
 /// * `filename`: filename of new file.
 /// * `text`: string to write to file.
+///
+/// returns: Result<()>
 pub fn write_file(filename: &str, text: &str) -> Result<()> {
     let file_path: &Path = Path::new(filename);
     let dir_name: String = get_directory(filename);
@@ -55,7 +57,7 @@ pub fn write_file(filename: &str, text: &str) -> Result<()> {
 ///
 /// * `filename`: filename of file to read.
 ///
-/// returns: Result<String, Err>
+/// returns: Result<String>
 pub fn read_file(filename: &str) -> Result<String> {
     let file_path: &Path = Path::new(filename);
 
@@ -83,6 +85,8 @@ pub fn read_file(filename: &str) -> Result<String> {
 /// # Arguments
 ///
 /// * `filename`: filename of file to delete.
+///
+/// returns: Result<()>
 pub fn delete_file(filename: &str) -> Result<()> {
     let file_path: &Path = Path::new(filename);
 

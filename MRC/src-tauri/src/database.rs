@@ -72,6 +72,7 @@ pub fn save_chat(c: &Chat) {
 }
 
 /// Returns all groups from database in vector format.
+/// If groups are not found, an empty vector is returned.
 ///
 /// returns: Vec<Group>
 pub fn get_groups() -> Vec<Group> {
@@ -92,6 +93,7 @@ pub fn get_groups() -> Vec<Group> {
 }
 
 /// Returns all chats in group from database in vector format.
+/// If chats are not found, an empty vector is returned.
 ///
 /// # Arguments
 ///
@@ -124,7 +126,6 @@ pub fn get_chats(group_id: i32) -> Vec<Chat> {
 /// returns: Chat
 pub fn get_last_chat(group_id: i32) -> Chat {
     let chats: Vec<Chat> = get_chats(group_id);
-    // Find the chat with the highest time.
     let mut last_chat: Chat = Chat::new(0, 0, "", "");
     for c in chats {
         if c.time > last_chat.time {
@@ -142,7 +143,6 @@ pub fn get_last_chat(group_id: i32) -> Chat {
 pub fn delete_single_group(group_id: i32) {
     let filename: String = chats_path(group_id);
     file::delete_file(&filename).expect("failed to delete chats file");
-
     let groups_file: String = groups_path();
     let read_result = file::read_file(&groups_file);
     let groups: Vec<Group> = match read_result {
