@@ -1,10 +1,7 @@
 use crate::file;
 use crate::config::user::User;
-use std::io::Error;
 
 pub(crate) mod user;
-
-const DEFAULT_USERNAME: &str = "Unnamed";
 
 /// Returns string representation of path to configs file.
 /// Output: ../config/user.json
@@ -23,7 +20,7 @@ pub fn set_username(username: &str) {
     let user_file: String = user_path();
     let user: User = User::new(username);
     let text: String = user::serialize(&user);
-    file::write_file(&user_file, &text);
+    file::write_file(&user_file, &text).expect("failed to set username");
 }
 
 /// Retrieves username from config.
@@ -32,27 +29,31 @@ pub fn set_username(username: &str) {
 /// returns: String
 pub fn get_username() -> String {
     let user_file: String = user_path();
-    let text: Result<String, Error> = file::read_file(&user_file);
-    match text {
+    match file::read_file(&user_file) {
         Ok(contents) => {
-            user::deserialize(&contents).username
+            if contents.is_empty() {
+                set_username(user::DEFAULT_USERNAME);
+                user::DEFAULT_USERNAME.to_string()
+            } else {
+                user::deserialize(&contents).username
+            }
         },
         Err(_) => {
-            set_username(DEFAULT_USERNAME);
-            DEFAULT_USERNAME.to_string()
-        }
+            set_username(user::DEFAULT_USERNAME);
+            user::DEFAULT_USERNAME.to_string()
+        },
     }
 }
 
 /// Deletes user config file.
 pub fn delete_user() {
-    let filename: String = user_path();
-    file::delete_file(&filename);
+    let user_file: String = user_path();
+    file::delete_file(&user_file).expect("failed to delete user file");
 }
 
 #[test]
 fn test_set_username() {
-    let username = String::from("Testname");
+    let username = String::from("Test-name");
     set_username(&username);
     let read_username = get_username();
 
@@ -68,7 +69,7 @@ fn test_get_empty_username() {
     let read_username = get_username();
 
     dbg!(&read_username);
-    assert_eq!(&read_username, DEFAULT_USERNAME);
+    assert_eq!(&read_username, user::DEFAULT_USERNAME);
 
     delete_user();
 }

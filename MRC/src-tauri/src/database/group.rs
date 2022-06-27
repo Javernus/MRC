@@ -45,7 +45,12 @@ pub fn serialize(groups: &Vec<Group>) -> String {
 ///
 /// returns: Vec<Group>
 pub fn deserialize(text: &str) -> Vec<Group> {
-    serde_json::from_str(text).unwrap()
+    dbg!(text);
+    if text.is_empty() {
+        vec![]
+    } else {
+        serde_json::from_str(text).unwrap()
+    }
 }
 
 #[test]

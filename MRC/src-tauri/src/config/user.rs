@@ -13,6 +13,8 @@ impl User {
     }
 }
 
+pub const DEFAULT_USERNAME: &str = "Unnamed";
+
 /// Serializes user. Returns string in json format.
 ///
 /// # Arguments
@@ -32,7 +34,12 @@ pub fn serialize(user: &User) -> String {
 ///
 /// returns: User
 pub fn deserialize(text: &str) -> User {
-    serde_json::from_str(text).unwrap()
+    dbg!(text);
+    if text.is_empty() {
+        User::new(DEFAULT_USERNAME)
+    } else {
+        serde_json::from_str(text).unwrap()
+    }
 }
 
 #[test]

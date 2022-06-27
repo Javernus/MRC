@@ -48,7 +48,12 @@ pub fn serialize(chats: &Vec<Chat>) -> String {
 ///
 /// returns: Vec<Chat>
 pub fn deserialize(text: &str) -> Vec<Chat> {
-    serde_json::from_str(text).unwrap()
+    dbg!(text);
+    if text.is_empty() {
+        vec![]
+    } else {
+        serde_json::from_str(text).unwrap()
+    }
 }
 
 #[test]
