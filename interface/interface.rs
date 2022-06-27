@@ -1,7 +1,11 @@
 use std::os::unix::net::UnixStream;
 use std::io::prelude::*;
 
+use std::{thread, time};
+
+
 fn main() -> std::io::Result<()> {
+    // connect to socket
     let mut stream = match UnixStream::connect("ipc.sock") {
         Ok(stream) => stream,
         Err(e) => {
@@ -10,11 +14,16 @@ fn main() -> std::io::Result<()> {
         }
     };
 
-    stream.write_all(b"null")?;
+    loop {
+        let mut message_buffer = [0; 256];
+        stream.read(&mut message_buffer).expect("todo");
+        let mut message = String::from_utf8(Vec::from(message_buffer)).expect("todo");
 
-    let mut response = String::new();
-    stream.read_to_string(&mut response)?;
-    println!("{response}");
+        if !message.is_empty() {
+            println!("{message}")
+        }
+
+    }
 
     Ok(())
 }
