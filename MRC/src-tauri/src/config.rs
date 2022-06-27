@@ -11,7 +11,7 @@ const DEFAULT_USERNAME: &str = "Unnamed";
 ///
 /// returns: String
 fn user_path() -> String {
-    String::from("../config/user.json")
+    String::from("../database/config.json")
 }
 
 /// Sets username and saves it in config.
@@ -52,7 +52,7 @@ pub fn delete_user() {
 
 #[test]
 fn test_set_username() {
-    let username = String::from("Alice");
+    let username = String::from("Testname");
     set_username(&username);
     let read_username = get_username();
 
