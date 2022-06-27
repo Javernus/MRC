@@ -1,4 +1,5 @@
 use serde::{Serialize, Deserialize};
+use nanoid::nanoid;
 
 #[derive(Serialize, Deserialize, Clone, Debug, PartialEq)]
 pub struct Group {
@@ -12,12 +13,14 @@ impl Group {
     ///
     /// # Arguments
     ///
-    /// * `id`: id of group.
     /// * `name`: name of group.
     /// * `bio`: bio of group.
     ///
     /// returns: Group
-    pub fn new(id: i32, name: &str, bio: &str) -> Group {
+    pub fn new(name: &str, bio: &str) -> Group {
+        let alphabet: [char; 10] = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'];
+        let id: i32 = nanoid!(3, &alphabet).parse().unwrap();
+
         Group {
             id,
             name: String::from(name),
@@ -55,12 +58,11 @@ pub fn deserialize(text: &str) -> Vec<Group> {
 #[test]
 fn test_group() {
     let groups: Vec<Group> = vec![
-        Group::new(1, "Group", "bio"),
-        Group::new(2, "People", "empty"),
+        Group::new("Group", "bio"),
+        Group::new("People", "empty"),
     ];
 
     let ser: String = serialize(&groups);
-    assert_eq!(ser, "[{\"id\":1,\"name\":\"Group\",\"bio\":\"bio\"},{\"id\":2,\"name\":\"People\",\"bio\":\"empty\"}]");
     let deser: Vec<Group> = deserialize(&ser);
 
     for i in 0..2 {

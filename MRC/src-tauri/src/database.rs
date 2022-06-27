@@ -181,8 +181,8 @@ pub fn delete_groups() {
 #[test]
 fn test_database() {
     let groups: Vec<Group> = vec![
-        Group::new(1, "Group", "bio"),
-        Group::new(2, "People", "empty")
+        Group::new("Group", "bio"),
+        Group::new("People", "empty")
     ];
 
     for g in &groups {
@@ -190,35 +190,39 @@ fn test_database() {
     }
 
     let read_groups: Vec<Group> = get_groups();
-    for i in 0..2 {
-        assert_eq!(&groups[i], &read_groups[i]);
+    for i in 0..read_groups.len() {
+        if read_groups[i].id == groups[0].id {
+            assert_eq!(&groups[0], &read_groups[i]);
+        } else if read_groups[i].id == groups[1].id {
+            assert_eq!(&groups[1], &read_groups[i]);
+        }
     }
 
     let chats_1: Vec<Chat> = vec![
-        Chat::new(1, 1000, "Alice", "Hi Bob!"),
-        Chat::new(1, 1200, "Bob", "Hi Alice!")
+        Chat::new(groups[0].id, 1000, "Alice", "Hi Bob!"),
+        Chat::new(groups[0].id, 1200, "Bob", "Hi Alice!")
     ];
 
     for c in &chats_1 {
         save_chat(c);
     }
 
-    let read_chats_1: Vec<Chat> = get_chats(1);
-    for i in 0..2 {
+    let read_chats_1: Vec<Chat> = get_chats(groups[0].id);
+    for i in 0..read_chats_1.len() {
         assert_eq!(&chats_1[i], &read_chats_1[i]);
     }
 
     let chats_2: Vec<Chat> = vec![
-        Chat::new(2, 4000, "Charlie", "Hi David!"),
-        Chat::new(2, 4200, "David", "Hi Charlie!")
+        Chat::new(groups[1].id, 4000, "Charlie", "Hi David!"),
+        Chat::new(groups[1].id, 4200, "David", "Hi Charlie!")
     ];
 
     for c in &chats_2 {
         save_chat(c);
     }
 
-    let read_chats_2: Vec<Chat> = get_chats(2);
-    for i in 0..2 {
+    let read_chats_2: Vec<Chat> = get_chats(groups[1].id);
+    for i in 0..read_chats_2.len() {
         assert_eq!(&chats_2[i], &read_chats_2[i]);
     }
 
