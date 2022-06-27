@@ -45,7 +45,6 @@ pub fn serialize(groups: &Vec<Group>) -> String {
 ///
 /// returns: Vec<Group>
 pub fn deserialize(text: &str) -> Vec<Group> {
-    dbg!(text);
     if text.is_empty() {
         vec![]
     } else {

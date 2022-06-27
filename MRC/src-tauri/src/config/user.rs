@@ -34,7 +34,6 @@ pub fn serialize(user: &User) -> String {
 ///
 /// returns: User
 pub fn deserialize(text: &str) -> User {
-    dbg!(text);
     if text.is_empty() {
         User::new(DEFAULT_USERNAME)
     } else {

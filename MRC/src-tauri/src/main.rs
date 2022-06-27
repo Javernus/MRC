@@ -8,6 +8,8 @@ extern crate core;
 use crate::database::chat::Chat;
 use crate::database::group::Group;
 use tauri::{Menu, MenuItem, Submenu};
+use std::thread;
+use std::time::Duration;
 
 pub(crate) mod file;
 mod database;
@@ -117,6 +119,13 @@ fn main() {
   let menu: Menu = Menu::new()
     .add_submenu(submenu)
     .add_submenu(submenu2);
+
+  thread::spawn(|| {
+    loop {
+      thread::sleep(Duration::from_secs(1));
+      println!("Test");
+    }
+  });
 
   tauri::Builder::default()
     .menu(menu)

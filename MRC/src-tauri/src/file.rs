@@ -28,7 +28,6 @@ fn get_directory(filename: &str) -> String {
 pub fn write_file(filename: &str, text: &str) -> Result<()> {
     let file_path: &Path = Path::new(filename);
     let dir_name: String = get_directory(filename);
-    dbg!(filename, &dir_name);
     let dir_path: &Path = Path::new(&dir_name);
 
     if !dir_path.is_dir() {

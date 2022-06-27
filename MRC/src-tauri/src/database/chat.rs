@@ -48,7 +48,6 @@ pub fn serialize(chats: &Vec<Chat>) -> String {
 ///
 /// returns: Vec<Chat>
 pub fn deserialize(text: &str) -> Vec<Chat> {
-    dbg!(text);
     if text.is_empty() {
         vec![]
     } else {
