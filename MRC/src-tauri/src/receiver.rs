@@ -3,9 +3,18 @@ use std::io::prelude::*;
 
 use std::{thread, time};
 
+use tauri::Manager;
+
+// the payload type must implement `Serialize` and `Clone`.
+#[derive(Clone, serde::Serialize)]
+struct Payload {
+    message: String,
+}
+
+
 pub fn start_receiver() -> () {
     // connect to socket
-    let mut stream = match UnixStream::connect("ipc.sock") {
+    let mut stream = match UnixStream::connect("/tmp/ipc.sock") {
         Ok(stream) => stream,
         Err(e) => {
             println!("Couldn't connect: {:?}", e);
