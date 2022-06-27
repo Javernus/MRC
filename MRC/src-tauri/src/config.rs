@@ -58,10 +58,7 @@ fn test_set_username() {
     let read_username: String = get_username();
     assert_eq!(&username, &read_username);
     delete_user();
-}
 
-#[test]
-fn test_get_empty_username() {
     let read_username: String = get_username();
     assert_eq!(&read_username, user::DEFAULT_USERNAME);
     delete_user();

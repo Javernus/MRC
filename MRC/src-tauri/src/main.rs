@@ -65,7 +65,7 @@ fn remove_group(group_id: i32) {
 #[tauri::command]
 fn create_group(name: String, bio: String, password: String) -> Group {
   // QUESTION: can String be replaced by &str in the parameters?
-  let group: Group = Group::new(8, &name, &bio);
+  let group: Group = Group::new(&name, &bio);
   database::save_group(&group);
   group
 }
