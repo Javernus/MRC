@@ -34,7 +34,6 @@ pub fn serialize(user: &User) -> String {
 ///
 /// returns: User
 pub fn deserialize(text: &str) -> User {
-    dbg!(text);
     if text.is_empty() {
         User::new(DEFAULT_USERNAME)
     } else {
@@ -46,10 +45,7 @@ pub fn deserialize(text: &str) -> User {
 fn test_config() {
     let user: User = User::new("Alice");
     let ser: String = serialize(&user);
-
     assert_eq!(ser, "{\"username\":\"Alice\"}");
-
     let deser: User = deserialize(&ser);
-
     assert_eq!(user, deser);
 }

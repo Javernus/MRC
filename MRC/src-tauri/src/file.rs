@@ -30,7 +30,6 @@ fn get_directory(filename: &str) -> String {
 pub fn write_file(filename: &str, text: &str) -> Result<()> {
     let file_path: &Path = Path::new(filename);
     let dir_name: String = get_directory(filename);
-    dbg!(filename, &dir_name);
     let dir_path: &Path = Path::new(&dir_name);
 
     if !dir_path.is_dir() {
@@ -112,7 +111,6 @@ fn test_file() {
             assert_eq!(text, contents);
             delete_file(filename).expect(&*format!("couldn't delete file: {}", filename));
             let dir_name: &str = &*get_directory(filename);
-            dbg!(filename, dir_name);
             let dir_path: &Path = Path::new(dir_name);
             remove_dir(dir_path).expect(&*format!("couldn't remove directory: {}", dir_name))
         },

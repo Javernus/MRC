@@ -56,19 +56,13 @@ fn test_set_username() {
     let username: &str = "Test-name";
     set_username(username);
     let read_username: String = get_username();
-
-    dbg!(username, &read_username);
     assert_eq!(&username, &read_username);
-
     delete_user();
 }
 
 #[test]
 fn test_get_empty_username() {
     let read_username: String = get_username();
-
-    dbg!(&read_username);
     assert_eq!(&read_username, user::DEFAULT_USERNAME);
-
     delete_user();
 }

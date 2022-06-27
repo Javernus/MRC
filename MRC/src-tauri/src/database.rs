@@ -132,6 +132,7 @@ pub fn get_last_chat(group_id: i32) -> Chat {
             last_chat = c;
         }
     }
+
     last_chat
 }
 
@@ -190,8 +191,6 @@ fn test_database() {
 
     let read_groups: Vec<Group> = get_groups();
     for i in 0..2 {
-        dbg!(&groups[i]);
-        dbg!(&read_groups[i]);
         assert_eq!(&groups[i], &read_groups[i]);
     }
 
@@ -206,8 +205,6 @@ fn test_database() {
 
     let read_chats_1: Vec<Chat> = get_chats(1);
     for i in 0..2 {
-        dbg!(&chats_1[i]);
-        dbg!(&read_chats_1[i]);
         assert_eq!(&chats_1[i], &read_chats_1[i]);
     }
 
@@ -222,8 +219,6 @@ fn test_database() {
 
     let read_chats_2: Vec<Chat> = get_chats(2);
     for i in 0..2 {
-        dbg!(&chats_2[i]);
-        dbg!(&read_chats_2[i]);
         assert_eq!(&chats_2[i], &read_chats_2[i]);
     }
 
