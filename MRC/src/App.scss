@@ -33,6 +33,7 @@ body {
   border-radius: 50%;
 }
 
+.change-username,
 .create-group,
 .groups,
 .plus-menu {
@@ -48,6 +49,7 @@ body {
   align-items: start;
 }
 
+.change-username,
 .create-group,
 .plus-menu {
   z-index: 1;
@@ -61,6 +63,7 @@ body {
   }
 }
 
+.change-username,
 .create-group {
   z-index: 2;
   align-items: center;

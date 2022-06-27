@@ -148,7 +148,7 @@ pub fn delete_single_group(group_id: i32) {
     let groups: Vec<Group> = match read_result {
         Ok(contents) => {
             let mut current: Vec<Group> = group::deserialize(&contents);
-            for i in 0..current.len() {
+            for i in 0..(current.len() - 1) {
                 if current[i].id == group_id {
                     current.remove(i);
                 }

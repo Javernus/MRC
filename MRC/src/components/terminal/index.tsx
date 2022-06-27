@@ -3,7 +3,7 @@ import cl from 'clsx'
 
 export default function Terminal(props) {
   const keyPress = (event) => {
-    if (event.keyCode === 13) {
+    if (event.keyCode === 13 && event.target.value.length > 0) {
       props.send(event.target.value)
       event.target.value = ''
     }
@@ -11,7 +11,7 @@ export default function Terminal(props) {
 
   return (
     <div class='terminal'>
-      <div class='terminal__chat'>
+      <div class='terminal__chat' ref={props.ref}>
         {props.children}
       </div>
       <div class='terminal__inputs'>

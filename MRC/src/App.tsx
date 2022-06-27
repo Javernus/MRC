@@ -9,14 +9,19 @@ import cl from 'clsx'
 let activeGroups = [1]
 
 // Return the chat message with the latest timestamp.
-const lastChat = async (groupId: number) => {
-  const chat = (await DB.getLastChat(groupId))
-  if (chat["group_id"] === 0) return null
-  return "<" + chat["name"] + "> " + chat["message"]
+const getLastChats = async (groups: Group[]) => {
+  return await Promise.all(groups.map(async (group) => {
+    const chat = await DB.getLastChat(group.id)
+    if (chat["group_id"] === 0) return { groupId: group.id, message: "" }
+    return {
+      groupId: group.id,
+      message: "<" + chat["name"] + "> " + chat["message"],
+    }
+  }))
 }
 
 const chatsFromGroup = async (group: Group) => {
-  return await DB.getChats(group.id)
+  return await (await DB.getChats(group.id)).reverse()
 }
 
 const requestGroups = async (setGroups) => {
@@ -24,19 +29,34 @@ const requestGroups = async (setGroups) => {
   setGroups(groups)
 }
 
+const requestUsername = async (setUsername) => {
+  const username = await DB.getUsername()
+  setUsername(username)
+}
+
 const App: Component = () => {
   let [plusMenu, setPlusMenu] = createSignal(false)
   let [groups, setGroups] = createSignal([])
+  let [username, setUsername] = createSignal('')
+  let [showChangeUsername, setShowChangeUsername] = createSignal(false)
   let [showCreateGroup, setShowCreateGroup] = createSignal(false)
   let [search, setSearch] = createSignal('')
   let [openGroup, setOpenGroup] = createSignal(null)
   let [showGroupInfo, setShowGroupInfo] = createSignal(false)
   let [chats, chatRefetch] = createResource(openGroup, chatsFromGroup)
+  let [lastChats, lastChatsRefetch] = createResource(groups, getLastChats)
   let [groupName, setGroupName] = createSignal('')
   let [groupBio, setGroupBio] = createSignal('')
   let [groupPassword, setGroupPassword] = createSignal('')
 
   requestGroups(setGroups)
+  requestUsername(setUsername)
+
+  const updateUsername = async () => {
+    await DB.setUsername(username())
+    setShowChangeUsername(false)
+    setPlusMenu(false)
+  }
 
   const searchGroups = (event) => {
     setSearch(event.target.value)
@@ -65,6 +85,19 @@ const App: Component = () => {
   const sendChat = async (message: string, groupId: number) => {
     await DB.sendChat(message, groupId)
     chatRefetch.refetch()
+    lastChatsRefetch.refetch()
+    scrollDown()
+  }
+
+  const getLastMessage = (groupId: number) => {
+    let lastChat = lastChats().find(chat => chat.groupId === groupId)
+    return lastChat ? lastChat.message : ''
+  }
+
+  let chatElement
+
+  const scrollDown = () => {
+    setTimeout(() => chatElement.scrollTop = chatElement.scrollHeight, 25)
   }
 
   return (
@@ -73,6 +106,7 @@ const App: Component = () => {
         <div class='top-bar'>
           <HamburgerX
             size='2rem'
+            isX={plusMenu()}
             onclick={() => {
                 if (showCreateGroup()) {
                   setPlusMenu(false)
@@ -85,6 +119,11 @@ const App: Component = () => {
           />
           <InputField placeholder="Search" oninput={searchGroups} />
         </div>
+        <div class={cl('change-username', { 'change-username--visible': showChangeUsername() })}>
+          <p class='change-username__header'>Change Username</p>
+          <InputField placeholder="Username" value={username()} oninput={(event) => setUsername(event.target.value)} />
+          <Button onclick={updateUsername} type="submit">Change</Button>
+        </div>
         <div class={cl('create-group', { 'create-group--visible': showCreateGroup() })}>
           <p class='create-group__header'>Create Group</p>
           <InputField placeholder="Group Name" oninput={(event) => setGroupName(event.target.value)} value={groupName()} />
@@ -96,27 +135,37 @@ const App: Component = () => {
           <GroupItem
             name='Create Group'
             onclick={() => setShowCreateGroup(true)}
-          />
+          >
+            <svg width="2.5rem" height="2.5rem" viewBox="0 0 100 100" style="transform: rotate(45deg)">
+              <path fill="none" stroke="white" class="plus" d="M 20,29.000046 H 80.000231 C 80.000231,29.000046 94.498839,28.817352 94.532987,66.711331 94.543142,77.980673 90.966081,81.670246 85.259173,81.668997 79.552261,81.667751 75.000211,74.999942 75.000211,74.999942 L 25.000021,25.000058" stroke-dasharray="54 207" stroke-dashoffset="-144" stroke-width="5" />
+              <path fill="none" stroke="white" class="plus" d="M 20,70.999954 H 80.000231 C 80.000231,70.999954 94.498839,71.182648 94.532987,33.288669 94.543142,22.019327 90.966081,18.329754 85.259173,18.331003 79.552261,18.332249 75.000211,25.000058 75.000211,25.000058 L 25.000021,74.999942" stroke-dasharray="54 207" stroke-dashoffset="-144" stroke-width="5" />
+            </svg>
+          </GroupItem>
           <GroupItem
             name='Join Group'
             onclick={() => {}}
+          />
+          <GroupItem
+            name='Change Username'
+            onclick={() => setShowChangeUsername(true)}
           />
         </div>
         <div class='groups'>
           <For each={groups().filter(group => group.name.toLowerCase().includes(search().toLowerCase()))}>{(group: Group) =>
             <GroupItem
               name={group.name}
-              lastChat={lastChat}
+              lastChat={getLastMessage(group.id)}
               status={activeGroups.includes(group.id) ? 'green' : 'yellow'}
               active={group === openGroup()}
               groupId={group.id}
-              onclick={() => setOpenGroup(group)}
+              onclick={() => { setOpenGroup(group); scrollDown() }}
             />
           }</For>
         </div>
       </Panel>
 
       <Terminal
+        ref={chatElement}
         disabled={!openGroup()}
         send={(message) => {sendChat(message, openGroup().id)}}
       >
@@ -143,7 +192,7 @@ const App: Component = () => {
             </div>
           }
           <div class='delete-group' onclick={deleteGroup}>
-            <p>Delete Group</p>
+            <p>Delete Group Data</p>
           </div>
         </Panel>
       }
