@@ -11,7 +11,7 @@ const DEFAULT_USERNAME: &str = "Unnamed";
 ///
 /// returns: String
 fn user_path() -> String {
-    String::from("../config/user.json")
+    String::from("../database/config/user.json")
 }
 
 /// Sets username and saves it in config.

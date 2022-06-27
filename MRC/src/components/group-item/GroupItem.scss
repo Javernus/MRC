@@ -1,6 +1,7 @@
 @import '../../colours.scss';
 
 .group-item {
+  user-select: none;
   display: flex;
   align-items: center;
   justify-content: start;
@@ -63,12 +64,14 @@
   }
 
   &__name {
+    user-select: none;
     font-size: 1rem;
     font-weight: bold;
     padding-bottom: 0.125rem;
   }
 
   &__last-chat {
+    user-select: none;
     font-size: 0.85rem;
     color: $white-strong;
     font-family: $chat-font-family;

@@ -9,16 +9,27 @@
   height: 100vh;
   font-family: $chat-font-family;
   box-sizing: border-box;
+  overflow: hidden;
 
   &__chat {
     display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: end;
-    flex-grow: 1;
+    flex-direction: column-reverse;
     font-family: $chat-font-family;
     box-sizing: border-box;
     width: 100%;
+    height: calc(100% - 2.5rem);
+    overflow-x: hidden;
+    overflow-y: scroll;
+    overflow-anchor: none;
+    // scroll-behavior: smooth;
+
+    .chat-item:first-child {
+      margin-bottom: 0.125rem;
+    }
+
+    .chat-item:last-child {
+      margin-top: auto;
+    }
   }
 
   &__inputs {
@@ -27,7 +38,6 @@
     align-items: center;
     justify-content: center;
     width: 100%;
-    margin-top: 0.25rem;
     font-family: $chat-font-family;
     box-sizing: border-box;
     border-top: solid 1px $white-moderate;
@@ -49,6 +59,7 @@
   &__input {
     width: 100%;
     height: 2rem;
+    min-height: 2rem;
     border: none;
     padding: 0.25rem;
     font-size: 1.2rem;

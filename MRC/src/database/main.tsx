@@ -5,6 +5,14 @@ const getGroups = async (): Promise<Group[]> => {
   return await invoke("get_groups")
 }
 
+const getUsername = async (): Promise<String> => {
+  return await invoke("get_username")
+}
+
+const setUsername = async (username: string) => {
+  return await invoke("set_username", { username: username })
+}
+
 const getChats = async (groupId: number): Promise<Chat[]> => {
   return await invoke("get_chats", { groupId: groupId })
 }
@@ -27,6 +35,8 @@ const sendChat = async (message: string, groupId: number) => {
 }
 
 export default {
+  getUsername,
+  setUsername,
   getGroups,
   getChats,
   getLastChat,

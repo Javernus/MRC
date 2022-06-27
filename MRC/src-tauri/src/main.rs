@@ -34,7 +34,7 @@ fn remove_group(group_id: i32) {
 }
 
 #[tauri::command]
-fn create_group(name: String, bio: String, _password: String) -> Group {
+fn create_group(name: String, bio: String, password: String) -> Group {
   // QUESTION: can String be replaced by &str in the parameters?
   let group: Group = Group::new(8, &name, &bio);
   database::save_group(&group);
@@ -72,7 +72,7 @@ fn main() {
 
   tauri::Builder::default()
     .menu(menu)
-    .invoke_handler(tauri::generate_handler![send_chat, get_chats, get_groups, get_newest_chat, remove_group, create_group])
+    .invoke_handler(tauri::generate_handler![set_username, get_username, send_chat, get_chats, get_groups, get_newest_chat, remove_group, create_group])
     .run(tauri::generate_context!())
     .expect("error while running tauri application");
 }
