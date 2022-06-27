@@ -60,9 +60,7 @@ fn test_group() {
     ];
 
     let ser: String = serialize(&groups);
-
     assert_eq!(ser, "[{\"id\":1,\"name\":\"Group\",\"bio\":\"bio\"},{\"id\":2,\"name\":\"People\",\"bio\":\"empty\"}]");
-
     let deser: Vec<Group> = deserialize(&ser);
 
     for i in 0..2 {

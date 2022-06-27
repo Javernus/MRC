@@ -63,9 +63,7 @@ fn test_chat() {
     ];
 
     let ser: String = serialize(&chats);
-
     assert_eq!(ser, "[{\"group_id\":1,\"time\":1000,\"name\":\"Alice\",\"message\":\"Hi Bob!\"},{\"group_id\":1,\"time\":1200,\"name\":\"Bob\",\"message\":\"Hi Alice!\"}]");
-
     let deser: Vec<Chat> = deserialize(&ser);
 
     for i in 0..2 {

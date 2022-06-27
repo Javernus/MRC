@@ -45,10 +45,7 @@ pub fn deserialize(text: &str) -> User {
 fn test_config() {
     let user: User = User::new("Alice");
     let ser: String = serialize(&user);
-
     assert_eq!(ser, "{\"username\":\"Alice\"}");
-
     let deser: User = deserialize(&ser);
-
     assert_eq!(user, deser);
 }
