@@ -33,6 +33,10 @@
     border-radius: 50%;
     margin-right: 0.5rem;
     position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    align-content: center;
   }
 
   &__indicator {
@@ -40,8 +44,8 @@
     height: 0.75rem;
     border-radius: 50%;
     position: relative;
-    left: calc(100% - 0.8rem);
-    top: calc(100% - 0.8rem);
+    left: 0.8rem;
+    top: 0.8rem;
     margin: 0;
 
     &--red {

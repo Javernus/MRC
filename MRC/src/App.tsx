@@ -136,7 +136,7 @@ const App: Component = () => {
             name='Create Group'
             onclick={() => setShowCreateGroup(true)}
           >
-            <svg width="2.5rem" height="2.5rem" viewBox="0 0 100 100" style="transform: rotate(45deg)">
+            <svg width="1000rem" height="2.25rem" viewBox="0 0 100 100" style="transform: rotate(45deg)">
               <path fill="none" stroke="white" class="plus" d="M 20,29.000046 H 80.000231 C 80.000231,29.000046 94.498839,28.817352 94.532987,66.711331 94.543142,77.980673 90.966081,81.670246 85.259173,81.668997 79.552261,81.667751 75.000211,74.999942 75.000211,74.999942 L 25.000021,25.000058" stroke-dasharray="54 207" stroke-dashoffset="-144" stroke-width="5" />
               <path fill="none" stroke="white" class="plus" d="M 20,70.999954 H 80.000231 C 80.000231,70.999954 94.498839,71.182648 94.532987,33.288669 94.543142,22.019327 90.966081,18.329754 85.259173,18.331003 79.552261,18.332249 75.000211,25.000058 75.000211,25.000058 L 25.000021,74.999942" stroke-dasharray="54 207" stroke-dashoffset="-144" stroke-width="5" />
             </svg>
@@ -144,7 +144,12 @@ const App: Component = () => {
           <GroupItem
             name='Join Group'
             onclick={() => {}}
-          />
+          >
+            <svg version="1.1" viewBox="-1 -1 54 54" width="1000rem" height="1.25rem">
+            <path fill="white" stroke-width="2" stroke="white" d="M51.704,51.273L36.845,35.82c3.79-3.801,6.138-9.041,6.138-14.82c0-11.58-9.42-21-21-21s-21,9.42-21,21s9.42,21,21,21 c5.083,0,9.748-1.817,13.384-4.832l14.895,15.491c0.196,0.205,0.458,0.307,0.721,0.307c0.25,0,0.499-0.093,0.693-0.279 C52.074,52.304,52.086,51.671,51.704,51.273z M21.983,40c-10.477,0-19-8.523-19-19s8.523-19,19-19s19,8.523,19,19
+              S32.459,40,21.983,40z"/>
+            </svg>
+          </GroupItem>
           <GroupItem
             name='Change Username'
             onclick={() => setShowChangeUsername(true)}
