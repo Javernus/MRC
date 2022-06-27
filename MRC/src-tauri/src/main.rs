@@ -15,6 +15,7 @@ pub(crate) mod file;
 mod database;
 mod config;
 mod cmd;
+mod receiver;
 
 /// Returns groups in vector format.
 ///
@@ -121,10 +122,7 @@ fn main() {
     .add_submenu(submenu2);
 
   thread::spawn(|| {
-    loop {
-      thread::sleep(Duration::from_secs(1));
-      println!("Test");
-    }
+    start_receiver();
   });
 
   tauri::Builder::default()
