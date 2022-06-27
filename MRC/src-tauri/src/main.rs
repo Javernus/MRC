@@ -122,7 +122,7 @@ fn main() {
     .add_submenu(submenu2);
 
   thread::spawn(|| {
-    start_receiver();
+    receiver::start_receiver();
   });
 
   tauri::Builder::default()

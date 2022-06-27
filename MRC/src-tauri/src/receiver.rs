@@ -3,14 +3,13 @@ use std::io::prelude::*;
 
 use std::{thread, time};
 
-
-fn start_receiver() -> () {
+pub fn start_receiver() -> () {
     // connect to socket
     let mut stream = match UnixStream::connect("ipc.sock") {
         Ok(stream) => stream,
         Err(e) => {
             println!("Couldn't connect: {:?}", e);
-            return Ok(());
+            return;
         }
     };
 
