@@ -2,6 +2,7 @@ import socket
 import os
 import meshtastic.serial_interface
 from pubsub import pub
+import time
 
 # By default will try to find a meshtastic device, otherwise provide a devPath like devPath='/dev/ttyUSB0'
 interface = meshtastic.serial_interface.SerialInterface(devPath='/dev/ttyUSB0')
@@ -71,18 +72,20 @@ def send_message(message: str):
 while True:
     # wait for a connection
     connection, address = s.accept()
+    print("client connected..")
 
-    message = str(connection.recv(256))
-    if message == str(b'null'):
-        print("client sent null message")
-    else:
-        if message:
-            print(f"client sent {message}")
-            send_message(message)
+    while True:
+        print("starting loop")
+        # check for new messages from socket
+        # message = str(connection.recv(256))
+        # if message != str(b''):
+        #     send_message(message)
 
-    send_reply(connection)
+        time.sleep(1)
 
-    connection.close()
+        send_reply(connection)
 
-interface.close()
+    # connection should never close
+    # connection.close()
+
 

@@ -6,7 +6,7 @@ use std::{thread, time};
 
 fn main() -> std::io::Result<()> {
     // connect to socket
-    let mut stream = match UnixStream::connect("ipc.sock") {
+    let mut stream = match UnixStream::connect("/tmp/ipc.sock") {
         Ok(stream) => stream,
         Err(e) => {
             println!("Couldn't connect: {:?}", e);
