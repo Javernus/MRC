@@ -2,10 +2,10 @@ use serde::{Serialize, Deserialize};
 
 #[derive(Serialize, Deserialize, Clone, Debug, PartialEq)]
 pub struct Chat {
-    pub(crate) group_id: i32,
-    pub(crate) time: i64,
-    pub(crate) name: String,
-    pub(crate) message: String,
+    pub group_id: i32,
+    pub time: i64,
+    pub name: String,
+    pub message: String,
 }
 
 impl Chat {
@@ -53,7 +53,17 @@ pub fn deserialize(text: &str) -> Vec<Chat> {
     } else {
         // FIX: Getting this error:
         // thread 'main' panicked at 'called `Result::unwrap()` on an `Err` value: Error("EOF while parsing a value", line: 1, column: 64)', src/database/chat.rs:54:36
-        serde_json::from_str(text).unwrap()
+        let output = serde_json::from_str(text);
+        match output {
+            Ok(c) => c,
+            Err(why) => {
+                dbg!(text);
+                println!("couldn't deserialize {}, because {}", text, why);
+                print!("output: {:?}", output);
+                println!("returning empty vector...");
+                vec![]
+            }
+        }
     }
 }
 
