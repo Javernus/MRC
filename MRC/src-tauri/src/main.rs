@@ -7,7 +7,7 @@ extern crate core;
 
 use crate::database::chat::Chat;
 use crate::database::group::Group;
-use tauri::{Menu, MenuItem, Submenu, Window, AboutMetadata};
+use tauri::{Menu, MenuItem, Submenu, Window};
 use std::thread;
 
 pub(crate) mod file;
@@ -42,17 +42,17 @@ fn send_chat(group_id: i32, time: i64, message: String) -> Chat {
   let chat: Chat = Chat::new(group_id, time, &name, &message);
   let group: Group = find_group(group_id);
   // TODO get groupdata.password
-  let encodeddata:String = encoding::encode(&name, &group.decrypt_password(), &message);
-  let serializeddata:String = encoding::group_encode(group.name, encodeddata);
+  let encodeddata: String = encoding::encode(&name, &group.decrypt_password(), &message);
+  let serializeddata: String = encoding::group_encode(group.name, encodeddata);
 
-  encoding::encode(&name, &groupdata.encrypted_password, &message);
+  encoding::encode(&name, &group.encrypted_password, &message);
   database::save_chat(&chat);
   chat
 }
 
 fn find_group(group_id: i32) -> Group {
   let mut groups: Vec<Group> = database::get_groups();
-  
+
   if groups.is_empty() {
     return Group::new(Some(0), "", "");
   }

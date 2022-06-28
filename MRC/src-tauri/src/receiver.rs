@@ -1,5 +1,7 @@
 extern crate core;
 use std::os::unix::net::UnixStream;
+use std::io::prelude::*;
+
 
 use tauri::Window;
 
@@ -23,7 +25,7 @@ static OUTGOING_QUEUE: Global<Queue<String>> = Global::new();
 
 fn read_from_socket(stream: &UnixStream) -> () {
     let mut buffer = [0;255];
-    *stream.read(&mut buffer).expect("read from socket");
+    stream.read(&mut buffer).expect("read from socket");
 
     let mut incoming_message = String::from_utf8(Vec::from(buffer)).expect("converting");
 
@@ -34,7 +36,7 @@ fn read_from_socket(stream: &UnixStream) -> () {
 }
 
 // convert to send_message function
-fn write_to_socket(stream: UnixStream, message: String) -> (){
+fn write_to_socket(stream: &UnixStream, message: String) -> (){
     let mut buffer = message.as_bytes();
     stream.write_all(&mut buffer).expect("writing to socket");
 
@@ -46,7 +48,7 @@ pub fn start_client(window: Window) -> () {
     *OUTGOING_QUEUE.lock_mut().unwrap() = queue![];
 
     //connect to socket
-    let mut stream = match UnixStream::connect("/tmp/ipc.sock") {
+    let stream = match UnixStream::connect("/tmp/ipc.sock") {
         Ok(stream) => Ok(stream),
         Err(e) => {
             println!("Couldn't connect: {:?}", e);
@@ -56,7 +58,7 @@ pub fn start_client(window: Window) -> () {
 
     loop {
         // check for incoming messages in socket
-        read_from_socket(&stream.unwrap());
+        read_from_socket(&stream.as_ref().unwrap());
 
         // signal tauri if we have messages
         if (*INCOMING_QUEUE.lock_mut().unwrap()).size() > 0 {
@@ -73,7 +75,7 @@ pub fn start_client(window: Window) -> () {
         // check for outgoing messages in queue
         if (*OUTGOING_QUEUE.lock_mut().unwrap()).size() > 0 {
             let mut outgoing = (*OUTGOING_QUEUE.lock_mut().unwrap()).remove().unwrap();
-            write_to_socket(stream.unwrap(), outgoing);
+            write_to_socket(&stream.as_ref().unwrap(), outgoing);
         }
 
     }
