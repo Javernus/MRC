@@ -73,7 +73,7 @@ fn create_group(name: String, password: String) -> Group {
 
 #[tauri::command]
 fn join_group(group: String, password: String) -> Group {
-  Group::init(0, &group, "")
+  Group::init(0, &group, &password)
 }
 
 /// Returns the newest chat in group.
