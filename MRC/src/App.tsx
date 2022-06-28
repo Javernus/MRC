@@ -44,7 +44,6 @@ const App: Component = () => {
   let [chats, chatRefetch] = createResource(openGroup, chatsFromGroup)
   let [lastChats, lastChatsRefetch] = createResource(groups, getLastChats)
   let [groupName, setGroupName] = createSignal('')
-  let [groupBio, setGroupBio] = createSignal('')
   let [groupPassword, setGroupPassword] = createSignal('')
 
   const requestUsername = async () => {
@@ -71,11 +70,10 @@ const App: Component = () => {
   }
 
   const createGroup = async () => {
-    const group = await DB.createGroup(groupName(), groupBio(), groupPassword())
+    const group = await DB.createGroup(groupName(), groupPassword())
     setGroups([...groups(), group])
 
     setGroupName('')
-    setGroupBio('')
     setGroupPassword('')
 
     setShowCreateGroup(false)
@@ -99,7 +97,6 @@ const App: Component = () => {
     setGroups([...groups(), group])
 
     setGroupName('')
-    setGroupBio('')
     setGroupPassword('')
 
     setShowJoinGroup(false)
@@ -158,7 +155,6 @@ const App: Component = () => {
                   setShowJoinGroup(false)
                   setJoinGroupError(false)
                   setGroupName('')
-                  setGroupBio('')
                   setGroupPassword('')
                   setJoinGroupError(false)
                 } else {
@@ -183,7 +179,6 @@ const App: Component = () => {
         <div class={cl('create-group', { 'create-group--visible': showCreateGroup() })}>
           <p class='create-group__header'>Create Group</p>
           <InputField placeholder="Group Name" oninput={(event) => setGroupName(event.target.value)} value={groupName()} />
-          <InputField placeholder="Bio" oninput={(event) => setGroupBio(event.target.value)} value={groupBio()} />
           <InputField placeholder="Password" type="password" oninput={(event) => setGroupPassword(event.target.value)} value={groupPassword()} />
           <Button onclick={createGroup} type="submit">Create</Button>
         </div>
@@ -262,12 +257,6 @@ const App: Component = () => {
             </div>
             <div class='group-name'><p>{openGroup().name}</p></div>
           </div>
-          {
-            openGroup().bio &&
-            <div class='bio'>
-              <p>{openGroup().bio}</p>
-            </div>
-          }
           <div class='delete-group' onclick={deleteGroup}>
             <p>Delete Group Data</p>
           </div>

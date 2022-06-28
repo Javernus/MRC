@@ -38,7 +38,7 @@ fn send_chat(group_id: i32, time: i64, message: String) -> Chat {
   // QUESTION: can String be replaced by &str in the parameters?
   let name: String = config::get_username();
   let chat: Chat = Chat::new(group_id, time, &name, &message);
-  
+
   database::save_chat(&chat);
   chat
 }
@@ -63,10 +63,10 @@ fn remove_group(group_id: i32) {
 ///
 /// returns: Group
 #[tauri::command]
-fn create_group(name: String, bio: String, password: String) -> Group {
+fn create_group(name: String, password: String) -> Group {
   // QUESTION: can String be replaced by &str in the parameters?
   // TODO: Group no bio but password
-  let group: Group = Group::new(&name, &bio);
+  let group: Group = Group::new(&name, &password);
   database::save_group(&group);
   group
 }

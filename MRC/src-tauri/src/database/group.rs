@@ -5,7 +5,7 @@ use nanoid::nanoid;
 pub struct Group {
     pub(crate) id: i32,
     pub(crate) name: String,
-    pub(crate) bio: String,
+    pub(crate) password: String,
 }
 
 impl Group {
@@ -14,25 +14,25 @@ impl Group {
     /// # Arguments
     ///
     /// * `name`: name of group.
-    /// * `bio`: bio of group.
+    /// * `password`: password of group.
     ///
     /// returns: Group
-    pub fn new(name: &str, bio: &str) -> Group {
+    pub fn new(name: &str, password: &str) -> Group {
         let alphabet: [char; 10] = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'];
         let id: i32 = nanoid!(9, &alphabet).parse().unwrap();
 
         Group {
             id,
             name: String::from(name),
-            bio: String::from(bio),
+            password: String::from(password),
         }
     }
 
-    pub fn init(id: i32, name: &str, bio: &str) -> Group {
+    pub fn init(id: i32, name: &str, password: &str) -> Group {
         Group {
             id,
             name: String::from(name),
-            bio: String::from(bio),
+            password: String::from(password),
         }
     }
 }
@@ -66,7 +66,7 @@ pub fn deserialize(text: &str) -> Vec<Group> {
 #[test]
 fn test_group() {
     let groups: Vec<Group> = vec![
-        Group::new("Group", "bio"),
+        Group::new("Group", "password"),
         Group::new("People", "empty"),
     ];
 

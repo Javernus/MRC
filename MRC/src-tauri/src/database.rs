@@ -181,7 +181,7 @@ pub fn delete_groups() {
 #[test]
 fn test_database() {
     let groups: Vec<Group> = vec![
-        Group::new("Group", "bio"),
+        Group::new("Group", "password"),
         Group::new("People", "empty")
     ];
 
