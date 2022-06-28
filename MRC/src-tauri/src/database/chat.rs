@@ -37,7 +37,10 @@ impl Chat {
 ///
 /// returns: String
 pub fn serialize(chats: &Vec<Chat>) -> String {
-    serde_json::to_string(chats).unwrap()
+    match serde_json::to_string(chats) {
+        Ok(s) => s,
+        Err(_) => "".to_string(),
+    }
 }
 
 /// Deserializes string to vector of chats. Returns vector of chats.
@@ -51,17 +54,9 @@ pub fn deserialize(text: &str) -> Vec<Chat> {
     if text.is_empty() {
         vec![]
     } else {
-        // FIX: Getting this error:
-        // thread 'main' panicked at 'called `Result::unwrap()` on an `Err` value: Error("EOF while parsing a value", line: 1, column: 64)', src/database/chat.rs:54:36
-        let output = serde_json::from_str(text);
-        match output {
+        match serde_json::from_str(text) {
             Ok(c) => c,
-            Err(why) => {
-                dbg!(text);
-                println!("couldn't deserialize {}, because {}", text, why);
-                println!("returning empty vector...");
-                vec![]
-            }
+            Err(_) => vec![],
         }
     }
 }

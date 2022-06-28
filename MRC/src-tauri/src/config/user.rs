@@ -23,7 +23,10 @@ impl User {
 ///
 /// returns: String
 pub fn serialize(user: &User) -> String {
-    serde_json::to_string(user).unwrap()
+    match serde_json::to_string(user) {
+        Ok(s) => s,
+        Err(_) => "".to_string(),
+    }
 }
 
 /// Deserializes string to user. Returns user.
@@ -38,7 +41,7 @@ pub fn deserialize(text: &str) -> User {
         User::new(DEFAULT_USERNAME)
     } else {
         match serde_json::from_str(text) {
-            Ok(user) => user,
+            Ok(u) => u,
             Err(_) => User::new(DEFAULT_USERNAME),
         }
     }

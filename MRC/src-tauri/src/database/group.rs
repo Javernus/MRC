@@ -56,7 +56,10 @@ impl Group {
 ///
 /// returns: String
 pub fn serialize(groups: &Vec<Group>) -> String {
-    serde_json::to_string(groups).unwrap()
+    match serde_json::to_string(groups) {
+        Ok(s) => s,
+        Err(_) => "".to_string(),
+    }
 }
 
 /// Deserializes string to vector of groups. Returns vector of groups.
@@ -70,7 +73,10 @@ pub fn deserialize(text: &str) -> Vec<Group> {
     if text.is_empty() {
         vec![]
     } else {
-        serde_json::from_str(text).unwrap()
+        match serde_json::from_str(text) {
+            Ok(g) => g,
+            Err(_) => vec![],
+        }
     }
 }
 
