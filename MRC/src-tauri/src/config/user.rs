@@ -1,19 +1,19 @@
 use serde::{Serialize, Deserialize};
 
+pub const DEFAULT_USERNAME: &str = "";
+
 #[derive(Serialize, Deserialize, Clone, Debug, PartialEq)]
 pub struct User {
-    pub(crate) username: String,
+    pub username: String,
 }
 
 impl User {
-    pub(crate) fn new(username: &str) -> User {
+    pub fn new(username: &str) -> User {
         User {
-            username: String::from(username),
+            username: username.to_string(),
         }
     }
 }
-
-pub const DEFAULT_USERNAME: &str = "";
 
 /// Serializes user. Returns string in json format.
 ///
