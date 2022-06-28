@@ -151,7 +151,8 @@ fn get_username() -> String {
 #[tauri::command]
 fn receiver(window: Window) {
   thread::spawn(|| {
-    receiver::start_receiver(window);
+    //todo rename to interface
+    receiver::start_client(window);
   });
 }
 
