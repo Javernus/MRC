@@ -44,7 +44,6 @@ const App: Component = () => {
   let [chats, chatRefetch] = createResource(openGroup, chatsFromGroup)
   let [lastChats, lastChatsRefetch] = createResource(groups, getLastChats)
   let [groupName, setGroupName] = createSignal('')
-  let [groupBio, setGroupBio] = createSignal('')
   let [groupPassword, setGroupPassword] = createSignal('')
 
   const requestUsername = async () => {
@@ -71,11 +70,10 @@ const App: Component = () => {
   }
 
   const createGroup = async () => {
-    const group = await DB.createGroup(groupName(), groupBio(), groupPassword())
+    const group = await DB.createGroup(groupName(), groupPassword())
     setGroups([...groups(), group])
 
     setGroupName('')
-    setGroupBio('')
     setGroupPassword('')
 
     setShowCreateGroup(false)
@@ -99,7 +97,6 @@ const App: Component = () => {
     setGroups([...groups(), group])
 
     setGroupName('')
-    setGroupBio('')
     setGroupPassword('')
 
     setShowJoinGroup(false)
@@ -158,7 +155,6 @@ const App: Component = () => {
                   setShowJoinGroup(false)
                   setJoinGroupError(false)
                   setGroupName('')
-                  setGroupBio('')
                   setGroupPassword('')
                   setJoinGroupError(false)
                 } else {
@@ -183,7 +179,6 @@ const App: Component = () => {
         <div class={cl('create-group', { 'create-group--visible': showCreateGroup() })}>
           <p class='create-group__header'>Create Group</p>
           <InputField placeholder="Group Name" oninput={(event) => setGroupName(event.target.value)} value={groupName()} />
-          <InputField placeholder="Bio" oninput={(event) => setGroupBio(event.target.value)} value={groupBio()} />
           <InputField placeholder="Password" type="password" oninput={(event) => setGroupPassword(event.target.value)} value={groupPassword()} />
           <Button onclick={createGroup} type="submit">Create</Button>
         </div>
@@ -191,6 +186,7 @@ const App: Component = () => {
           <GroupItem
             name='Create Group'
             onclick={() => setShowCreateGroup(true)}
+            button={true}
           >
             <svg width="1000rem" height="2.25rem" viewBox="0 0 100 100" style="transform: rotate(45deg)">
               <path fill="none" stroke="white" class="plus" d="M 20,29.000046 H 80.000231 C 80.000231,29.000046 94.498839,28.817352 94.532987,66.711331 94.543142,77.980673 90.966081,81.670246 85.259173,81.668997 79.552261,81.667751 75.000211,74.999942 75.000211,74.999942 L 25.000021,25.000058" stroke-dasharray="54 207" stroke-dashoffset="-144" stroke-width="5" />
@@ -200,6 +196,7 @@ const App: Component = () => {
           <GroupItem
             name='Join Group'
             onclick={() => setShowJoinGroup(true)}
+            button={true}
           >
             <svg version="1.1" viewBox="-1 -1 54 54" width="1000rem" height="1.25rem">
             <path fill="white" stroke-width="2" stroke="white" d="M51.704,51.273L36.845,35.82c3.79-3.801,6.138-9.041,6.138-14.82c0-11.58-9.42-21-21-21s-21,9.42-21,21s9.42,21,21,21 c5.083,0,9.748-1.817,13.384-4.832l14.895,15.491c0.196,0.205,0.458,0.307,0.721,0.307c0.25,0,0.499-0.093,0.693-0.279 C52.074,52.304,52.086,51.671,51.704,51.273z M21.983,40c-10.477,0-19-8.523-19-19s8.523-19,19-19s19,8.523,19,19
@@ -209,6 +206,7 @@ const App: Component = () => {
           <GroupItem
             name='Change Username'
             onclick={() => setShowChangeUsername(true)}
+            button={true}
           >
             <svg width="1000rem" height="1.25rem" viewBox="0 0 456.645 456.645">
               <g>
@@ -224,9 +222,10 @@ const App: Component = () => {
           </GroupItem>
         </div>
         <div class='groups'>
-          <For each={groups().filter(group => group.name.toLowerCase().includes(search().toLowerCase()))}>{(group: Group) =>
+          <For each={groups().filter(group => group.name.toLowerCase().includes(search().toLowerCase()))}>{(group: Group, index) =>
             <GroupItem
               name={group.name}
+              colour={`hsl(${((120 - index()) % 360) * 5}, 40%, 70%)`}
               lastChat={getLastMessage(group.id)}
               status={activeGroups.includes(group.id) ? 'green' : 'yellow'}
               active={group === openGroup()}
@@ -258,12 +257,6 @@ const App: Component = () => {
             </div>
             <div class='group-name'><p>{openGroup().name}</p></div>
           </div>
-          {
-            openGroup().bio &&
-            <div class='bio'>
-              <p>{openGroup().bio}</p>
-            </div>
-          }
           <div class='delete-group' onclick={deleteGroup}>
             <p>Delete Group Data</p>
           </div>

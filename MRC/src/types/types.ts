@@ -1,7 +1,7 @@
 export interface Group {
   id: number;
   name: string;
-  bio: string;
+  password: string;
 }
 
 export interface Chat {

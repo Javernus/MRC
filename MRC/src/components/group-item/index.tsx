@@ -5,10 +5,13 @@ export default function GroupItem(props) {
   return (
     <div
       tabIndex={0}
-      class={cl('group-item', { 'group-item--active': props.active })}
-      onclick={() => props.onclick()}
+      class={cl('group-item', {
+        'group-item--active': props.active,
+        'group-item--button': props.button,
+      })}
+      onclick={props.onclick}
     >
-      <div class='group-item__image'>
+      <div class='group-item__image' style={{ "background-color": props.colour }}>
         {props.children}
         <div class={cl(`group-item__indicator group-item__indicator--${props.status}`)}></div>
       </div>

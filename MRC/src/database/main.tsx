@@ -21,8 +21,8 @@ const getLastChat = async (groupId: number): Promise<Chat> => {
   return await invoke("get_newest_chat", { groupId: groupId })
 }
 
-const createGroup = async (name: string, bio: string, password: string): Promise<Group> => {
-  return invoke("create_group", { name: name, bio: bio, password: password })
+const createGroup = async (name: string, password: string): Promise<Group> => {
+  return invoke("create_group", { name: name, password: password })
 }
 
 const joinGroup = async (group: string, password: string): Promise<Group> => {

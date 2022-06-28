@@ -12,11 +12,10 @@ pub struct Group {
 }
 
 impl Group {
-    /// Creates and returns new group. If no id is given, a unique id is generated.
+    /// Creates and returns new group.
     ///
     /// # Arguments
     ///
-    /// * `id`: optional id of group.
     /// * `name`: name of group.
     /// * `bio`: bio of group.
     /// * `password`: password of group, use "" for empty password.
@@ -92,4 +91,3 @@ fn test_group() {
         assert_eq!(groups[i], deser[i]);
     }
 }
-
