@@ -2,7 +2,7 @@
   all(not(debug_assertions), target_os = "windows"),
   windows_subsystem = "windows"
 )]
-
+#[macro_use] extern crate magic_crypt;
 extern crate core;
 
 use crate::database::chat::Chat;
@@ -40,20 +40,23 @@ fn send_chat(group_id: i32, time: i64, message: String) -> Chat {
   // QUESTION: can String be replaced by &str in the parameters?
   let name: String = config::get_username();
   let chat: Chat = Chat::new(group_id, time, &name, &message);
-  let groupdata: Group = find_group_data(group_id);
+  let group: Group = find_group(group_id);
   // TODO get groupdata.password
-  encoding::encode(name, groupdata.password, message);
+  let encodeddata:String = encoding::encode(&name, &group.decrypt_password(), &message);
+  let serializeddata:String = encoding::group_encode(group.name, encodeddata);
+
   database::save_chat(&chat);
   chat
 }
 
-fn find_group_data(group_id: i32) -> Group {
+fn find_group(group_id: i32) -> Group {
   let mut groups:Vec<Group> = database::get_groups();
   for group in &groups {
     if group.id == group_id {
       return group;
     }
   }
+  return Group::new(-1,"".to_string(),"".to_string())
 }
 /// Removes group and all its chats from database.
 ///

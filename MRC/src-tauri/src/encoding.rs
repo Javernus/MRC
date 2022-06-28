@@ -1,4 +1,4 @@
-#[macro_use] extern crate magic_crypt;
+
 extern crate base64;
 extern crate regex;
 use magic_crypt::MagicCryptTrait;
