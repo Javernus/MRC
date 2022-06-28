@@ -1,4 +1,4 @@
-
+extern crate magic_crypt;
 extern crate base64;
 extern crate regex;
 use magic_crypt::MagicCryptTrait;
@@ -23,15 +23,14 @@ pub fn get_group(encodedstring:String) -> (String, String) {
 pub fn encode(name:&str, password:&str, data:&str) -> String {
 
     let datatoencode = format!("{},{}", name, data);
-    let mcrypt = new_magic_crypt!(password, 256);
+    let mcrypt = magic_crypt::new_magic_crypt!(password, 256);
     let encrypted_string = mcrypt.encrypt_str_to_base64(datatoencode);
     return encrypted_string;
 }
 
 // decodes the data with a given password.
 pub fn decode(password:&str, data:String) -> (bool, String, String){
-
-    let mcrypt = new_magic_crypt!(password, 256);
+    let mcrypt = magic_crypt::new_magic_crypt!(password, 256);
     let decrypted_string = mcrypt.decrypt_base64_to_string(&data);
     match decrypted_string {
         Ok(data) => {

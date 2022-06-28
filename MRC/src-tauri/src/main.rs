@@ -45,18 +45,25 @@ fn send_chat(group_id: i32, time: i64, message: String) -> Chat {
   let encodeddata:String = encoding::encode(&name, &group.decrypt_password(), &message);
   let serializeddata:String = encoding::group_encode(group.name, encodeddata);
 
+  encoding::encode(&name, &groupdata.encrypted_password, &message);
   database::save_chat(&chat);
   chat
 }
 
 fn find_group(group_id: i32) -> Group {
-  let mut groups:Vec<Group> = database::get_groups();
+  let mut groups: Vec<Group> = database::get_groups();
+  
+  if groups.is_empty() {
+    return Group::new(Some(0), "", "");
+  }
+
   for group in &groups {
     if group.id == group_id {
-      return group;
+      return group.clone();
     }
   }
-  return Group::new(-1,"".to_string(),"".to_string())
+
+  return Group::new(Some(0), "", "");
 }
 /// Removes group and all its chats from database.
 ///
@@ -78,9 +85,9 @@ fn remove_group(group_id: i32) {
 ///
 /// returns: Group
 #[tauri::command]
-fn create_group(name: String, bio: String, password: String) -> Group {
+fn create_group(name: String, password: String) -> Group {
   // QUESTION: can String be replaced by &str in the parameters?
-  let group: Group = Group::new(None, &name, &bio, &password);
+  let group: Group = Group::new(None, &name, &password);
   database::save_group(&group);
   group
 }
@@ -92,7 +99,7 @@ fn join_group(name: String, password: String) -> Group {
   // todo!("retrieve password");
   // todo!("check password");
 
-  let group: Group = Group::new(Some(0), &name, "", &password);
+  let group: Group = Group::new(Some(0), &name, &password);
   database::save_group(&group);
   group
 }

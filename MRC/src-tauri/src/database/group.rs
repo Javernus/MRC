@@ -7,7 +7,6 @@ use nanoid::nanoid;
 pub struct Group {
     pub id: i32,
     pub name: String,
-    pub bio: String,
     pub encrypted_password: String,
 }
 
@@ -17,11 +16,10 @@ impl Group {
     /// # Arguments
     ///
     /// * `name`: name of group.
-    /// * `bio`: bio of group.
     /// * `password`: password of group, use "" for empty password.
     ///
     /// returns: Group
-    pub fn new(id: Option<i32>, name: &str, bio: &str, password: &str) -> Group {
+    pub fn new(id: Option<i32>, name: &str, password: &str) -> Group {
         Group {
             id: {
                 match id {
@@ -35,7 +33,6 @@ impl Group {
                 }
             },
             name: String::from(name),
-            bio: String::from(bio),
             encrypted_password: {
                 if password.is_empty() {
                     password.to_string()
@@ -80,8 +77,8 @@ pub fn deserialize(text: &str) -> Vec<Group> {
 #[test]
 fn test_group() {
     let groups: Vec<Group> = vec![
-        Group::new(Some(193), "Group", "bio", ""),
-        Group::new(None, "People", "empty", "very strong password"),
+        Group::new(Some(193), "Group", ""),
+        Group::new(None, "People", "very strong password"),
     ];
 
     let ser: String = serialize(&groups);
