@@ -5,7 +5,7 @@ const getGroups = async (): Promise<Group[]> => {
   return await invoke("get_groups")
 }
 
-const getUsername = async (): Promise<String> => {
+const getUsername = async (): Promise<string> => {
   return await invoke("get_username")
 }
 

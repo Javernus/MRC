@@ -59,7 +59,6 @@ pub fn deserialize(text: &str) -> Vec<Chat> {
             Err(why) => {
                 dbg!(text);
                 println!("couldn't deserialize {}, because {}", text, why);
-                print!("output: {:?}", output);
                 println!("returning empty vector...");
                 vec![]
             }
