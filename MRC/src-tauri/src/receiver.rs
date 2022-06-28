@@ -30,7 +30,7 @@ pub fn start_receiver(window: Window) -> () {
 
     loop {
         thread::sleep(time::Duration::from_secs(5));
-        println!("Waiting for message...");
+        // println!("Waiting for message...");
         // window.emit("custom_event", Payload {
         //     message: "Hello from Rust!".to_string(),
         // });

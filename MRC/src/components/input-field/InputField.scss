@@ -6,14 +6,19 @@
   margin: 0 0 0 0.5rem;
   box-sizing: border-box;
   background-color: $surface-moderate;
-  border: none;
-  color: $white-strong;
+  border: solid 1px $surface-moderate;
+  color: $white-strongest;
   height: 2rem;
   border-radius: 0.5rem;
   padding: 0.5rem;
   font-size: 1rem;
   font-family: 'Roboto', sans-serif;
   box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.1);
+
+  &--error {
+    border: solid 1px $red-normal;
+    color: $white-strong;
+  }
 
   &:focus {
     outline: none;

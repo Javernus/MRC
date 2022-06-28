@@ -7,7 +7,7 @@ extern crate core;
 
 use crate::database::chat::Chat;
 use crate::database::group::Group;
-use tauri::{Menu, MenuItem, Submenu, Window};
+use tauri::{Menu, MenuItem, Submenu, Window, AboutMetadata};
 use std::thread;
 use std::time::Duration;
 
@@ -70,6 +70,11 @@ fn create_group(name: String, bio: String, password: String) -> Group {
   group
 }
 
+#[tauri::command]
+fn join_group(group: String, password: String) -> Group {
+  Group::init(0, &group, "")
+}
+
 /// Returns the newest chat in group.
 ///
 /// # Arguments
@@ -122,15 +127,26 @@ fn receiver(window: Window) {
 }
 
 fn main() {
-  let submenu: Submenu = Submenu::new("MRC", Menu::new().add_native_item(MenuItem::Quit));
-  let submenu2: Submenu = Submenu::new("Settings", Menu::new().add_native_item(MenuItem::Quit));
+  let app = Menu::new()
+    .add_native_item(MenuItem::Quit);
+
+  let text = Menu::new()
+    .add_native_item(MenuItem::Undo)
+    .add_native_item(MenuItem::Redo)
+    .add_native_item(MenuItem::Separator)
+    .add_native_item(MenuItem::Copy)
+    .add_native_item(MenuItem::Paste)
+    .add_native_item(MenuItem::Cut)
+    .add_native_item(MenuItem::Separator)
+    .add_native_item(MenuItem::SelectAll);
+
   let menu: Menu = Menu::new()
-    .add_submenu(submenu)
-    .add_submenu(submenu2);
+    .add_submenu(Submenu::new("MRC", app))
+    .add_submenu(Submenu::new("File", text));
 
   tauri::Builder::default()
     .menu(menu)
-    .invoke_handler(tauri::generate_handler![set_username, get_username, send_chat, get_chats, get_groups, get_newest_chat, remove_group, create_group, receiver])
+    .invoke_handler(tauri::generate_handler![set_username, get_username, send_chat, get_chats, get_groups, get_newest_chat, remove_group, create_group, join_group, receiver])
     .run(tauri::generate_context!())
     .expect("error while running tauri application");
 }

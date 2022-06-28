@@ -25,6 +25,10 @@ const createGroup = async (name: string, bio: string, password: string): Promise
   return invoke("create_group", { name: name, bio: bio, password: password })
 }
 
+const joinGroup = async (group: string, password: string): Promise<Group> => {
+  return invoke("join_group", { group: group, password: password })
+}
+
 const removeGroup = async (groupId: number): Promise<void> => {
   invoke("remove_group", { groupId: groupId })
 }
@@ -45,6 +49,7 @@ export default {
   getChats,
   getLastChat,
   createGroup,
+  joinGroup,
   removeGroup,
   receiver,
   sendChat,

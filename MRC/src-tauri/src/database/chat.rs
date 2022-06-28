@@ -51,6 +51,8 @@ pub fn deserialize(text: &str) -> Vec<Chat> {
     if text.is_empty() {
         vec![]
     } else {
+        // FIX: Getting this error:
+        // thread 'main' panicked at 'called `Result::unwrap()` on an `Err` value: Error("EOF while parsing a value", line: 1, column: 64)', src/database/chat.rs:54:36
         serde_json::from_str(text).unwrap()
     }
 }

@@ -27,6 +27,14 @@ impl Group {
             bio: String::from(bio),
         }
     }
+
+    pub fn init(id: i32, name: &str, bio: &str) -> Group {
+        Group {
+            id,
+            name: String::from(name),
+            bio: String::from(bio),
+        }
+    }
 }
 
 /// Serializes vector of groups. Returns string in json format.
