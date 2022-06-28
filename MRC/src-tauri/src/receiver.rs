@@ -39,6 +39,8 @@ pub fn start_receiver(window: Window) -> () {
         // let mut message = String::from_utf8(Vec::from(message_buffer)).expect("todo");
         let message = "Hello from Rust!".to_string();
 
+        // let decode = yourfunc(&message)
+
         if !message.is_empty() {
         //     // emit the `event-name` event to all webview windows on the frontend
             // window.emit(
@@ -46,7 +48,7 @@ pub fn start_receiver(window: Window) -> () {
             //     Payload { message: message.to_string() }
             // ).unwrap();
 
-            // let chat: Chat = Chat::new(8, 123456789012, "Name", &message);
+            // let chat: Chat = Chat::new(GROUPID, TIME (TO BE GENERATED), NAME, MESSAGE);
 
             // database::save_chat(&chat)
         }
