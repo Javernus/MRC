@@ -37,7 +37,10 @@ pub fn deserialize(text: &str) -> User {
     if text.is_empty() {
         User::new(DEFAULT_USERNAME)
     } else {
-        serde_json::from_str(text).unwrap()
+        match serde_json::from_str(text) {
+            Ok(user) => user,
+            Err(_) => User::new(DEFAULT_USERNAME),
+        }
     }
 }
 
