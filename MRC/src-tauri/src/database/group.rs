@@ -1,11 +1,14 @@
+use crate::encryption_unique_name::{encrypt, decrypt};
+use crate::config::get_mpw;
 use serde::{Serialize, Deserialize};
 use nanoid::nanoid;
 
 #[derive(Serialize, Deserialize, Clone, Debug, PartialEq)]
 pub struct Group {
-    pub(crate) id: i32,
-    pub(crate) name: String,
-    pub(crate) password: String,
+    pub id: i32,
+    pub name: String,
+    pub bio: String,
+    pub encrypted_password: String,
 }
 
 impl Group {
@@ -14,26 +17,37 @@ impl Group {
     /// # Arguments
     ///
     /// * `name`: name of group.
-    /// * `password`: password of group.
+    /// * `bio`: bio of group.
+    /// * `password`: password of group, use "" for empty password.
     ///
     /// returns: Group
-    pub fn new(name: &str, password: &str) -> Group {
-        let alphabet: [char; 10] = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'];
-        let id: i32 = nanoid!(9, &alphabet).parse().unwrap();
-
+    pub fn new(id: Option<i32>, name: &str, bio: &str, password: &str) -> Group {
         Group {
-            id,
+            id: {
+                match id {
+                    None => {
+                        let a: [char; 10] = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'];
+                        nanoid!(9, &a).parse::<i32>().unwrap()
+                    },
+                    Some(g_id) => {
+                        g_id
+                    },
+                }
+            },
             name: String::from(name),
-            password: String::from(password),
+            bio: String::from(bio),
+            encrypted_password: {
+                if password.is_empty() {
+                    password.to_string()
+                } else {
+                    encrypt(password, &get_mpw())
+                }
+            },
         }
     }
 
-    pub fn init(id: i32, name: &str, password: &str) -> Group {
-        Group {
-            id,
-            name: String::from(name),
-            password: String::from(password),
-        }
+    pub fn decrypt_password(&self) -> String {
+        decrypt(&*self.encrypted_password, &get_mpw())
     }
 }
 
@@ -66,8 +80,8 @@ pub fn deserialize(text: &str) -> Vec<Group> {
 #[test]
 fn test_group() {
     let groups: Vec<Group> = vec![
-        Group::new("Group", "password"),
-        Group::new("People", "empty"),
+        Group::new(Some(193), "Group", "bio", ""),
+        Group::new(None, "People", "empty", "very strong password"),
     ];
 
     let ser: String = serialize(&groups);
@@ -76,4 +90,6 @@ fn test_group() {
     for i in 0..2 {
         assert_eq!(groups[i], deser[i]);
     }
+
+    assert_eq!(groups[1].decrypt_password(), "very strong password");
 }

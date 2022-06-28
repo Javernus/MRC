@@ -13,9 +13,10 @@ use std::thread;
 pub(crate) mod file;
 mod database;
 mod config;
-mod cmd;
+mod encryption_unique_name;
 mod receiver;
 mod encoding;
+mod cmd;
 
 /// Returns groups in vector format.
 ///
@@ -74,17 +75,23 @@ fn remove_group(group_id: i32) {
 ///
 /// returns: Group
 #[tauri::command]
-fn create_group(name: String, password: String) -> Group {
+fn create_group(name: String, bio: String, password: String) -> Group {
   // QUESTION: can String be replaced by &str in the parameters?
-  // TODO: Group no bio but password
-  let group: Group = Group::new(&name, &password);
+  let group: Group = Group::new(None, &name, &bio, &password);
   database::save_group(&group);
   group
 }
 
 #[tauri::command]
-fn join_group(group: String, password: String) -> Group {
-  Group::init(0, &group, "")
+fn join_group(name: String, password: String) -> Group {
+  // todo!("retrieve id");
+  // todo!("retrieve bio");
+  // todo!("retrieve password");
+  // todo!("check password");
+
+  let group: Group = Group::new(Some(0), &name, "", &password);
+  database::save_group(&group);
+  group
 }
 
 /// Returns the newest chat in group.

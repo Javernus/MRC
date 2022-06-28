@@ -1,8 +1,6 @@
-use std::{
-    fs::{File, remove_file, create_dir, remove_dir},
-    io::{Result, prelude::*},
-    path::Path,
-};
+use std::fs::{File, remove_file, create_dir};
+use std::io::{Result, prelude::*};
+use std::path::Path;
 use std::str::Split;
 
 /// Returns directory path of file.
@@ -101,6 +99,8 @@ pub fn delete_file(filename: &str) -> Result<()> {
 
 #[test]
 fn test_file() {
+    use std::fs::remove_dir;
+
     let filename: &str = "test_directory/test_file.txt";
     let text: &str = "This is a test file.";
 
