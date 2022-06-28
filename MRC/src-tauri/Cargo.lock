@@ -6,7 +6,6 @@ version = 3
 name = "MRC"
 version = "0.1.0"
 dependencies = [
- "magic-crypt",
  "base64",
  "magic-crypt",
  "nanoid",
