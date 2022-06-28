@@ -13,7 +13,7 @@ impl User {
     }
 }
 
-pub const DEFAULT_USERNAME: &str = "Unnamed";
+pub const DEFAULT_USERNAME: &str = "";
 
 /// Serializes user. Returns string in json format.
 ///

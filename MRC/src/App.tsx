@@ -30,11 +30,6 @@ const requestGroups = async (setGroups) => {
   setGroups(groups)
 }
 
-const requestUsername = async (setUsername) => {
-  const username = await DB.getUsername()
-  setUsername(username)
-}
-
 const App: Component = () => {
   let [plusMenu, setPlusMenu] = createSignal(false)
   let [groups, setGroups] = createSignal([])
@@ -52,10 +47,20 @@ const App: Component = () => {
   let [groupBio, setGroupBio] = createSignal('')
   let [groupPassword, setGroupPassword] = createSignal('')
 
-  requestGroups(setGroups)
-  requestUsername(setUsername)
+  const requestUsername = async () => {
+    const uname = await DB.getUsername()
+    setUsername(uname)
+    if (uname === "") {
+      setShowChangeUsername(true)
+    }
+  }
+
 
   const updateUsername = async () => {
+    if (username() === '') {
+      return
+    }
+
     await DB.setUsername(username())
     setShowChangeUsername(false)
     setPlusMenu(false)
@@ -122,6 +127,9 @@ const App: Component = () => {
     return lastChat ? lastChat.message : ''
   }
 
+  requestGroups(setGroups)
+  requestUsername()
+
   let chatElement
 
   const scrollDown = () => {
@@ -162,7 +170,7 @@ const App: Component = () => {
           <InputField placeholder="Search" oninput={searchGroups} />
         </div>
         <div class={cl('change-username', { 'change-username--visible': showChangeUsername() })}>
-          <p class='change-username__header'>Change Username</p>
+          <p class='change-username__header'>Set Username</p>
           <InputField placeholder="Username" value={username()} oninput={(event) => setUsername(event.target.value)} />
           <Button onclick={updateUsername} type="submit">Change</Button>
         </div>
