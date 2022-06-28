@@ -51,7 +51,7 @@ fn send_chat(group_id: i32, time: i64, message: String) -> Chat {
 }
 
 fn find_group(group_id: i32) -> Group {
-  let mut groups: Vec<Group> = database::get_groups();
+  let groups: Vec<Group> = database::get_groups();
 
   if groups.is_empty() {
     return Group::new(Some(0), "", "");
