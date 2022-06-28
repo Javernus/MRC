@@ -2,8 +2,8 @@ use crate::file;
 use crate::database::group::Group;
 use crate::database::chat::Chat;
 
-pub(crate) mod group;
-pub(crate) mod chat;
+pub mod group;
+pub mod chat;
 
 /// Returns string representation of path to groups file in database.
 /// Output: ../data/groups.json
@@ -181,8 +181,8 @@ pub fn delete_groups() {
 #[test]
 fn test_database() {
     let groups: Vec<Group> = vec![
-        Group::new("Group", "password"),
-        Group::new("People", "empty")
+        Group::new(Some(192), "Group", "bio", ""),
+        Group::new(None, "People", "empty", "very strong password")
     ];
 
     for g in &groups {

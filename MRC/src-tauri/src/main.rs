@@ -13,8 +13,10 @@ use std::thread;
 pub(crate) mod file;
 mod database;
 mod config;
-mod cmd;
+mod encryption_unique_name;
 mod receiver;
+mod encoding;
+mod cmd;
 
 /// Returns groups in vector format.
 ///
@@ -38,11 +40,27 @@ fn send_chat(group_id: i32, time: i64, message: String) -> Chat {
   // QUESTION: can String be replaced by &str in the parameters?
   let name: String = config::get_username();
   let chat: Chat = Chat::new(group_id, time, &name, &message);
-
+  let groupdata: Group = find_group_data(group_id);
+  // TODO get groupdata.password
+  encoding::encode(&name, &groupdata.encrypted_password, &message);
   database::save_chat(&chat);
   chat
 }
 
+fn find_group_data(group_id: i32) -> Group {
+  let mut groups: Vec<Group> = database::get_groups();
+  if groups.is_empty() {
+    return Group::new(Some(0), "", "");
+  }
+
+  for group in &groups {
+    if group.id == group_id {
+      return group.clone();
+    }
+  }
+
+  return Group::new(Some(0), "", "");
+}
 /// Removes group and all its chats from database.
 ///
 /// # Arguments
@@ -65,15 +83,21 @@ fn remove_group(group_id: i32) {
 #[tauri::command]
 fn create_group(name: String, password: String) -> Group {
   // QUESTION: can String be replaced by &str in the parameters?
-  // TODO: Group no bio but password
-  let group: Group = Group::new(&name, &password);
+  let group: Group = Group::new(None, &name, &password);
   database::save_group(&group);
   group
 }
 
 #[tauri::command]
-fn join_group(group: String, password: String) -> Group {
-  Group::init(0, &group, &password)
+fn join_group(name: String, password: String) -> Group {
+  // todo!("retrieve id");
+  // todo!("retrieve bio");
+  // todo!("retrieve password");
+  // todo!("check password");
+
+  let group: Group = Group::new(Some(0), &name, &password);
+  database::save_group(&group);
+  group
 }
 
 /// Returns the newest chat in group.
