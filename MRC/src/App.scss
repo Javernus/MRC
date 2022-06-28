@@ -33,6 +33,15 @@ body {
   border-radius: 50%;
 }
 
+.groups {
+  display: flex;
+  flex-direction: column;
+  justify-content: start;
+  align-items: start;
+  background-color: $surface-weakest;
+  overflow-y: scroll;
+}
+
 .join-group,
 .change-username,
 .create-group,
@@ -75,7 +84,7 @@ body {
     font-size: 1.6rem;
     font-weight: bold;
     color: $white-strongest;
-    font-family: 'Roboto', sans-serif;
+    font-family: 'Source Sans Pro', sans-serif;
   }
 
   .input-field {
@@ -124,7 +133,7 @@ body {
 .group-name {
   display: inline-block;
   color: $white-strongest;
-  font-family: 'Roboto', sans-serif;
+  font-family: 'Source Sans Pro', sans-serif;
   font-size: 1.5rem;
   font-weight: bold;
   width: 14rem;
@@ -180,7 +189,7 @@ body {
   width: 100%;
   height: 2rem;
   color: $red-light;
-  font-family: 'Roboto', sans-serif;
+  font-family: 'Source Sans Pro', sans-serif;
   font-size: 1.2rem;
   margin-top: 2rem;
   border-top: solid 1px $white-weak;
