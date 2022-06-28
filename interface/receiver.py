@@ -4,7 +4,7 @@ import time
 
 # try to get interface
 # interface = meshtastic.serial_interface.SerialInterface(devPath='/dev/DINGEN')
-interface = meshtastic.serial_interface.SerialInterface(devPath='/dev/ttyUSB0')
+interface = meshtastic.serial_interface.SerialInterface(devPath='/dev/ttyUSB1')
 
 
 def on_receive(packet):  # called when a packet arrives

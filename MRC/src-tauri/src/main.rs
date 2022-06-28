@@ -9,7 +9,6 @@ use crate::database::chat::Chat;
 use crate::database::group::Group;
 use tauri::{Menu, MenuItem, Submenu, Window, AboutMetadata};
 use std::thread;
-use std::time::Duration;
 
 pub(crate) mod file;
 mod database;
