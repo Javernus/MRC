@@ -24,14 +24,20 @@
     background-color: $surface-weakest;
   }
 
+  &--button {
+    .group-item__image {
+      background-color: $blue-normal;
+    }
+  }
+
   &__image {
     min-width: 2.5rem;
     width: 2.5rem;
     min-height: 2.5rem;
     height: 2.5rem;
-    background-color: $purple-normal;
     border-radius: 50%;
     margin-right: 0.5rem;
+    box-sizing: border-box;
     position: relative;
     display: flex;
     justify-content: center;
@@ -63,13 +69,13 @@
 
   &__text {
     color: $white-strongest;
-    font-family: 'Roboto', sans-serif;
+    font-family: 'Source Sans Pro', sans-serif;
     padding-right: 0.5rem;
   }
 
   &__name {
     user-select: none;
-    font-size: 1rem;
+    font-size: 1.1rem;
     font-weight: bold;
     padding-bottom: 0.125rem;
   }

@@ -41,14 +41,14 @@ pub fn start_receiver(window: Window) -> () {
 
         if !message.is_empty() {
         //     // emit the `event-name` event to all webview windows on the frontend
-            window.emit(
-                "refetch_chat",
-                Payload { message: message.to_string() }
-            ).unwrap();
+            // window.emit(
+            //     "refetch_chat",
+            //     Payload { message: message.to_string() }
+            // ).unwrap();
 
-            let chat: Chat = Chat::new(8, 123456789012, "Name", &message);
+            // let chat: Chat = Chat::new(8, 123456789012, "Name", &message);
 
-            database::save_chat(&chat)
+            // database::save_chat(&chat)
         }
     }
 }
