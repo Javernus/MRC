@@ -8,7 +8,7 @@ pub(crate) mod user;
 ///
 /// returns: String
 fn user_path() -> String {
-    String::from("../database/config.json")
+    String::from("../data/config.json")
 }
 
 /// Sets username and saves it in config.

@@ -6,15 +6,15 @@ pub(crate) mod group;
 pub(crate) mod chat;
 
 /// Returns string representation of path to groups file in database.
-/// Output: ../database/groups.json
+/// Output: ../data/groups.json
 ///
 /// returns: String
 fn groups_path() -> String {
-    String::from("../database/groups.json")
+    String::from("../data/groups.json")
 }
 
 /// Returns string representation of path to chats file in database.
-/// Output example: ../database/chats-42.json
+/// Output example: ../data/chats-42.json
 ///
 /// # Arguments
 ///
@@ -22,7 +22,7 @@ fn groups_path() -> String {
 ///
 /// returns: String
 fn chats_path(group_id: i32) -> String {
-    format!("{}{}{}", "../database/chats-", group_id, ".json")
+    format!("{}{}{}", "../data/chats-", group_id, ".json")
 }
 
 /// Appends group to groups.json in database.
