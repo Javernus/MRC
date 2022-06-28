@@ -79,7 +79,7 @@ const App: Component = () => {
   }
 
   const joinGroup = async () => {
-    if (groupName() === '' || groupPassword() === '') {
+    if (groupName() === '') {
       setJoinGroupError(true)
       return
     }
@@ -248,7 +248,7 @@ const App: Component = () => {
             <div class='group-icon'>
               <div class='group-icon__indicator group-icon__indicator--green' />
             </div>
-            <p class='group-name'>{openGroup().name}</p>
+            <div class='group-name'><p>{openGroup().name}</p></div>
           </div>
           {
             openGroup().bio &&

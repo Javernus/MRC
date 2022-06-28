@@ -91,7 +91,9 @@ body {
 
 .group-icon {
   width: 4rem;
+  min-width: 4rem;
   height: 4rem;
+  min-height: 4rem;
   background-color: $purple-normal;
   border-radius: 50%;
   position: relative;
@@ -120,12 +122,23 @@ body {
 }
 
 .group-name {
+  display: inline-block;
   color: $white-strongest;
   font-family: 'Roboto', sans-serif;
   font-size: 1.5rem;
   font-weight: bold;
+  width: 14rem;
+  word-wrap: break-all;
+  overflow-wrap: break-word;
   margin: 0;
   padding-left: 1rem;
+
+  p {
+    margin: 0;
+    width: 100%;
+    word-wrap: break-all;
+    overflow-wrap: break-word;
+  }
 }
 
 .bio {
