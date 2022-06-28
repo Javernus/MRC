@@ -4,13 +4,13 @@ extern crate regex;
 use magic_crypt::MagicCryptTrait;
 use regex::Regex;
 
-fn group_encode(encrypted_string:String, groupname:String) -> String {
+pub fn group_encode(encrypted_string:String, groupname:String) -> String {
 
     let encodedstring = format!("{},{}", groupname, encrypted_string);
     return encodedstring;
 }
 
-fn find_group(encodedstring:String) -> (String, String) {
+pub fn get_group(encodedstring:String) -> (String, String) {
 
     let re = Regex::new("^([^,]*),(.*)").unwrap();
     let name = re.captures(&encodedstring).unwrap();
@@ -20,7 +20,7 @@ fn find_group(encodedstring:String) -> (String, String) {
 }
 // encode data with name as a string seperated by a comma.
 // maybe add an extra value for header for different types of information.
-fn encode(name:&str, password:&str, data:&str) -> String {
+pub fn encode(name:&str, password:&str, data:&str) -> String {
 
     let datatoencode = format!("{},{}", name, data);
     let mcrypt = new_magic_crypt!(password, 256);
@@ -29,7 +29,7 @@ fn encode(name:&str, password:&str, data:&str) -> String {
 }
 
 // decodes the data with a given password.
-fn decode(password:&str, data:String) -> (bool, String, String){
+pub fn decode(password:&str, data:String) -> (bool, String, String){
 
     let mcrypt = new_magic_crypt!(password, 256);
     let decrypted_string = mcrypt.decrypt_base64_to_string(&data);

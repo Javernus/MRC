@@ -15,6 +15,7 @@ mod database;
 mod config;
 mod cmd;
 mod receiver;
+mod encoding;
 
 /// Returns groups in vector format.
 ///
@@ -38,11 +39,21 @@ fn send_chat(group_id: i32, time: i64, message: String) -> Chat {
   // QUESTION: can String be replaced by &str in the parameters?
   let name: String = config::get_username();
   let chat: Chat = Chat::new(group_id, time, &name, &message);
-
+  let groupdata: Group = find_group_data(group_id);
+  // TODO get groupdata.password
+  encoding::encode(name, groupdata.password, message);
   database::save_chat(&chat);
   chat
 }
 
+fn find_group_data(group_id: i32) -> Group {
+  let mut groups:Vec<Group> = database::get_groups();
+  for group in &groups {
+    if group.id == group_id {
+      return group;
+    }
+  }
+}
 /// Removes group and all its chats from database.
 ///
 /// # Arguments
