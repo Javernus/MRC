@@ -3,7 +3,7 @@ import sys
 
 # try to get interface
 # interface = meshtastic.serial_interface.SerialInterface(devPath='/dev/DINGEN')
-interface = meshtastic.serial_interface.SerialInterface(devPath='/dev/ttyUSB1')
+interface = meshtastic.serial_interface.SerialInterface()
 
 data = str(sys.argv[1])
 print(f"sending {data}")
@@ -18,4 +18,3 @@ interface.sendData(
     onResponse=None,
     channelIndex=0
 )
-

@@ -34,7 +34,7 @@ const removeGroup = async (groupId: number): Promise<void> => {
 }
 
 const receiver = async () => {
-  invoke("client")
+  invoke("start_client")
 }
 
 const setMPassword = async (password: string) => {
