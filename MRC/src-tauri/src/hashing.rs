@@ -9,6 +9,7 @@ use argon2::Argon2;
 ///
 /// returns: String
 pub fn hash_password(password: &str) -> String {
+  // TODO: change to use the same salt when verifying.
   let salt: SaltString = SaltString::generate(&mut OsRng);
   println!("{}", salt);
   let argon2: Argon2 = Argon2::default();

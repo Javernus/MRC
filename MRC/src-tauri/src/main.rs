@@ -2,12 +2,17 @@
   all(not(debug_assertions), target_os = "windows"),
   windows_subsystem = "windows"
 )]
+#[allow(non_snake_case)]
+
 extern crate magic_crypt;
 extern crate core;
 
 use tauri::{Menu, MenuItem, Submenu, Window};
-use tauri::plugin::Plugin;
 use tauri::async_runtime;
+
+#[allow(unused_imports)]
+use tauri::plugin::Plugin;
+#[allow(unused_imports)]
 use std::thread;
 
 mod file;
@@ -82,6 +87,7 @@ fn find_group(group_id: i32) -> Group {
   return Group::new(Some(0), "", "");
 }
 
+#[allow(dead_code)]
 fn find_group_ids(serializeddata: String) -> Vec<Group> {
   let groupdata: (String, String) = encoding::get_group(serializeddata);
   let groups: Vec<Group> = match read_groups() {
@@ -204,6 +210,8 @@ fn get_username() -> String {
 
 #[tauri::command]
 fn start_client(window: Window) {
+  #[allow(unused_must_use)]
+  #[allow(unused_variables)]
   let handle = async_runtime::spawn(async move {
     interface::start_client(window).await;
   });

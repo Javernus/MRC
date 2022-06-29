@@ -45,6 +45,7 @@ impl Chat {
     /// Returns name of sender of chat.
     ///
     /// result: String
+    #[allow(dead_code)]
     pub fn get_name(&self) -> String {
         self.name.to_string()
     }
@@ -52,6 +53,7 @@ impl Chat {
     /// Returns message of chat.
     ///
     /// result: String
+    #[allow(dead_code)]
     pub fn get_message(&self) -> String {
         self.message.to_string()
     }

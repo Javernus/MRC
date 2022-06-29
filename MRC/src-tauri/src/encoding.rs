@@ -29,6 +29,7 @@ pub fn encode(name:&str, password:&str, data:&str) -> String {
 }
 
 // decodes the data with a given password.
+#[allow(dead_code)]
 pub fn decode(password:&str, data:String) -> (bool, String, String){
     let mcrypt = magic_crypt::new_magic_crypt!(password, 256);
     let decrypted_string = mcrypt.decrypt_base64_to_string(&data);
@@ -39,7 +40,7 @@ pub fn decode(password:&str, data:String) -> (bool, String, String){
             let datatosend = (true, name[1].to_string(), name[2].to_string());
             return datatosend;
         },
-        Err(msg) => {
+        Err(_msg) => {
             return(false, "".to_string(), "".to_string())
         }
     }

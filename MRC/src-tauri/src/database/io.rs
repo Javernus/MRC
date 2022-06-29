@@ -1,5 +1,4 @@
 use std::io::Error;
-use magic_crypt::generic_array::typenum::Gr;
 use crate::database::{chat, group};
 use crate::database::group::Group;
 use crate::database::chat::Chat;

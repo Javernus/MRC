@@ -61,7 +61,9 @@ pub async fn start_client(window: Window) -> Result<(), Box<dyn Error>> {
                 // TODO: Deserialisation by Scott
 
                 let chat: Chat = Chat::new(8, 123456789012, "Name", &incoming_message);
-                database::append_chat(&chat);
+                if database::append_chat(&chat).is_err() {
+                    // TODO: throw error perhaps?
+                }
 
                 window.emit(
                     "refetch_chat",

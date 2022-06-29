@@ -79,7 +79,6 @@ pub fn write_password(password: &str) -> Result<(), Error> {
 
 #[cfg(test)]
 mod tests {
-    use std::io::Error;
     use crate::config::config_struct::{DEFAULT_PASSWORD, DEFAULT_USERNAME};
     use crate::config::io::delete_config;
     use crate::config::{read_password, read_username, write_password, write_username};
