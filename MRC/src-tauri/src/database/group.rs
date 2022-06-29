@@ -1,4 +1,4 @@
-use crate::encryption_unique_name::{encrypt, decrypt};
+use crate::encryption::{encrypt, decrypt};
 use crate::config::{read_mpw};
 use serde::{Serialize, Deserialize};
 use nanoid::nanoid;

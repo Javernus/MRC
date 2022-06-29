@@ -141,7 +141,7 @@ pub fn delete_config() -> Result<(), std::io::Error>  {
 }
 
 #[test]
-fn test_read_write_config() {
+fn test_config_read_after_write() {
     let username: &str = "Test-name";
     let mpw: &str = "password123";
     write_username(username).expect("couldn't set username");
@@ -151,7 +151,10 @@ fn test_read_write_config() {
     assert_eq!(&username, &r_username);
     assert_eq!(&mpw, &r_mpw);
     delete_config().expect("couldn't delete config");
+}
 
+#[test]
+fn test_config_read_empty() {
     let r_username: String = read_username();
     let r_mpw: String = read_mpw();
     assert_eq!(&r_username, DEFAULT_USERNAME);
