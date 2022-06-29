@@ -2,7 +2,7 @@
   all(not(debug_assertions), target_os = "windows"),
   windows_subsystem = "windows"
 )]
-#[macro_use] extern crate magic_crypt;
+extern crate magic_crypt;
 extern crate core;
 
 use crate::database::chat::Chat;
@@ -49,6 +49,7 @@ fn send_chat(group_id: i32, time: i64, message: String) -> Chat {
   chat
 }
 
+// Finds group based on group id.
 fn find_group(group_id: i32) -> Group {
   let groups: Vec<Group> = database::get_groups();
 
@@ -63,6 +64,26 @@ fn find_group(group_id: i32) -> Group {
   }
 
   return Group::new(Some(0), "", "");
+}
+
+fn find_group_ids(serializeddata: String) -> Vec<Group> {
+
+  let groupdata: (String, String) = encoding::get_group(serializeddata);
+  let groups: Vec<Group> = database::get_groups();
+  let mut groupvec = Vec::new();
+
+  if groups.is_empty() {
+    return groupvec;
+  }
+
+  for group in &groups {
+    if group.name == groupdata.0 {
+      groupvec.push(group.clone());
+    }
+  }
+
+  return groupvec;
+
 }
 /// Removes group and all its chats from database.
 ///
