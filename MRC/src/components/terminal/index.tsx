@@ -20,7 +20,7 @@ export default function Terminal(props) {
           disabled={props.disabled}
           tabIndex={0}
           class='terminal__input'
-          maxlength={128}
+          maxlength={120}
           oninput={props.oninput || null}
           onchange={props.onchange || null}
           onclick={props.onclick || null}
