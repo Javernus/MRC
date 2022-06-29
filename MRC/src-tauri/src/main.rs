@@ -15,9 +15,11 @@ mod file;
 mod database;
 mod config;
 mod encryption_unique_name;
-mod receiver;
+// mod receiver;
 mod encoding;
 mod cmd;
+mod interface;
+use interface::{start_client, send_message};
 
 /// Returns groups in vector format.
 ///
@@ -37,7 +39,7 @@ fn get_groups() -> Vec<Group> {
 ///
 /// returns: Chat
 #[tauri::command]
-fn send_chat(group_id: i32, time: i64, message: String) -> Chat {
+fn send_chat(group_id: i32, time: i64, message: String) {
   // QUESTION: can String be replaced by &str in the parameters?
   let name: String = config::read_username();
   let chat: Chat = Chat::new(group_id, time, &name, &message);
@@ -45,9 +47,10 @@ fn send_chat(group_id: i32, time: i64, message: String) -> Chat {
   let encodeddata: String = encoding::encode(&name, &group.decrypt_password(), &message);
   let serializeddata: String = encoding::group_encode(group.name, encodeddata);
 
+  send_message(serializeddata);
   encoding::encode(&name, &group.encrypted_password, &message);
+
   database::save_chat(&chat);
-  chat
 }
 
 fn find_group(group_id: i32) -> Group {
@@ -152,11 +155,12 @@ fn get_username() -> String {
 }
 
 #[tauri::command]
-fn receiver(window: Window) {
-  thread::spawn(|| {
-    //todo rename to interface
-    receiver::start_client(window);
-  });
+fn start_cient(window: Window<R>) {
+  // async_runtime::spawn(interface::start_client(window));
+  Plugin::initialize(interface::start_client(window));
+  // thread::spawn(|| {
+  //   interface::start_client(window);
+  // });
 }
 
 #[tauri::command]
@@ -184,7 +188,7 @@ fn main() {
 
   tauri::Builder::default()
     .menu(menu)
-    .invoke_handler(tauri::generate_handler![set_username, get_username, send_chat, get_chats, get_groups, get_newest_chat, remove_group, create_group, join_group, receiver, set_m_password])
+    .invoke_handler(tauri::generate_handler![set_username, get_username, send_chat, get_chats, get_groups, get_newest_chat, remove_group, create_group, join_group, start_client, set_m_password])
     .run(tauri::generate_context!())
     .expect("error while running tauri application");
 }
