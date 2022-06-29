@@ -108,6 +108,11 @@ pub fn delete_chat(group_id: i32) -> Result<(), Error> {
 
 #[test]
 fn test_chats_io() {
+    match delete_chat(123) {
+        Ok(_) => {}
+        Err(_) => {}
+    };
+
     let chats = vec![
         Chat::new(123, 123, "name", "hello world"),
         Chat::new(123, 234, "other", "good bye"),
@@ -115,12 +120,19 @@ fn test_chats_io() {
 
     write_chats(&chats).expect("failed to write chats");
     let r_chats = read_chats(123).unwrap();
+
     assert_eq!(&chats, &r_chats);
-    delete_chat(123).expect("failet to delete chat");
+
+    delete_chat(123).expect("failed to delete chat");
 }
 
 #[test]
 fn test_groups_io() {
+    match delete_group() {
+        Ok(_) => {}
+        Err(_) => {}
+    };
+
     let groups = vec![
         Group::new(Some(123), "group1", "pass123"),
         Group::new(Some(234), "group2", "word234"),
@@ -134,6 +146,8 @@ fn test_groups_io() {
             vec![]
         },
     };
+
     assert_eq!(&groups, &r_groups);
+
     delete_group().expect("failed to delete group");
 }
