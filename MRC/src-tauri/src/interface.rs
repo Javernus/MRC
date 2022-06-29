@@ -1,5 +1,5 @@
 extern crate core;
-use tauri::Window;
+use tauri::{Window, async_runtime};
 use crate::database::chat::Chat;
 use crate::database;
 extern crate queues;
@@ -26,11 +26,11 @@ struct Payload {
 // TODO implement custom structs
 static OUTGOING_QUEUE: Global<Queue<String>> = Global::new();
 
-fn send_message(message: String) -> () {
+pub fn send_message(message: String) -> () {
     (*OUTGOING_QUEUE.lock_mut().unwrap()).add(message).expect("adding message");
 }
 
-async fn start_client() -> Result<(), Box<dyn Error>> {
+pub async fn start_client(window: Window) -> Result<(), Box<dyn Error>> {
     *OUTGOING_QUEUE.lock_mut().unwrap() = queue![];
 
     let stream = UnixStream::connect("/tmp/ipc.sock").await?;
