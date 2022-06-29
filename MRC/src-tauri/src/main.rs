@@ -159,7 +159,7 @@ fn get_username() -> String {
 
 #[tauri::command]
 fn start_client(window: Window) {
-  let handle = tokio::spawn(async move {
+  let handle = async_runtime::spawn(async move {
     interface::start_client(window).await;
   });
   // let test = async_runtime::spawn(
