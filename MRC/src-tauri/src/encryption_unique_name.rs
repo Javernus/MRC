@@ -11,7 +11,10 @@ pub fn encrypt(text: &str, password: &str) -> String {
 
 pub fn decrypt(ciphertext: &str, password: &str) -> String {
     let key = generate_key(password);
-    key.decrypt_base64_to_string(ciphertext).unwrap()
+    match key.decrypt_base64_to_string(ciphertext) {
+        Ok(s) => s,
+        Err(_) => "".to_string(),
+    }
 }
 
 #[test]
