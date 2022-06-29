@@ -141,9 +141,7 @@ fn test_groups_io() {
     write_groups(&groups).expect("failed to write groups");
     let r_groups = match read_groups() {
         Ok(g) => g,
-        Err(why) => {
-            dbg!(&groups);
-            dbg!(why);
+        Err(_) => {
             vec![]
         },
     };

@@ -15,9 +15,7 @@ pub fn hash_password(password: &str) -> String {
   let argon2: Argon2 = Argon2::default();
   match argon2.hash_password(password.as_ref(), &salt) {
     Ok(hash) => hash.to_string(),
-    Err(why) => {
-      dbg!(password);
-      dbg!(why);
+    Err(_) => {
       "".to_string()
     },
   }

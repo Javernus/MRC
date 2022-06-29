@@ -13,8 +13,7 @@ pub mod io;
 pub fn read_username() -> String {
     match read_config() {
         Ok(config) => config.get_username(),
-        Err(why) => {
-            dbg!(why);
+        Err(_) => {
             DEFAULT_USERNAME.to_string()
         },
     }
@@ -27,8 +26,7 @@ pub fn read_username() -> String {
 pub fn read_password() -> String {
     match read_config() {
         Ok(config) => config.get_password(),
-        Err(why) => {
-            dbg!(why);
+        Err(_) => {
             DEFAULT_PASSWORD.to_string()
         },
     }
