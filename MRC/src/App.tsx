@@ -34,6 +34,8 @@ const App: Component = () => {
   let [plusMenu, setPlusMenu] = createSignal(false)
   let [groups, setGroups] = createSignal([])
   let [username, setUsername] = createSignal('')
+  let [showMPassword, setShowMPassword] = createSignal(true)
+  let [MPasswordWrong, setMPasswordWrong] = createSignal(false)
   let [showChangeUsername, setShowChangeUsername] = createSignal(false)
   let [showJoinGroup, setShowJoinGroup] = createSignal(false)
   let [joinGroupError, setJoinGroupError] = createSignal(false)
@@ -127,7 +129,7 @@ const App: Component = () => {
   requestGroups(setGroups)
   requestUsername()
 
-  let chatElement
+  let chatElement, MPasswordElement
 
   const scrollDown = () => {
     setTimeout(() => chatElement.scrollTop = chatElement.scrollHeight, 25)
@@ -139,6 +141,17 @@ const App: Component = () => {
     chatRefetch.refetch()
     lastChatsRefetch.refetch()
   })
+
+  const sendMPassword = async () => {
+    const success = await DB.setMPassword(MPasswordElement.value)
+
+    if (success) {
+      setShowMPassword(false)
+      setMPasswordWrong(false)
+    } else {
+      setMPasswordWrong(true)
+    }
+  }
 
   return (
     <>
@@ -164,6 +177,12 @@ const App: Component = () => {
             }
           />
           <InputField placeholder="Search" oninput={searchGroups} />
+        </div>
+        <div class={cl('enter-password', { 'enter-password--visible': showMPassword() })}>
+          <p class='enter-password__header'>Enter Password</p>
+          <p class="enter-password__info">If this is your first time opening the application, type in a new password. Otherwise, enter the password you have previously used.</p>
+          <InputField placeholder="Master Password" type="password" oninput={() => setMPasswordWrong(false)} ref={MPasswordElement} error={MPasswordWrong()} />
+          <Button onclick={sendMPassword} type="submit">Submit</Button>
         </div>
         <div class={cl('change-username', { 'change-username--visible': showChangeUsername() })}>
           <p class='change-username__header'>Set Username</p>
