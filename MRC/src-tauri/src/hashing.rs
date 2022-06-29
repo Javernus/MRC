@@ -31,6 +31,7 @@ pub fn hash_password(password: &str) -> String {
 /// * `hashed_password`: password to verify withe (retrieved from database).
 ///
 /// returns: bool
+#[allow(dead_code)]
 pub fn verify_password(password: &str, hashed_password: &str) -> bool {
   let argon2: Argon2 = Argon2::default();
   let parsed_hash: PasswordHash = match PasswordHash::new(hashed_password) {

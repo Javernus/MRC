@@ -44,6 +44,7 @@ pub fn write_config(config: &Config) -> Result<(), Error> {
 /// Deletes user config file.
 ///
 /// Returns: Result<(), std::io::Error>
+#[allow(dead_code)]
 pub fn delete_config() -> Result<(), Error> {
     file::delete_file(&config_path())
 }

@@ -109,6 +109,7 @@ pub fn delete_single_group(group_id: i32) -> Result<(), Error> {
 /// Deletes all chats and groups files from database.
 ///
 /// returns: Result<(), Error>
+#[allow(dead_code)]
 pub fn delete_groups() -> Result<(), Error> {
     match read_groups() {
         Ok(groups) => {

@@ -94,6 +94,7 @@ pub fn write_chats(chats: &Vec<Chat>) -> Result<(), Error> {
 /// Deletes groups file from the database.
 ///
 /// returns: Result<(), std::io::Error>
+#[allow(dead_code)]
 pub fn delete_group() -> Result<(), Error> {
     file::delete_file(&groups_path())
 }
