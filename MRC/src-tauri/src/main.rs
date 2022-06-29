@@ -9,6 +9,8 @@ extern crate core;
 use crate::database::chat::Chat;
 use crate::database::group::Group;
 use tauri::{Menu, MenuItem, Submenu, Window};
+use tauri::plugin::Plugin;
+use tauri::async_runtime;
 use std::thread;
 
 mod file;
@@ -19,7 +21,7 @@ mod encryption_unique_name;
 mod encoding;
 mod cmd;
 mod interface;
-use interface::{start_client, send_message};
+use interface::send_message;
 
 /// Returns groups in vector format.
 ///
@@ -155,12 +157,21 @@ fn get_username() -> String {
 }
 
 #[tauri::command]
-fn start_cient(window: Window<R>) {
-  // async_runtime::spawn(interface::start_client(window));
-  Plugin::initialize(interface::start_client(window));
+fn start_client(window: Window) {
+  let handle = tokio::spawn(async move {
+    interface::start_client(window).await;
+  });
+  // let test = async_runtime::spawn(
+  //   async move {
+  //     interface::start_client(window);
+  //   }
+  // );
+  // test.await.expect("TODO: panic message");
+  // Plugin::initialize(interface::start_client(window));
   // thread::spawn(|| {
   //   interface::start_client(window);
   // });
+
 }
 
 #[tauri::command]

@@ -1,5 +1,5 @@
 extern crate core;
-use tauri::{Window, async_runtime};
+use tauri::Window;
 use crate::database::chat::Chat;
 use crate::database;
 extern crate queues;
@@ -33,6 +33,7 @@ pub fn send_message(message: String) -> () {
 pub async fn start_client(window: Window) -> Result<(), Box<dyn Error>> {
     *OUTGOING_QUEUE.lock_mut().unwrap() = queue![];
 
+    println!("trying to connect to socket..");
     let stream = UnixStream::connect("/tmp/ipc.sock").await?;
 
     loop {
@@ -61,12 +62,12 @@ pub async fn start_client(window: Window) -> Result<(), Box<dyn Error>> {
             if !incoming_message.is_empty() {
                 println!("read {incoming_message} from socket");
 
-                let chat: Chat = Chat::new(8, 123456789012, "Name", &incoming);
+                let chat: Chat = Chat::new(8, 123456789012, "Name", &incoming_message);
                 database::save_chat(&chat);
 
                 window.emit(
                     "refetch_chat",
-                    Payload { message: incoming.to_string() }
+                    Payload { message: incoming_message.to_string() }
                 ).unwrap();
             }
         }
