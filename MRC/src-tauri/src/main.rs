@@ -17,7 +17,6 @@ mod file;
 mod database;
 mod config;
 mod encryption_unique_name;
-// mod receiver;
 mod encoding;
 mod cmd;
 mod interface;
@@ -162,17 +161,6 @@ fn start_client(window: Window) {
   let handle = async_runtime::spawn(async move {
     interface::start_client(window).await;
   });
-  // let test = async_runtime::spawn(
-  //   async move {
-  //     interface::start_client(window);
-  //   }
-  // );
-  // test.await.expect("TODO: panic message");
-  // Plugin::initialize(interface::start_client(window));
-  // thread::spawn(|| {
-  //   interface::start_client(window);
-  // });
-
 }
 
 #[tauri::command]
