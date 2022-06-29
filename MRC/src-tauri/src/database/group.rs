@@ -1,13 +1,13 @@
 use crate::encryption::{encrypt, decrypt};
-use crate::config::{read_mpw};
-use serde::{Serialize, Deserialize};
+use crate::config::{read_password};
 use nanoid::nanoid;
+use serde::{Serialize, Deserialize};
 
 #[derive(Serialize, Deserialize, Clone, Debug, PartialEq)]
 pub struct Group {
-    pub id: i32,
-    pub name: String,
-    pub encrypted_password: String,
+    id: i32,
+    name: String,
+    encrypted_password: String,
 }
 
 impl Group {
@@ -37,14 +37,26 @@ impl Group {
                 if password.is_empty() {
                     password.to_string()
                 } else {
-                    encrypt(password, &read_mpw())
+                    encrypt(password, &read_password())
                 }
             },
         }
     }
 
-    pub fn decrypt_password(&self) -> String {
-        decrypt(&*self.encrypted_password, &read_mpw())
+    pub fn get_id(&self) -> i32 {
+        self.id
+    }
+
+    pub fn get_name(&self) -> String {
+        self.name.to_string()
+    }
+
+    pub fn get_encrypted_password(&self) -> String {
+        self.encrypted_password.to_string()
+    }
+
+    pub fn get_decrypted_password(&self) -> String {
+        decrypt(&self.get_encrypted_password(), &read_password())
     }
 }
 
@@ -55,11 +67,8 @@ impl Group {
 /// * `groups`: reference to vector of groups to serialize.
 ///
 /// returns: String
-pub fn serialize(groups: &Vec<Group>) -> String {
-    match serde_json::to_string(groups) {
-        Ok(s) => s,
-        Err(_) => "".to_string(),
-    }
+pub fn serialize(groups: &Vec<Group>) -> Result<String, serde_json::Error> {
+    serde_json::to_string(groups)
 }
 
 /// Deserializes string to vector of groups. Returns vector of groups.
@@ -69,14 +78,11 @@ pub fn serialize(groups: &Vec<Group>) -> String {
 /// * `text`: reference to string to deserialize.
 ///
 /// returns: Vec<Group>
-pub fn deserialize(text: &str) -> Vec<Group> {
+pub fn deserialize(text: &str) -> Result<Vec<Group>, serde_json::Error> {
     if text.is_empty() {
-        vec![]
+        Ok(vec![])
     } else {
-        match serde_json::from_str(text) {
-            Ok(g) => g,
-            Err(_) => vec![],
-        }
+        serde_json::from_str(text)
     }
 }
 
@@ -87,12 +93,12 @@ fn test_group() {
         Group::new(None, "People", "very strong password"),
     ];
 
-    let ser: String = serialize(&groups);
-    let deser: Vec<Group> = deserialize(&ser);
+    let ser: String = serialize(&groups).unwrap();
+    let deser: Vec<Group> = deserialize(&ser).unwrap();
 
     for i in 0..2 {
         assert_eq!(groups[i], deser[i]);
     }
 
-    assert_eq!(groups[1].decrypt_password(), "very strong password");
+    assert_eq!(groups[1].get_decrypted_password(), "very strong password");
 }

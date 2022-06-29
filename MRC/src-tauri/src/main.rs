@@ -5,9 +5,6 @@
 extern crate magic_crypt;
 extern crate core;
 
-// use std::io::Error;
-use crate::database::chat::Chat;
-use crate::database::group::Group;
 use tauri::{Menu, MenuItem, Submenu, Window};
 use tauri::plugin::Plugin;
 use tauri::async_runtime;
@@ -18,18 +15,23 @@ mod database;
 mod config;
 mod encryption;
 mod hashing;
-mod receiver;
 mod encoding;
 mod cmd;
 mod interface;
 use interface::send_message;
+use database::chat::Chat;
+use database::group::Group;
+use database::io::{read_chats, read_groups};
 
 /// Returns groups in vector format.
 ///
 /// returns: Vec<Group>
 #[tauri::command]
 fn get_groups() -> Vec<Group> {
-  database::get_groups().into()
+  match read_groups() {
+    Ok(groups) => groups,
+    Err(_) => vec![],
+  }
 }
 
 /// Sends chat to group and saves it to the database.
@@ -46,27 +48,33 @@ fn send_chat(group_id: i32, time: i64, message: String) {
   // QUESTION: can String be replaced by &str in the parameters?
   let name: String = config::read_username();
   let group: Group = find_group(group_id);
-  let encodeddata: String = encoding::encode(&name, &group.decrypt_password(), &message);
-  let serializeddata: String = encoding::group_encode(group.name, encodeddata);
+  let encodeddata: String = encoding::encode(&name, &group.get_decrypted_password(), &message);
+  let serializeddata: String = encoding::group_encode(group.get_name(), encodeddata);
 
   // TODO: encrypt message with user password
   let chat: Chat = Chat::new(group_id, time, &name, &message);
 
   // encoding::encode(&name, &group.encrypted_password, &message);
   send_message(serializeddata);
-  database::save_chat(&chat);
+  match database::append_chat(&chat) {
+    Ok(_) => {}
+    Err(_) => {}
+  };
 }
 
 // Finds group based on group id.
 fn find_group(group_id: i32) -> Group {
-  let groups: Vec<Group> = database::get_groups();
+  let groups: Vec<Group> = match read_groups() {
+    Ok(g) => g,
+    Err(_) => vec![],
+  };
 
   if groups.is_empty() {
     return Group::new(Some(0), "", "");
   }
 
   for group in &groups {
-    if group.id == group_id {
+    if group.get_id() == group_id {
       return group.clone();
     }
   }
@@ -75,9 +83,11 @@ fn find_group(group_id: i32) -> Group {
 }
 
 fn find_group_ids(serializeddata: String) -> Vec<Group> {
-
   let groupdata: (String, String) = encoding::get_group(serializeddata);
-  let groups: Vec<Group> = database::get_groups();
+  let groups: Vec<Group> = match read_groups() {
+    Ok(g) => g,
+    Err(_) => vec![],
+  };
   let mut groupvec = Vec::new();
 
   if groups.is_empty() {
@@ -85,7 +95,7 @@ fn find_group_ids(serializeddata: String) -> Vec<Group> {
   }
 
   for group in &groups {
-    if group.name == groupdata.0 {
+    if group.get_name() == groupdata.0 {
       groupvec.push(group.clone());
     }
   }
@@ -100,7 +110,10 @@ fn find_group_ids(serializeddata: String) -> Vec<Group> {
 /// * `group_id`: id of the group to remove.
 #[tauri::command]
 fn remove_group(group_id: i32) {
-  database::delete_single_group(group_id);
+  match database::delete_single_group(group_id) {
+    Ok(_) => {}
+    Err(_) => {}
+  };
 }
 
 /// Creates and returns a new group.
@@ -116,8 +129,10 @@ fn remove_group(group_id: i32) {
 fn create_group(name: String, password: String) -> Group {
   // QUESTION: can String be replaced by &str in the parameters?
   let group: Group = Group::new(None, &name, &password);
-  database::save_group(&group);
-  group
+  match database::append_group(&group) {
+    Ok(_) => group,
+    Err(_) => group,
+  }
 }
 
 #[tauri::command]
@@ -128,8 +143,10 @@ fn join_group(name: String, password: String) -> Group {
   // todo!("check password");
 
   let group: Group = Group::new(Some(0), &name, &password);
-  database::save_group(&group);
-  group
+  match database::append_group(&group) {
+    Ok(_) => group,
+    Err(_) => group,
+  }
 }
 
 /// Returns the newest chat in group.
@@ -141,7 +158,10 @@ fn join_group(name: String, password: String) -> Group {
 /// returns: Chat
 #[tauri::command]
 fn get_newest_chat(group_id: i32) -> Chat {
-  database::get_last_chat(group_id).into()
+  match database::read_last_chat(group_id) {
+    Ok(chat) => chat,
+    Err(_) => Chat::new(-1, 0, "", ""),
+  }
 }
 
 /// Returns all chats in group in vector format.
@@ -153,7 +173,10 @@ fn get_newest_chat(group_id: i32) -> Chat {
 /// returns: Vec<Chat, Global>
 #[tauri::command]
 fn get_chats(group_id: i32) -> Vec<Chat> {
-  database::get_chats(group_id).into()
+  match read_chats(group_id) {
+    Ok(chats) => chats,
+    Err(_) => vec![],
+  }
 }
 
 /// Sets username in config.
@@ -188,7 +211,10 @@ fn start_client(window: Window) {
 
 #[tauri::command]
 fn set_m_password(password: String) {
-  config::write_mpw(&password);
+  match config::write_password(&password) {
+    Ok(_) => {}
+    Err(_) => {}
+  };
 }
 
 fn main() {

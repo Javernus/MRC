@@ -1,90 +1,9 @@
-use crate::file;
-use serde::{Serialize, Deserialize};
+use crate::config::serialization::{Config, DEFAULT_PASSWORD, DEFAULT_USERNAME};
+use crate::config::io::{read_config, write_config};
+use std::io::Error;
 
-pub const DEFAULT_USERNAME: &str = "";
-pub const DEFAULT_MPW: &str = "";
-
-/// Returns string representation of path to config file.
-/// Output: ../data/config.json
-///
-/// returns: String
-fn config_path() -> String {
-    String::from("../data/config.json")
-}
-
-#[derive(Serialize, Deserialize, Clone, Debug, PartialEq)]
-pub struct Config {
-    username: String,
-    mpw: String,
-}
-
-impl Config {
-    fn new(username: &str, mpw: &str) -> Config {
-        Config {
-            username: username.to_string(),
-            mpw: mpw.to_string(),
-        }
-    }
-
-    fn set_username(&mut self, username: &str) {
-        self.username = username.to_string();
-    }
-
-    fn set_mpw(&mut self, mpw: &str) {
-        self.mpw = mpw.to_string();
-    }
-
-    fn get_username(&self) -> String {
-        self.username.to_string()
-    }
-
-    fn get_mpw(&self) -> String {
-        self.mpw.to_string()
-    }
-}
-
-fn serialize(config: &Config) -> Result<String, serde_json::Error> {
-    serde_json::to_string(config)
-}
-
-fn deserialize(text: &str) -> Result<Config, serde_json::Error> {
-    if text.is_empty() {
-        Ok(Config::new(DEFAULT_USERNAME, DEFAULT_MPW))
-    } else {
-        serde_json::from_str(text)
-    }
-}
-
-#[test]
-fn test_config_serialization() {
-    let config: Config = Config::new("Alice", "password123");
-    let ser: String = serialize(&config).unwrap();
-    assert_eq!(ser, "{\"username\":\"Alice\",\"mpw\":\"password123\"}");
-    let deser: Config = deserialize(&ser).unwrap();
-    assert_eq!(config, deser);
-}
-
-fn read_config() -> Result<Config, std::io::Error> {
-    match file::read_file(&config_path()) {
-        Ok(contents) => match deserialize(&contents) {
-            Ok(config) => Ok(config),
-            Err(why) => Err(std::io::Error::from(why)),
-        },
-        Err(why) => Err(why),
-    }
-}
-
-fn write_config(config: &Config) -> Result<(), std::io::Error> {
-    match serialize(&config) {
-        Ok(serialized) => {
-            match file::write_file(&config_path(), &serialized) {
-                Ok(_) => Ok(()),
-                Err(why) => Err(why),
-            }
-        }
-        Err(why) => Err(std::io::Error::from(why)),
-    }
-}
+pub mod serialization;
+pub mod io;
 
 /// Retrieves username from config.
 /// If no username is found, DEFAULT_USERNAME is set as username and gets returned as well.
@@ -97,10 +16,10 @@ pub fn read_username() -> String {
     }
 }
 
-pub fn read_mpw() -> String {
+pub fn read_password() -> String {
     match read_config() {
-        Ok(config) => config.get_mpw(),
-        Err(_) => DEFAULT_MPW.to_string(),
+        Ok(config) => config.get_password(),
+        Err(_) => DEFAULT_PASSWORD.to_string(),
     }
 }
 
@@ -109,55 +28,57 @@ pub fn read_mpw() -> String {
 /// # Arguments
 ///
 /// * `username`: username to set in config.
-pub fn write_username(username: &str) -> Result<(), std::io::Error> {
+pub fn write_username(username: &str) -> Result<(), Error> {
     let config: Config = match read_config() {
         Ok(old_config) => {
             let mut new_config = old_config;
             new_config.set_username(username);
             new_config
         },
-        Err(_) => Config::new(username, DEFAULT_MPW),
+        Err(_) => Config::new(username, DEFAULT_PASSWORD),
     };
 
     write_config(&config)
 }
 
-pub fn write_mpw(mpw: &str) -> Result<(), std::io::Error> {
+pub fn write_password(password: &str) -> Result<(), Error> {
     let config: Config = match read_config() {
         Ok(old_config) => {
             let mut new_config = old_config;
-            new_config.set_mpw(mpw);
+            new_config.set_password(password);
             new_config
         },
-        Err(_) => Config::new(DEFAULT_USERNAME, mpw),
+        Err(_) => Config::new(DEFAULT_USERNAME, password),
     };
 
     write_config(&config)
 }
 
-/// Deletes user config file.
-pub fn delete_config() -> Result<(), std::io::Error>  {
-    file::delete_file(&config_path())
-}
+#[cfg(test)]
+mod tests {
+    use crate::config::serialization::{DEFAULT_PASSWORD, DEFAULT_USERNAME};
+    use crate::config::io::delete_config;
+    use crate::config::{read_password, read_username, write_password, write_username};
 
-#[test]
-fn test_config_read_after_write() {
-    let username: &str = "Test-name";
-    let mpw: &str = "password123";
-    write_username(username).expect("couldn't set username");
-    write_mpw(mpw).expect("couldn't set mpw");
-    let r_username: String = read_username();
-    let r_mpw: String = read_mpw();
-    assert_eq!(&username, &r_username);
-    assert_eq!(&mpw, &r_mpw);
-    delete_config().expect("couldn't delete config");
-}
+    #[test]
+    fn test_config_read_after_write() {
+        let username: &str = "Test-name";
+        let password: &str = "password123";
+        write_username(username).expect("couldn't set username");
+        write_password(password).expect("couldn't set password");
+        let r_username: String = read_username();
+        let r_password: String = read_password();
+        assert_eq!(&username, &r_username);
+        assert_eq!(&password, &r_password);
+        delete_config().expect("couldn't delete config");
+    }
 
-#[test]
-fn test_config_read_empty() {
-    let r_username: String = read_username();
-    let r_mpw: String = read_mpw();
-    assert_eq!(&r_username, DEFAULT_USERNAME);
-    assert_eq!(&r_mpw, DEFAULT_MPW);
-    delete_config().expect("couldn't delete config");
+    #[test]
+    fn test_config_read_empty() {
+        let r_username: String = read_username();
+        let r_password: String = read_password();
+        assert_eq!(&r_username, DEFAULT_USERNAME);
+        assert_eq!(&r_password, DEFAULT_PASSWORD);
+        delete_config().expect("couldn't delete config");
+    }
 }

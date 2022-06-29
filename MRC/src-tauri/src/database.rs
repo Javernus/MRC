@@ -1,51 +1,30 @@
-use crate::file;
 use crate::database::group::Group;
 use crate::database::chat::Chat;
+use crate::database::io::{read_chats, read_groups, write_chats, write_groups};
+use std::io::Error;
 
 pub mod group;
 pub mod chat;
-
-/// Returns string representation of path to groups file in database.
-/// Output: ../data/groups.json
-///
-/// returns: String
-fn groups_path() -> String {
-    String::from("../data/groups.json")
-}
-
-/// Returns string representation of path to chats file in database.
-/// Output example: ../data/chats-42.json
-///
-/// # Arguments
-///
-/// * `group_id`: id of group.
-///
-/// returns: String
-fn chats_path(group_id: i32) -> String {
-    format!("{}{}{}", "../data/chats-", group_id, ".json")
-}
+pub mod io;
 
 /// Appends group to groups.json in database.
 ///
 /// # Arguments
 ///
 /// * `g`: group to save.
-pub fn save_group(g: &Group) {
-    let groups_file: String = groups_path();
-    let read_result = file::read_file(&groups_file);
-    let groups: Vec<Group> = match read_result {
-        Ok(contents) => {
-            let mut current: Vec<Group> = group::deserialize(&contents);
-            current.push(g.clone());
-            current
-        },
+pub fn append_group(group: &Group) -> Result<(), Error> {
+    let groups: Vec<Group> = match read_groups() {
+        Ok(old_groups) => {
+            let mut new_groups: Vec<Group> = old_groups;
+            new_groups.push(group.clone());
+            new_groups
+        }
         Err(_) => {
-            vec![g.clone()]
+            vec![group.clone()]
         },
     };
 
-    let text: String = group::serialize(&groups);
-    file::write_file(&groups_file, &text).expect("failed to save group");
+    write_groups(&groups)
 }
 
 /// Appends chat to chats-<<id>>.json in database.
@@ -53,68 +32,19 @@ pub fn save_group(g: &Group) {
 /// # Arguments
 ///
 /// * `c`: chat to save.
-pub fn save_chat(c: &Chat) {
-    let chats_file: String = chats_path(c.group_id);
-    let read_result = file::read_file(&chats_file);
-    let chats: Vec<Chat> = match read_result {
-        Ok(contents) => {
-            let mut current: Vec<Chat> = chat::deserialize(&contents);
-            current.push(c.clone());
-            current
-        },
+pub fn append_chat(chat: &Chat) -> Result<(), Error> {
+    let chats: Vec<Chat> = match read_chats(chat.get_group_id()) {
+        Ok(old_chats) => {
+            let mut new_chats: Vec<Chat> = old_chats;
+            new_chats.push(chat.clone());
+            new_chats
+        }
         Err(_) => {
-            vec![c.clone()]
+            vec![chat.clone()]
         },
     };
 
-    let text: String = chat::serialize(&chats);
-    file::write_file(&chats_file, &text).expect("failed to save chat");
-}
-
-/// Returns all groups from database in vector format.
-/// If groups are not found, an empty vector is returned.
-///
-/// returns: Vec<Group>
-pub fn get_groups() -> Vec<Group> {
-    let groups_file: String = groups_path();
-    let text = file::read_file(&groups_file);
-    match text {
-        Ok(contents) => {
-            if contents.is_empty() {
-                vec![]
-            } else {
-                group::deserialize(&contents)
-            }
-        },
-        Err(_) => {
-            vec![]
-        },
-    }
-}
-
-/// Returns all chats in group from database in vector format.
-/// If chats are not found, an empty vector is returned.
-///
-/// # Arguments
-///
-/// * `group_id`: id of group.
-///
-/// returns: Vec<Chat>
-pub fn get_chats(group_id: i32) -> Vec<Chat> {
-    let chats_file: String = chats_path(group_id);
-    let text = file::read_file(&chats_file);
-    match text {
-        Ok(contents) => {
-            if contents.is_empty() {
-                vec![]
-            } else {
-                chat::deserialize(&contents)
-            }
-        },
-        Err(_) => {
-            vec![]
-        },
-    }
+    write_chats(&chats)
 }
 
 /// Returns last chat in group from database.
@@ -124,16 +54,21 @@ pub fn get_chats(group_id: i32) -> Vec<Chat> {
 /// * `group_id`: id of group.
 ///
 /// returns: Chat
-pub fn get_last_chat(group_id: i32) -> Chat {
-    let chats: Vec<Chat> = get_chats(group_id);
-    let mut last_chat: Chat = Chat::new(0, 0, "", "");
-    for c in chats {
-        if c.time > last_chat.time {
-            last_chat = c;
-        }
-    }
+pub fn read_last_chat(group_id: i32) -> Result<Chat, Error> {
+    let mut last_chat: Chat = Chat::new(-1, 0, "", "");
 
-    last_chat
+    match read_chats(group_id) {
+        Ok(chats) => {
+            for chat in chats {
+                if chat.get_time() > last_chat.get_time() {
+                    last_chat = chat;
+                }
+            }
+
+            Ok(last_chat)
+        },
+        Err(why) => Err(why),
+    }
 }
 
 /// Deletes chats file and group item in groups file from database.
@@ -141,41 +76,45 @@ pub fn get_last_chat(group_id: i32) -> Chat {
 /// # Arguments
 ///
 /// * `group_id`: id of group.
-pub fn delete_single_group(group_id: i32) {
-    let filename: String = chats_path(group_id);
-    file::delete_file(&filename).expect("failed to delete chats file");
-    let groups_file: String = groups_path();
-    let read_result = file::read_file(&groups_file);
-    let groups: Vec<Group> = match read_result {
-        Ok(contents) => {
-            let mut current: Vec<Group> = group::deserialize(&contents);
-            for i in 0..(current.len() - 1) {
-                if current[i].id == group_id {
-                    current.remove(i);
+pub fn delete_single_group(group_id: i32) -> Result<(), Error> {
+    match io::delete_chat(group_id) {
+        Ok(_) => {},
+        Err(why) => return Err(why),
+    }
+
+    let groups: Vec<Group> = match read_groups() {
+        Ok(old_groups) => {
+            let mut new_groups: Vec<Group> = old_groups;
+
+            for i in 0..(new_groups.len() - 1) {
+                if new_groups[i].get_id() == group_id {
+                    new_groups.remove(i);
                 }
             }
 
-            current
+            new_groups
         },
-        Err(_) => {
-            vec![]
-        },
+        Err(_) => vec![],
     };
 
-    let text: String = group::serialize(&groups);
-    file::write_file(&groups_file, &text).expect("failed to update groups file");
+    write_groups(&groups)
 }
 
 /// Deletes all chats and groups files from database.
-pub fn delete_groups() {
-    let groups: Vec<Group> = get_groups();
-    for group in groups {
-        let filename: String = chats_path(group.id);
-        file::delete_file(&filename).expect("failed to delete chats file");
-    }
+pub fn delete_groups() -> Result<(), Error> {
+    match read_groups() {
+        Ok(groups) => {
+            for group in groups {
+                match io::delete_chat(group.get_id()) {
+                    Ok(_) => {}
+                    Err(why) => return Err(why),
+                };
+            }
 
-    let groups_file: String = groups_path();
-    file::delete_file(&groups_file).expect("failed to delete groups file");
+            io::delete_group()
+        },
+        Err(why) => Err(why),
+    }
 }
 
 #[test]
@@ -186,45 +125,45 @@ fn test_database() {
     ];
 
     for g in &groups {
-        save_group(g);
+        append_group(g).expect("failed append group");
     }
 
-    let read_groups: Vec<Group> = get_groups();
+    let read_groups: Vec<Group> = read_groups().unwrap();
     for i in 0..read_groups.len() {
-        if read_groups[i].id == groups[0].id {
+        if read_groups[i].get_id() == groups[0].get_id() {
             assert_eq!(&groups[0], &read_groups[i]);
-        } else if read_groups[i].id == groups[1].id {
+        } else if read_groups[i].get_id() == groups[1].get_id() {
             assert_eq!(&groups[1], &read_groups[i]);
         }
     }
 
     let chats_1: Vec<Chat> = vec![
-        Chat::new(groups[0].id, 1000, "Alice", "Hi Bob!"),
-        Chat::new(groups[0].id, 1200, "Bob", "Hi Alice!")
+        Chat::new(groups[0].get_id(), 1000, "Alice", "Hi Bob!"),
+        Chat::new(groups[0].get_id(), 1200, "Bob", "Hi Alice!")
     ];
 
     for c in &chats_1 {
-        save_chat(c);
+        append_chat(c).expect("failed append chat");
     }
 
-    let read_chats_1: Vec<Chat> = get_chats(groups[0].id);
+    let read_chats_1: Vec<Chat> = read_chats(groups[0].get_id()).unwrap();
     for i in 0..read_chats_1.len() {
         assert_eq!(&chats_1[i], &read_chats_1[i]);
     }
 
     let chats_2: Vec<Chat> = vec![
-        Chat::new(groups[1].id, 4000, "Charlie", "Hi David!"),
-        Chat::new(groups[1].id, 4200, "David", "Hi Charlie!")
+        Chat::new(groups[1].get_id(), 4000, "Charlie", "Hi David!"),
+        Chat::new(groups[1].get_id(), 4200, "David", "Hi Charlie!")
     ];
 
     for c in &chats_2 {
-        save_chat(c);
+        append_chat(c).expect("failed append chat");
     }
 
-    let read_chats_2: Vec<Chat> = get_chats(groups[1].id);
+    let read_chats_2: Vec<Chat> = read_chats(groups[1].get_id()).unwrap();
     for i in 0..read_chats_2.len() {
         assert_eq!(&chats_2[i], &read_chats_2[i]);
     }
 
-    delete_groups();
+    delete_groups().unwrap();
 }
