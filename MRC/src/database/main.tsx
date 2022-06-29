@@ -37,6 +37,10 @@ const receiver = async () => {
   invoke("receiver")
 }
 
+const setMPassword = async (password: string) => {
+  return await invoke("set_m_password", { password: password })
+}
+
 const sendChat = async (message: string, groupId: number) => {
   let time = new Date().getTime()
   invoke("send_chat", { message: message, time: time, groupId: groupId })
@@ -53,4 +57,5 @@ export default {
   removeGroup,
   receiver,
   sendChat,
+  setMPassword,
 }

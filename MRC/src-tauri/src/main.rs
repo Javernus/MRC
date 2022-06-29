@@ -155,6 +155,11 @@ fn receiver(window: Window) {
   });
 }
 
+#[tauri::command]
+fn set_m_password(password: String) {
+  config::set_mpw(&password)
+}
+
 fn main() {
   let app = Menu::new()
     .add_native_item(MenuItem::Quit);
@@ -175,7 +180,7 @@ fn main() {
 
   tauri::Builder::default()
     .menu(menu)
-    .invoke_handler(tauri::generate_handler![set_username, get_username, send_chat, get_chats, get_groups, get_newest_chat, remove_group, create_group, join_group, receiver])
+    .invoke_handler(tauri::generate_handler![set_username, get_username, send_chat, get_chats, get_groups, get_newest_chat, remove_group, create_group, join_group, receiver, set_m_password])
     .run(tauri::generate_context!())
     .expect("error while running tauri application");
 }
