@@ -138,13 +138,6 @@ fn test_database() {
     }
 
     let read_groups: Vec<Group> = read_groups().unwrap();
-    for i in 0..read_groups.len() {
-        if read_groups[i].get_id() == groups[0].get_id() {
-            assert_eq!(&groups[0], &read_groups[i]);
-        } else if read_groups[i].get_id() == groups[1].get_id() {
-            assert_eq!(&groups[1], &read_groups[i]);
-        }
-    }
 
     let chats_1: Vec<Chat> = vec![
         Chat::new(groups[0].get_id(), 1000, "Alice", "Hi Bob!"),
@@ -156,9 +149,6 @@ fn test_database() {
     }
 
     let read_chats_1: Vec<Chat> = read_chats(groups[0].get_id()).unwrap();
-    for i in 0..read_chats_1.len() {
-        assert_eq!(&chats_1[i], &read_chats_1[i]);
-    }
 
     let chats_2: Vec<Chat> = vec![
         Chat::new(groups[1].get_id(), 4000, "Charlie", "Hi David!"),
@@ -170,9 +160,22 @@ fn test_database() {
     }
 
     let read_chats_2: Vec<Chat> = read_chats(groups[1].get_id()).unwrap();
+
+    delete_groups().unwrap();
+
+    for i in 0..read_groups.len() {
+        if read_groups[i].get_id() == groups[0].get_id() {
+            assert_eq!(&groups[0], &read_groups[i]);
+        } else if read_groups[i].get_id() == groups[1].get_id() {
+            assert_eq!(&groups[1], &read_groups[i]);
+        }
+    }
+
+    for i in 0..read_chats_1.len() {
+        assert_eq!(&chats_1[i], &read_chats_1[i]);
+    }
+
     for i in 0..read_chats_2.len() {
         assert_eq!(&chats_2[i], &read_chats_2[i]);
     }
-
-    delete_groups().unwrap();
 }

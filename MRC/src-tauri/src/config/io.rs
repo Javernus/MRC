@@ -56,14 +56,14 @@ fn test_config_io() {
         Err(_) => {}
     };
 
-    let config = Config::new("user", "pass");
-    write_config(&config).unwrap();
+    let config: Config = Config::new("user", "pass");
+    write_config(&config).expect("failed to write config");
     let r_config = match read_config() {
         Ok(conf) => conf,
         Err(why) => panic!("failed to read config: {}", why),
     };
 
-    assert_eq!(config, r_config);
-
     delete_config().unwrap();
+
+    assert_eq!(config, r_config);
 }

@@ -95,9 +95,9 @@ mod tests {
         write_username(username).expect("couldn't set username");
         let r_username: String = read_username();
 
-        assert_eq!(&username, &r_username);
-
         delete_config().expect("couldn't delete config");
+
+        assert_eq!(&username, &r_username);
     }
 
     #[test]
@@ -112,9 +112,9 @@ mod tests {
         write_password(password).expect("couldn't set password");
         let r_password: String = read_password();
 
-        assert_eq!(&hash_password(password), &r_password);
-
         delete_config().expect("couldn't delete config");
+
+        assert_eq!(&hash_password(password), &r_password);
     }
 
     #[test]
@@ -126,9 +126,9 @@ mod tests {
 
         let r_username: String = read_username();
 
-        assert_eq!(&r_username, DEFAULT_USERNAME);
-
         delete_config().expect("couldn't delete config");
+
+        assert_eq!(&r_username, DEFAULT_USERNAME);
     }
 
     #[test]
@@ -140,8 +140,8 @@ mod tests {
 
         let r_password: String = read_password();
 
-        assert_eq!(&r_password, DEFAULT_PASSWORD);
-
         delete_config().expect("couldn't delete config");
+
+        assert_eq!(&r_password, DEFAULT_PASSWORD);
     }
 }

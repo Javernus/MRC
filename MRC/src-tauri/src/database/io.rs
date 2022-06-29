@@ -121,9 +121,9 @@ fn test_chats_io() {
     write_chats(&chats).expect("failed to write chats");
     let r_chats = read_chats(123).unwrap();
 
-    assert_eq!(&chats, &r_chats);
-
     delete_chat(123).expect("failed to delete chat");
+
+    assert_eq!(&chats, &r_chats);
 }
 
 #[test]
@@ -142,12 +142,13 @@ fn test_groups_io() {
     let r_groups = match read_groups() {
         Ok(g) => g,
         Err(why) => {
+            dbg!(&groups);
             dbg!(why);
             vec![]
         },
     };
 
-    assert_eq!(&groups, &r_groups);
-
     delete_group().expect("failed to delete group");
+
+    assert_eq!(&groups, &r_groups);
 }
