@@ -1,15 +1,18 @@
-use crate::config::serialization::{Config, deserialize, serialize};
+use std::io::Error;
+use crate::config::config_struct::{Config, deserialize, serialize};
 use crate::file;
 
 /// Returns string representation of path to config file.
-/// Output: ../data/config.json
 ///
 /// returns: String
 fn config_path() -> String {
     String::from("../data/config.json")
 }
 
-pub fn read_config() -> Result<Config, std::io::Error> {
+/// Reads config from database.
+///
+/// returns: Result<Config, std::io::Error>
+pub fn read_config() -> Result<Config, Error> {
     match file::read_file(&config_path()) {
         Ok(contents) => match deserialize(&contents) {
             Ok(config) => Ok(config),
@@ -19,7 +22,14 @@ pub fn read_config() -> Result<Config, std::io::Error> {
     }
 }
 
-pub fn write_config(config: &Config) -> Result<(), std::io::Error> {
+/// Writes config to database.
+///
+/// # Arguments
+///
+/// * `config`: the config to write to the database.
+///
+/// returns: Result<(), std::io::Error>
+pub fn write_config(config: &Config) -> Result<(), Error> {
     match serialize(&config) {
         Ok(serialized) => {
             match file::write_file(&config_path(), &serialized) {
@@ -32,6 +42,20 @@ pub fn write_config(config: &Config) -> Result<(), std::io::Error> {
 }
 
 /// Deletes user config file.
-pub fn delete_config() -> Result<(), std::io::Error> {
+///
+/// Returns: Result<(), std::io::Error>
+pub fn delete_config() -> Result<(), Error> {
     file::delete_file(&config_path())
+}
+
+#[test]
+fn test_config_io() {
+    let config = Config::new("user", "pass");
+    write_config(&config).unwrap();
+    let r_config = match read_config() {
+        Ok(conf) => conf,
+        Err(why) => panic!("failed to read config: {}", why),
+    };
+    assert_eq!(config, r_config);
+    delete_config().unwrap();
 }

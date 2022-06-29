@@ -9,7 +9,7 @@ pub struct Chat {
 }
 
 impl Chat {
-    /// Creates and returns new chat.
+    /// Returns a new chat object.
     ///
     /// # Arguments
     ///
@@ -28,41 +28,53 @@ impl Chat {
         }
     }
 
+    /// Returns group id of chat.
+    ///
+    /// result: i32
     pub fn get_group_id(&self) -> i32 {
         self.group_id
     }
 
+    /// Returns time of chat.
+    ///
+    /// result: i64
     pub fn get_time(&self) -> i64 {
         self.time
     }
 
+    /// Returns name of sender of chat.
+    ///
+    /// result: String
     pub fn get_name(&self) -> String {
         self.name.to_string()
     }
 
+    /// Returns message of chat.
+    ///
+    /// result: String
     pub fn get_message(&self) -> String {
         self.message.to_string()
     }
 }
 
-/// Serializes vector of chats. Returns string in json format.
+/// Serializes vector of chats. Returns result of string in json format.
 ///
 /// # Arguments
 ///
 /// * `chats`: reference to vector of chats to serialize.
 ///
-/// returns: String
+/// returns: Result<String, serde_json::Error>
 pub fn serialize(chats: &Vec<Chat>) -> Result<String, serde_json::Error> {
     serde_json::to_string(chats)
 }
 
-/// Deserializes string to vector of chats. Returns vector of chats.
+/// Deserializes string to vector of chats. Returns result of vector of chats.
 ///
 /// # Arguments
 ///
 /// * `text`: reference to string to deserialize.
 ///
-/// returns: Vec<Chat>
+/// returns: Result<Vec<Chat>, serde_json::Error>
 pub fn deserialize(text: &str) -> Result<Vec<Chat>, serde_json::Error> {
     if text.is_empty() {
         Ok(vec![])

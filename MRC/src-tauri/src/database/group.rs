@@ -11,18 +11,19 @@ pub struct Group {
 }
 
 impl Group {
-    /// Creates and returns new group.
+    /// Returns new group object.
+    /// If id is None, a unique id will be generated.
     ///
     /// # Arguments
     ///
+    /// * `id`: id of group.
     /// * `name`: name of group.
-    /// * `password`: password of group, use "" for empty password.
+    /// * `password`: password of group.
     ///
     /// returns: Group
     pub fn new(id: Option<i32>, name: &str, password: &str) -> Group {
         Group {
-            id: {
-                match id {
+            id: match id {
                     None => {
                         let a: [char; 10] = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'];
                         nanoid!(9, &a).parse::<i32>().unwrap()
@@ -30,54 +31,59 @@ impl Group {
                     Some(g_id) => {
                         g_id
                     },
-                }
-            },
+                },
             name: String::from(name),
-            encrypted_password: {
-                if password.is_empty() {
-                    password.to_string()
-                } else {
-                    encrypt(password, &read_password())
-                }
-            },
+            encrypted_password: encrypt(password, &read_password()),
         }
     }
 
+    /// Returns id of group.
+    ///
+    /// result: i32
     pub fn get_id(&self) -> i32 {
         self.id
     }
 
+    /// Returns name of group.
+    ///
+    /// result: String
     pub fn get_name(&self) -> String {
         self.name.to_string()
     }
 
+    /// Returns encrypted password of group.
+    ///
+    /// result: String
     pub fn get_encrypted_password(&self) -> String {
         self.encrypted_password.to_string()
     }
 
+    /// Returns decrypted password of group.
+    ///
+    /// result: String
     pub fn get_decrypted_password(&self) -> String {
         decrypt(&self.get_encrypted_password(), &read_password())
     }
 }
 
-/// Serializes vector of groups. Returns string in json format.
+/// Serializes vector of groups. Returns result of string in json format.
 ///
 /// # Arguments
 ///
 /// * `groups`: reference to vector of groups to serialize.
 ///
-/// returns: String
+/// returns: Result<String, serde_json::Error>
 pub fn serialize(groups: &Vec<Group>) -> Result<String, serde_json::Error> {
     serde_json::to_string(groups)
 }
 
-/// Deserializes string to vector of groups. Returns vector of groups.
+/// Deserializes string to vector of groups. Returns result of vector of groups.
 ///
 /// # Arguments
 ///
 /// * `text`: reference to string to deserialize.
 ///
-/// returns: Vec<Group>
+/// returns: Result<Vec<Group>, serde_json::Error>
 pub fn deserialize(text: &str) -> Result<Vec<Group>, serde_json::Error> {
     if text.is_empty() {
         Ok(vec![])

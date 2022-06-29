@@ -11,7 +11,9 @@ pub mod io;
 ///
 /// # Arguments
 ///
-/// * `g`: group to save.
+/// * `group`: group to save.
+///
+/// returns: Result<(), Error>
 pub fn append_group(group: &Group) -> Result<(), Error> {
     let groups: Vec<Group> = match read_groups() {
         Ok(old_groups) => {
@@ -31,7 +33,9 @@ pub fn append_group(group: &Group) -> Result<(), Error> {
 ///
 /// # Arguments
 ///
-/// * `c`: chat to save.
+/// * `chat`: chat to save.
+///
+/// returns: Result<(), Error>
 pub fn append_chat(chat: &Chat) -> Result<(), Error> {
     let chats: Vec<Chat> = match read_chats(chat.get_group_id()) {
         Ok(old_chats) => {
@@ -53,7 +57,7 @@ pub fn append_chat(chat: &Chat) -> Result<(), Error> {
 ///
 /// * `group_id`: id of group.
 ///
-/// returns: Chat
+/// returns: Result<Chat, Error>
 pub fn read_last_chat(group_id: i32) -> Result<Chat, Error> {
     let mut last_chat: Chat = Chat::new(-1, 0, "", "");
 
@@ -76,6 +80,8 @@ pub fn read_last_chat(group_id: i32) -> Result<Chat, Error> {
 /// # Arguments
 ///
 /// * `group_id`: id of group.
+///
+/// returns: Result<(), Error>
 pub fn delete_single_group(group_id: i32) -> Result<(), Error> {
     match io::delete_chat(group_id) {
         Ok(_) => {},
@@ -101,6 +107,8 @@ pub fn delete_single_group(group_id: i32) -> Result<(), Error> {
 }
 
 /// Deletes all chats and groups files from database.
+///
+/// returns: Result<(), Error>
 pub fn delete_groups() -> Result<(), Error> {
     match read_groups() {
         Ok(groups) => {

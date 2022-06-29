@@ -1,10 +1,11 @@
+use std::io::Error;
+use magic_crypt::generic_array::typenum::Gr;
 use crate::database::{chat, group};
 use crate::database::group::Group;
 use crate::database::chat::Chat;
 use crate::file;
 
 /// Returns string representation of path to groups file in database.
-/// Output: ../data/groups.json
 ///
 /// returns: String
 fn groups_path() -> String {
@@ -12,7 +13,6 @@ fn groups_path() -> String {
 }
 
 /// Returns string representation of path to chats file in database.
-/// Output example: ../data/chats-42.json
 ///
 /// # Arguments
 ///
@@ -25,10 +25,9 @@ fn chats_path(group_id: i32) -> String {
 
 
 /// Returns all groups from database in vector format.
-/// If groups are not found, an empty vector is returned.
 ///
-/// returns: Vec<Group>
-pub fn read_groups() -> Result<Vec<Group>, std::io::Error> {
+/// returns: Result<Vec<Group>, std::io::Error>
+pub fn read_groups() -> Result<Vec<Group>, Error> {
     match file::read_file(&groups_path()) {
         Ok(contents) => match group::deserialize(&contents) {
             Ok(groups) => Ok(groups),
@@ -39,14 +38,13 @@ pub fn read_groups() -> Result<Vec<Group>, std::io::Error> {
 }
 
 /// Returns all chats in group from database in vector format.
-/// If chats are not found, an empty vector is returned.
 ///
 /// # Arguments
 ///
 /// * `group_id`: id of group.
 ///
-/// returns: Vec<Chat>
-pub fn read_chats(group_id: i32) -> Result<Vec<Chat>, std::io::Error> {
+/// returns: Result<Vec<Chat>, std::io::Error>
+pub fn read_chats(group_id: i32) -> Result<Vec<Chat>, Error> {
     match file::read_file(&chats_path(group_id)) {
         Ok(contents) => match chat::deserialize(&contents) {
             Ok(chats) => Ok(chats),
@@ -56,7 +54,14 @@ pub fn read_chats(group_id: i32) -> Result<Vec<Chat>, std::io::Error> {
     }
 }
 
-pub fn write_groups(groups: &Vec<Group>) -> Result<(), std::io::Error> {
+/// Writes groups to database in serialized vector format.
+///
+/// # Arguments
+///
+/// * `groups`: groups to write to database.
+///
+/// returns: Result<(), Error>
+pub fn write_groups(groups: &Vec<Group>) -> Result<(), Error> {
     match group::serialize(&groups) {
         Ok(serialized) => {
             match file::write_file(&groups_path(), &serialized) {
@@ -68,7 +73,14 @@ pub fn write_groups(groups: &Vec<Group>) -> Result<(), std::io::Error> {
     }
 }
 
-pub fn write_chats(chats: &Vec<Chat>) -> Result<(), std::io::Error> {
+/// Writes chats to database in serialized vector format.
+///
+/// # Arguments
+///
+/// * `chats`: chats to write to database.
+///
+/// returns: Result<(), Error>
+pub fn write_chats(chats: &Vec<Chat>) -> Result<(), Error> {
     match chat::serialize(&chats) {
         Ok(serialized) => {
             match file::write_file(&chats_path(chats[0].get_group_id()), &serialized) {
@@ -80,10 +92,48 @@ pub fn write_chats(chats: &Vec<Chat>) -> Result<(), std::io::Error> {
     }
 }
 
-pub fn delete_group() -> Result<(), std::io::Error> {
+/// Deletes groups file from the database.
+///
+/// returns: Result<(), std::io::Error>
+pub fn delete_group() -> Result<(), Error> {
     file::delete_file(&groups_path())
 }
 
-pub fn delete_chat(group_id: i32) -> Result<(), std::io::Error> {
+/// Deletes a chats file from the database.
+///
+/// returns: Result<(), std::io::Error>
+pub fn delete_chat(group_id: i32) -> Result<(), Error> {
     file::delete_file(&chats_path(group_id))
+}
+
+#[test]
+fn test_chats_io() {
+    let chats = vec![
+        Chat::new(123, 123, "name", "hello world"),
+        Chat::new(123, 234, "other", "good bye"),
+    ];
+
+    write_chats(&chats).expect("failed to write chats");
+    let r_chats = read_chats(123).unwrap();
+    assert_eq!(&chats, &r_chats);
+    delete_chat(123).expect("failet to delete chat");
+}
+
+#[test]
+fn test_groups_io() {
+    let groups = vec![
+        Group::new(Some(123), "group1", "pass123"),
+        Group::new(Some(234), "group2", "word234"),
+    ];
+
+    write_groups(&groups).expect("failed to write groups");
+    let r_groups = match read_groups() {
+        Ok(g) => g,
+        Err(why) => {
+            dbg!(why);
+            vec![]
+        },
+    };
+    assert_eq!(&groups, &r_groups);
+    delete_group().expect("failed to delete group");
 }

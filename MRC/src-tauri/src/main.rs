@@ -211,6 +211,7 @@ fn start_client(window: Window) {
 
 #[tauri::command]
 fn set_m_password(password: String) {
+  // TODO: change function name to set_user_password().
   match config::write_password(&password) {
     Ok(_) => {}
     Err(_) => {}
