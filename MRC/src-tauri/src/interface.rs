@@ -30,9 +30,7 @@ fn send_message(message: String) -> () {
     (*OUTGOING_QUEUE.lock_mut().unwrap()).add(message).expect("adding message");
 }
 
-// TODO make this its own function
-#[tokio::main]
-async fn main() -> Result<(), Box<dyn Error>> {
+async fn start_client() -> Result<(), Box<dyn Error>> {
     *OUTGOING_QUEUE.lock_mut().unwrap() = queue![];
 
     let stream = UnixStream::connect("/tmp/ipc.sock").await?;
@@ -77,7 +75,6 @@ async fn main() -> Result<(), Box<dyn Error>> {
             if (*OUTGOING_QUEUE.lock_mut().unwrap()).size() > 0 {
                 let outgoing_message = (*OUTGOING_QUEUE.lock_mut().unwrap()).remove().unwrap();
 
-
                 match stream.try_write((outgoing_message + "\n").as_bytes()) {
                     Ok(_) => {}
                     Err(ref e) if e.kind() == io::ErrorKind::WouldBlock => {
@@ -88,7 +85,6 @@ async fn main() -> Result<(), Box<dyn Error>> {
                     }
                 }
             }
-
         }
     }
 }

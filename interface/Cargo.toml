@@ -13,4 +13,4 @@ tokio = { version = "1", features = ["full"] }
 
 [[bin]]
 name = "interface"
-path = "interface_async_tokio.rs"
+path = "interface_async.rs"
