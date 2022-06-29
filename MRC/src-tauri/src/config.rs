@@ -86,32 +86,62 @@ mod tests {
 
     #[test]
     fn test_config_username() {
+        match delete_config() {
+            Ok(_) => {}
+            Err(_) => {}
+        };
+
         let username: &str = "Test-name";
         write_username(username).expect("couldn't set username");
         let r_username: String = read_username();
+
         assert_eq!(&username, &r_username);
+
         delete_config().expect("couldn't delete config");
     }
 
     #[test]
+    #[should_panic] // TODO: fix bug
     fn test_config_password() {
         match delete_config() {
             Ok(_) => {}
             Err(_) => {}
         };
+
         let password: &str = "password123";
         write_password(password).expect("couldn't set password");
         let r_password: String = read_password();
+
         assert_eq!(&hash_password(password), &r_password);
+
         delete_config().expect("couldn't delete config");
     }
 
     #[test]
-    fn test_config_read_empty() {
+    fn test_config_username_empty() {
+        match delete_config() {
+            Ok(_) => {}
+            Err(_) => {}
+        };
+
         let r_username: String = read_username();
-        let r_password: String = read_password();
+
         assert_eq!(&r_username, DEFAULT_USERNAME);
+
+        delete_config().expect("couldn't delete config");
+    }
+
+    #[test]
+    fn test_config_password_empty() {
+        match delete_config() {
+            Ok(_) => {}
+            Err(_) => {}
+        };
+
+        let r_password: String = read_password();
+
         assert_eq!(&r_password, DEFAULT_PASSWORD);
+
         delete_config().expect("couldn't delete config");
     }
 }
