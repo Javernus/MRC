@@ -5,6 +5,7 @@
 #[macro_use] extern crate magic_crypt;
 extern crate core;
 
+// use std::io::Error;
 use crate::database::chat::Chat;
 use crate::database::group::Group;
 use tauri::{Menu, MenuItem, Submenu, Window};
@@ -38,7 +39,7 @@ fn get_groups() -> Vec<Group> {
 #[tauri::command]
 fn send_chat(group_id: i32, time: i64, message: String) -> Chat {
   // QUESTION: can String be replaced by &str in the parameters?
-  let name: String = config::get_username();
+  let name: String = config::read_username();
   let chat: Chat = Chat::new(group_id, time, &name, &message);
   let group: Group = find_group(group_id);
   let encodeddata: String = encoding::encode(&name, &group.decrypt_password(), &message);
@@ -135,7 +136,10 @@ fn get_chats(group_id: i32) -> Vec<Chat> {
 #[tauri::command]
 fn set_username(username: String) {
   // QUESTION: can String be replaced by &str in the parameters?
-  config::set_username(&username);
+  match config::write_username(&username) {
+    Ok(_) => {}
+    Err(_) => {}
+  };
 }
 
 /// Returns username in config.
@@ -144,7 +148,7 @@ fn set_username(username: String) {
 #[tauri::command]
 fn get_username() -> String {
   // QUESTION: can String be replaced by &str in the parameters?
-  config::get_username()
+  config::read_username()
 }
 
 #[tauri::command]
