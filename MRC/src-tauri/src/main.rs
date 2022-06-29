@@ -165,7 +165,7 @@ fn start_cient(window: Window<R>) {
 
 #[tauri::command]
 fn set_m_password(password: String) {
-  config::set_mpw(&password)
+  config::write_mpw(&password);
 }
 
 fn main() {
