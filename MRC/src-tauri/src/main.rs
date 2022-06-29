@@ -9,16 +9,22 @@ extern crate core;
 use crate::database::chat::Chat;
 use crate::database::group::Group;
 use tauri::{Menu, MenuItem, Submenu, Window};
+use tauri::plugin::Plugin;
+use tauri::async_runtime;
 use std::thread;
 
 mod file;
 mod database;
 mod config;
+mod encryption_unique_name;
+// mod receiver;
 mod encryption;
 mod hashing;
 mod receiver;
 mod encoding;
 mod cmd;
+mod interface;
+use interface::send_message;
 
 /// Returns groups in vector format.
 ///
@@ -38,17 +44,19 @@ fn get_groups() -> Vec<Group> {
 ///
 /// returns: Chat
 #[tauri::command]
-fn send_chat(group_id: i32, time: i64, message: String) -> Chat {
+fn send_chat(group_id: i32, time: i64, message: String) {
   // QUESTION: can String be replaced by &str in the parameters?
   let name: String = config::read_username();
-  let chat: Chat = Chat::new(group_id, time, &name, &message);
   let group: Group = find_group(group_id);
   let encodeddata: String = encoding::encode(&name, &group.decrypt_password(), &message);
   let serializeddata: String = encoding::group_encode(group.name, encodeddata);
 
-  encoding::encode(&name, &group.encrypted_password, &message);
+  // TODO: encrypt message with user password
+  let chat: Chat = Chat::new(group_id, time, &name, &message);
+
+  // encoding::encode(&name, &group.encrypted_password, &message);
+  send_message(serializeddata);
   database::save_chat(&chat);
-  chat
 }
 
 fn find_group(group_id: i32) -> Group {
@@ -153,11 +161,21 @@ fn get_username() -> String {
 }
 
 #[tauri::command]
-fn receiver(window: Window) {
-  thread::spawn(|| {
-    //todo rename to interface
-    receiver::start_client(window);
+fn start_client(window: Window) {
+  let handle = async_runtime::spawn(async move {
+    interface::start_client(window).await;
   });
+  // let test = async_runtime::spawn(
+  //   async move {
+  //     interface::start_client(window);
+  //   }
+  // );
+  // test.await.expect("TODO: panic message");
+  // Plugin::initialize(interface::start_client(window));
+  // thread::spawn(|| {
+  //   interface::start_client(window);
+  // });
+
 }
 
 #[tauri::command]
@@ -185,7 +203,7 @@ fn main() {
 
   tauri::Builder::default()
     .menu(menu)
-    .invoke_handler(tauri::generate_handler![set_username, get_username, send_chat, get_chats, get_groups, get_newest_chat, remove_group, create_group, join_group, receiver, set_m_password])
+    .invoke_handler(tauri::generate_handler![set_username, get_username, send_chat, get_chats, get_groups, get_newest_chat, remove_group, create_group, join_group, start_client, set_m_password])
     .run(tauri::generate_context!())
     .expect("error while running tauri application");
 }
