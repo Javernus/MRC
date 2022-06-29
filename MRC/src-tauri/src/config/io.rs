@@ -63,7 +63,6 @@ fn test_config_io() {
         Err(why) => panic!("failed to read config: {}", why),
     };
 
-    delete_config().unwrap();
-
+    assert!(delete_config().is_ok());
     assert_eq!(config, r_config);
 }

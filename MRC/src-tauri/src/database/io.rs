@@ -121,8 +121,7 @@ fn test_chats_io() {
     write_chats(&chats).expect("failed to write chats");
     let r_chats = read_chats(123).unwrap();
 
-    delete_chat(123).expect("failed to delete chat");
-
+    assert!(delete_chat(123).is_ok());
     assert_eq!(&chats, &r_chats);
 }
 
@@ -146,7 +145,6 @@ fn test_groups_io() {
         },
     };
 
-    delete_group().expect("failed to delete group");
-
+    assert!(delete_group().is_ok());
     assert_eq!(&groups, &r_groups);
 }

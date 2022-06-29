@@ -161,7 +161,7 @@ fn test_database() {
 
     let read_chats_2: Vec<Chat> = read_chats(groups[1].get_id()).unwrap();
 
-    delete_groups().unwrap();
+    assert!(delete_groups().is_ok());
 
     for i in 0..read_groups.len() {
         if read_groups[i].get_id() == groups[0].get_id() {
