@@ -3,6 +3,7 @@ use std::os::unix::net::UnixStream;
 use std::io::prelude::*;
 
 use tauri::Window;
+use std::thread;
 
 use crate::database::chat::Chat;
 use crate::database;

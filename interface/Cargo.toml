@@ -1,12 +1,16 @@
 [package]
+edition = "2021"
 name = "hello_world" # the name of the package
-version = "0.1.0"    # the current version, obeying semver
+version = "1.0.0"    # the current version, obeying semver
 
 
 [dependencies]
 event-listener = "2.5.2"
 rand = "0.8.5"
+queues = "1.0.2"
+global = "0.4.3"
+tokio = { version = "1", features = ["full"] }
 
 [[bin]]
 name = "interface"
-path = "interface.rs"
+path = "interface_async_tokio.rs"
