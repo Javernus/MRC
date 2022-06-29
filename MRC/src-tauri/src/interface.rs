@@ -40,10 +40,6 @@ pub async fn start_client(window: Window) -> Result<(), Box<dyn Error>> {
         let _ = sleep(Duration::from_millis(1000)).await;
         let ready = stream.ready(Interest::READABLE | Interest::WRITABLE).await?;
 
-        if rand::random() {
-            send_message("Hello world".parse().unwrap());
-        }
-
         if ready.is_readable() {
             let mut data = vec![0; 255];
 
@@ -61,6 +57,8 @@ pub async fn start_client(window: Window) -> Result<(), Box<dyn Error>> {
 
             if !incoming_message.is_empty() {
                 println!("read {incoming_message} from socket");
+
+                // TODO: Deserialisation by Scott
 
                 let chat: Chat = Chat::new(8, 123456789012, "Name", &incoming_message);
                 database::save_chat(&chat);

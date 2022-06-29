@@ -2,7 +2,7 @@
   all(not(debug_assertions), target_os = "windows"),
   windows_subsystem = "windows"
 )]
-#[macro_use] extern crate magic_crypt;
+extern crate magic_crypt;
 extern crate core;
 
 // use std::io::Error;
@@ -16,8 +16,6 @@ use std::thread;
 mod file;
 mod database;
 mod config;
-mod encryption_unique_name;
-// mod receiver;
 mod encryption;
 mod hashing;
 mod receiver;
@@ -59,6 +57,7 @@ fn send_chat(group_id: i32, time: i64, message: String) {
   database::save_chat(&chat);
 }
 
+// Finds group based on group id.
 fn find_group(group_id: i32) -> Group {
   let groups: Vec<Group> = database::get_groups();
 
@@ -73,6 +72,26 @@ fn find_group(group_id: i32) -> Group {
   }
 
   return Group::new(Some(0), "", "");
+}
+
+fn find_group_ids(serializeddata: String) -> Vec<Group> {
+
+  let groupdata: (String, String) = encoding::get_group(serializeddata);
+  let groups: Vec<Group> = database::get_groups();
+  let mut groupvec = Vec::new();
+
+  if groups.is_empty() {
+    return groupvec;
+  }
+
+  for group in &groups {
+    if group.name == groupdata.0 {
+      groupvec.push(group.clone());
+    }
+  }
+
+  return groupvec;
+
 }
 /// Removes group and all its chats from database.
 ///
@@ -165,17 +184,6 @@ fn start_client(window: Window) {
   let handle = async_runtime::spawn(async move {
     interface::start_client(window).await;
   });
-  // let test = async_runtime::spawn(
-  //   async move {
-  //     interface::start_client(window);
-  //   }
-  // );
-  // test.await.expect("TODO: panic message");
-  // Plugin::initialize(interface::start_client(window));
-  // thread::spawn(|| {
-  //   interface::start_client(window);
-  // });
-
 }
 
 #[tauri::command]

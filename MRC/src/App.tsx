@@ -34,7 +34,7 @@ const App: Component = () => {
   let [plusMenu, setPlusMenu] = createSignal(false)
   let [groups, setGroups] = createSignal([])
   let [username, setUsername] = createSignal('')
-  let [showMPassword, setShowMPassword] = createSignal(true)
+  let [showMPassword, setShowMPassword] = createSignal(false)
   let [MPasswordWrong, setMPasswordWrong] = createSignal(false)
   let [showChangeUsername, setShowChangeUsername] = createSignal(false)
   let [showJoinGroup, setShowJoinGroup] = createSignal(false)

@@ -13,7 +13,7 @@ pub fn decrypt(ciphertext: &str, password: &str) -> String {
     let key = generate_key(password);
     match key.decrypt_base64_to_string(ciphertext) {
         Ok(s) => s,
-        Err(_) => "",
+        Err(_) => "".to_string(),
     }
 }
 

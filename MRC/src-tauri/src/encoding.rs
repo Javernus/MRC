@@ -4,7 +4,7 @@ extern crate regex;
 use magic_crypt::MagicCryptTrait;
 use regex::Regex;
 
-pub fn group_encode(encrypted_string:String, groupname:String) -> String {
+pub fn group_encode(groupname:String, encrypted_string:String) -> String {
 
     let encodedstring = format!("{},{}", groupname, encrypted_string);
     return encodedstring;
@@ -15,7 +15,7 @@ pub fn get_group(encodedstring:String) -> (String, String) {
     let re = Regex::new("^([^,]*),(.*)").unwrap();
     let name = re.captures(&encodedstring).unwrap();
     let groupdata = (name[1].to_string(), name[2].to_string());
-    println!("{:#?}", groupdata);
+    // println!("{:#?}", groupdata);
     return groupdata;
 }
 // encode data with name as a string seperated by a comma.
