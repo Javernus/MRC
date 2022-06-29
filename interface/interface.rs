@@ -4,25 +4,26 @@ use std::io::prelude::*;
 use std::{thread, time};
 
 
-fn main() -> std::io::Result<(UnixStream)> {
+fn main() -> (){
     // connect to socket
-    let mut stream = match UnixStream::connect("/tmp/ipc.sock") {
-        Ok(stream) => stream,
-        Err(e) => {
-            println!("Couldn't connect: {:?}", e);
-            return Ok(());
-        }
-    };
+    let mut stream = UnixStream::connect("/tmp/ipc.sock").unwrap();
+        //     Ok(stream) => Ok(stream),
+        //     Err(e) => {
+        //         println!("Couldn't connect: {:?}", e);
+        //         Err(e)
+        //     }
+        // };
+
 
     loop {
         if rand::random() {
+            println!("sending message to socket..");
             // let mut message_buffer = [0;254];
             thread::sleep(time::Duration::from_millis(1000));
             let mut message = "testing";
             let mut message_buffer = message.as_bytes();
             stream.write_all(&mut message_buffer).expect("write to stream");
 
-            // println!("sending message to socket..");
             // stream.write_all(b"testing")?
         }
 
