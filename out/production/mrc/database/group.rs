@@ -1,5 +1,5 @@
 use crate::encryption_unique_name::{encrypt, decrypt};
-use crate::config::{read_mpw};
+use crate::config::get_mpw;
 use serde::{Serialize, Deserialize};
 use nanoid::nanoid;
 
@@ -37,14 +37,14 @@ impl Group {
                 if password.is_empty() {
                     password.to_string()
                 } else {
-                    encrypt(password, &read_mpw())
+                    encrypt(password, &get_mpw())
                 }
             },
         }
     }
 
     pub fn decrypt_password(&self) -> String {
-        decrypt(&*self.encrypted_password, &read_mpw())
+        decrypt(&*self.encrypted_password, &get_mpw())
     }
 }
 
