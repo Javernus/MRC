@@ -13,9 +13,7 @@ pub mod io;
 pub fn read_username() -> String {
     match read_config() {
         Ok(config) => config.get_username(),
-        Err(_) => {
-            DEFAULT_USERNAME.to_string()
-        },
+        Err(_) => DEFAULT_USERNAME.to_string(),
     }
 }
 
@@ -26,9 +24,7 @@ pub fn read_username() -> String {
 pub fn read_password() -> String {
     match read_config() {
         Ok(config) => config.get_password(),
-        Err(_) => {
-            DEFAULT_PASSWORD.to_string()
-        },
+        Err(_) => DEFAULT_PASSWORD.to_string(),
     }
 }
 
@@ -84,13 +80,10 @@ mod tests {
 
     #[test]
     fn test_config_username() {
-        match delete_config() {
-            Ok(_) => {}
-            Err(_) => {}
-        };
+        let username: String = "Alice".to_string();
 
-        let username: &str = "Alice";
-        write_username(username).expect("couldn't set username");
+        assert!(delete_config().is_ok());
+        assert!(write_username(&username).is_ok());
         let r_username: String = read_username();
 
         assert!(delete_config().is_ok());
@@ -100,17 +93,15 @@ mod tests {
     #[test]
     #[should_panic] // TODO: fix bug
     fn test_config_password() {
-        match delete_config() {
-            Ok(_) => {}
-            Err(_) => {}
-        };
-
-        let password: &str = "password123";
-        write_password(password).expect("couldn't set password");
-        let r_password: String = read_password();
+        let password: String = "Not Alice's password".to_string();
+        let hashed_password: String = hash_password(&password);
 
         assert!(delete_config().is_ok());
-        assert_eq!(&hash_password(password), &r_password);
+        assert!(write_password(&password).is_ok());
+        let r_hashed_password: String = read_password();
+
+        assert!(delete_config().is_ok());
+        assert_eq!(&hashed_password, &r_hashed_password);
     }
 
     #[test]

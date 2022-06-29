@@ -51,18 +51,13 @@ pub fn delete_config() -> Result<(), Error> {
 
 #[test]
 fn test_config_io() {
-    match delete_config() {
-        Ok(_) => {}
-        Err(_) => {}
-    };
-
-    let config: Config = Config::new("user", "pass");
-    write_config(&config).expect("failed to write config");
-    let r_config = match read_config() {
-        Ok(conf) => conf,
+    let config: Config = Config::new("Bob", "Bob's password");
+    assert!(write_config(&config).is_ok());
+    match read_config() {
+        Ok(r_config) => {
+            assert!(delete_config().is_ok());
+            assert_eq!(&config, &r_config);
+        },
         Err(why) => panic!("failed to read config: {}", why),
     };
-
-    assert!(delete_config().is_ok());
-    assert_eq!(config, r_config);
 }

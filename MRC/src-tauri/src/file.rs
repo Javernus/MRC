@@ -1,5 +1,5 @@
 use std::fs::{File, remove_file, create_dir};
-use std::io::{Result, prelude::*};
+use std::io::{Result, prelude::*, Error, ErrorKind};
 use std::path::Path;
 use std::str::Split;
 
@@ -70,10 +70,7 @@ pub fn read_file(filename: &str) -> Result<String> {
             Err(why) => Err(why),
         }
     } else {
-        match write_file(filename, "") {
-            Ok(_) => Ok("".to_string()),
-            Err(why) => Err(why),
-        }
+        Err(Error::from(ErrorKind::NotFound))
     }
 }
 
@@ -90,7 +87,7 @@ pub fn delete_file(filename: &str) -> Result<()> {
     return if file_path.is_file() {
         match remove_file(file_path) {
             Ok(_) => Ok(()),
-            Err(why) => return Err(why),
+            Err(why) => Err(why),
         }
     } else {
         Ok(())

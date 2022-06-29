@@ -106,45 +106,39 @@ pub fn delete_chat(group_id: i32) -> Result<(), Error> {
     file::delete_file(&chats_path(group_id))
 }
 
-#[test]
-fn test_chats_io() {
-    match delete_chat(123) {
-        Ok(_) => {}
-        Err(_) => {}
-    };
+#[cfg(test)]
+mod tests {
+    use crate::database::io::{delete_chat, delete_group, write_chats, write_groups};
+    use crate::{Chat, Group, read_chats, read_groups};
 
-    let chats = vec![
-        Chat::new(123, 123, "name", "hello world"),
-        Chat::new(123, 234, "other", "good bye"),
-    ];
+    #[test]
+    fn test_chats_io() {
+        let group_id = 123;
+        let chats = vec![
+            Chat::new(group_id, 1000, "name", "hello world"),
+            Chat::new(group_id, 1000, "other", "good bye"),
+        ];
 
-    write_chats(&chats).expect("failed to write chats");
-    let r_chats = read_chats(123).unwrap();
+        write_chats(&chats).expect("failed to write chats");
+        let r_chats = read_chats(group_id).unwrap();
 
-    assert!(delete_chat(123).is_ok());
-    assert_eq!(&chats, &r_chats);
-}
+        assert!(delete_chat(group_id).is_ok());
+        assert_eq!(&chats, &r_chats);
+    }
 
-#[test]
-fn test_groups_io() {
-    match delete_group() {
-        Ok(_) => {}
-        Err(_) => {}
-    };
-
-    let groups = vec![
-        Group::new(Some(123), "group1", "pass123"),
-        Group::new(Some(234), "group2", "word234"),
-    ];
-
-    write_groups(&groups).expect("failed to write groups");
-    let r_groups = match read_groups() {
-        Ok(g) => g,
-        Err(_) => {
-            vec![]
-        },
-    };
-
-    assert!(delete_group().is_ok());
-    assert_eq!(&groups, &r_groups);
+    #[test]
+    fn test_groups_io() {
+        let groups: Vec<Group> = vec![
+            Group::new(Some(345), "group1", "pass123"),
+            Group::new(Some(543), "group2", "word234"),
+        ];
+        assert!(write_groups(&groups).is_ok());
+        match read_groups() {
+            Ok(r_groups) => {
+                assert!(delete_group().is_ok());
+                assert_eq!(&groups, &r_groups);
+            },
+            Err(why) => panic!("failed to read groups: {}", why),
+        };
+    }
 }

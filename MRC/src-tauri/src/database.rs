@@ -90,10 +90,10 @@ pub fn delete_single_group(group_id: i32) -> Result<(), Error> {
 
     let groups: Vec<Group> = match read_groups() {
         Ok(old_groups) => {
-            let mut new_groups: Vec<Group> = old_groups;
+            let mut new_groups: Vec<Group> = old_groups.clone();
 
-            for i in 0..(new_groups.len() - 1) {
-                if new_groups[i].get_id() == group_id {
+            for (i, group) in old_groups.iter().enumerate() {
+                if group.get_id() == group_id {
                     new_groups.remove(i);
                 }
             }
@@ -126,56 +126,106 @@ pub fn delete_groups() -> Result<(), Error> {
     }
 }
 
-#[test]
-fn test_database() {
-    let groups: Vec<Group> = vec![
-        Group::new(Some(192), "Group", ""),
-        Group::new(None, "People", "very strong password")
-    ];
+#[cfg(test)]
+mod tests {
+    #[allow(unused_imports)]
+    use std::io::Error;
+    use crate::{Chat, Group, read_chats, read_groups};
+    use crate::database::{append_chat, append_group, delete_groups, delete_single_group};
 
-    for g in &groups {
-        append_group(g).expect("failed append group");
-    }
+    #[test]
+    fn test_database_groups() {
+        match delete_groups() {
+            Ok(_) => {}
+            Err(_) => {}
+        };
 
-    let read_groups: Vec<Group> = read_groups().unwrap();
+        let groups: Vec<Group> = vec![
+            Group::new(Some(192), "Group", ""),
+            Group::new(None, "People", "very strong password")
+        ];
 
-    let chats_1: Vec<Chat> = vec![
-        Chat::new(groups[0].get_id(), 1000, "Alice", "Hi Bob!"),
-        Chat::new(groups[0].get_id(), 1200, "Bob", "Hi Alice!")
-    ];
+        for g in &groups {
+            assert!(append_group(g).is_ok());
+        }
 
-    for c in &chats_1 {
-        append_chat(c).expect("failed append chat");
-    }
+        let read_groups: Vec<Group> = match read_groups() {
+            Ok(g) => g,
+            Err(why) => panic!("failed to read groups: {}", why),
+        };
 
-    let read_chats_1: Vec<Chat> = read_chats(groups[0].get_id()).unwrap();
+        assert!(delete_groups().is_ok());
 
-    let chats_2: Vec<Chat> = vec![
-        Chat::new(groups[1].get_id(), 4000, "Charlie", "Hi David!"),
-        Chat::new(groups[1].get_id(), 4200, "David", "Hi Charlie!")
-    ];
-
-    for c in &chats_2 {
-        append_chat(c).expect("failed append chat");
-    }
-
-    let read_chats_2: Vec<Chat> = read_chats(groups[1].get_id()).unwrap();
-
-    assert!(delete_groups().is_ok());
-
-    for i in 0..read_groups.len() {
-        if read_groups[i].get_id() == groups[0].get_id() {
-            assert_eq!(&groups[0], &read_groups[i]);
-        } else if read_groups[i].get_id() == groups[1].get_id() {
-            assert_eq!(&groups[1], &read_groups[i]);
+        for i in 0..read_groups.len() {
+            if read_groups[i].get_id() == groups[0].get_id() {
+                assert_eq!(&groups[0], &read_groups[i]);
+            } else if read_groups[i].get_id() == groups[1].get_id() {
+                assert_eq!(&groups[1], &read_groups[i]);
+            }
         }
     }
 
-    for i in 0..read_chats_1.len() {
-        assert_eq!(&chats_1[i], &read_chats_1[i]);
+    #[test]
+    fn test_database_chats_1() {
+        match delete_groups() {
+            Ok(_) => {}
+            Err(_) => {}
+        };
+
+        let group_id: i32 = 192;
+        let group: Group = Group::new(Some(group_id), "Group", "");
+        let chats: Vec<Chat> = vec![
+            Chat::new(group_id, 1000, "Alice", "Hi Bob!"),
+            Chat::new(group_id, 1200, "Bob", "Hi Alice!")
+        ];
+
+        assert!(append_group(&group).is_ok());
+
+        for c in &chats {
+            assert!(append_chat(c).is_ok());
+        }
+
+        let r_chats: Vec<Chat> = match read_chats(group_id) {
+            Ok(c) => c,
+            Err(why) => panic!("failed to read chats: {}", why),
+        };
+
+        assert!(delete_single_group(group_id).is_ok());
+
+        for i in 0..r_chats.len() {
+            assert_eq!(&chats[i], &r_chats[i]);
+        }
     }
 
-    for i in 0..read_chats_2.len() {
-        assert_eq!(&chats_2[i], &read_chats_2[i]);
+    #[test]
+    fn test_database_chats_2() {
+        match delete_groups() {
+            Ok(_) => {}
+            Err(_) => {}
+        };
+
+        let group: Group = Group::new(None, "People", "very strong password");
+        let group_id = group.get_id();
+        let chats: Vec<Chat> = vec![
+            Chat::new(group_id, 4000, "Charlie", "Hi David!"),
+            Chat::new(group_id, 4200, "David", "Hi Charlie!")
+        ];
+
+        assert!(append_group(&group).is_ok());
+
+        for c in &chats {
+            assert!(append_chat(c).is_ok());
+        }
+
+        let r_chats: Vec<Chat> = match read_chats(group_id) {
+            Ok(c) => c,
+            Err(why) => panic!("failed to read chats: {}", why),
+        };
+
+        assert!(delete_single_group(group_id).is_ok());
+
+        for i in 0..r_chats.len() {
+            assert_eq!(&chats[i], &r_chats[i]);
+        }
     }
 }
