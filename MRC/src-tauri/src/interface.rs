@@ -26,24 +26,19 @@ struct Payload {
 // TODO implement custom structs
 static OUTGOING_QUEUE: Global<Queue<String>> = Global::new();
 
-fn send_message(message: String) -> () {
+pub fn send_message(message: String) -> () {
     (*OUTGOING_QUEUE.lock_mut().unwrap()).add(message).expect("adding message");
 }
 
-// TODO make this its own function
-#[tokio::main]
-async fn main() -> Result<(), Box<dyn Error>> {
+pub async fn start_client(window: Window) -> Result<(), Box<dyn Error>> {
     *OUTGOING_QUEUE.lock_mut().unwrap() = queue![];
 
+    println!("trying to connect to socket..");
     let stream = UnixStream::connect("/tmp/ipc.sock").await?;
 
     loop {
         let _ = sleep(Duration::from_millis(1000)).await;
         let ready = stream.ready(Interest::READABLE | Interest::WRITABLE).await?;
-
-        if rand::random() {
-            send_message("Hello world".parse().unwrap());
-        }
 
         if ready.is_readable() {
             let mut data = vec![0; 255];
@@ -63,12 +58,14 @@ async fn main() -> Result<(), Box<dyn Error>> {
             if !incoming_message.is_empty() {
                 println!("read {incoming_message} from socket");
 
-                let chat: Chat = Chat::new(8, 123456789012, "Name", &incoming);
+                // TODO: Deserialisation by Scott
+
+                let chat: Chat = Chat::new(8, 123456789012, "Name", &incoming_message);
                 database::save_chat(&chat);
 
                 window.emit(
                     "refetch_chat",
-                    Payload { message: incoming.to_string() }
+                    Payload { message: incoming_message.to_string() }
                 ).unwrap();
             }
         }
@@ -76,7 +73,6 @@ async fn main() -> Result<(), Box<dyn Error>> {
         if ready.is_writable() {
             if (*OUTGOING_QUEUE.lock_mut().unwrap()).size() > 0 {
                 let outgoing_message = (*OUTGOING_QUEUE.lock_mut().unwrap()).remove().unwrap();
-
 
                 match stream.try_write((outgoing_message + "\n").as_bytes()) {
                     Ok(_) => {}
@@ -88,7 +84,6 @@ async fn main() -> Result<(), Box<dyn Error>> {
                     }
                 }
             }
-
         }
     }
 }

@@ -34,7 +34,11 @@ const removeGroup = async (groupId: number): Promise<void> => {
 }
 
 const receiver = async () => {
-  invoke("receiver")
+  invoke("start_client")
+}
+
+const setMPassword = async (password: string) => {
+  return await invoke("set_m_password", { password: password })
 }
 
 const sendChat = async (message: string, groupId: number) => {
@@ -53,4 +57,5 @@ export default {
   removeGroup,
   receiver,
   sendChat,
+  setMPassword,
 }
