@@ -40,12 +40,13 @@ fn get_groups() -> Vec<Group> {
 fn send_chat(group_id: i32, time: i64, message: String) -> Chat {
   // QUESTION: can String be replaced by &str in the parameters?
   let name: String = config::read_username();
-  let chat: Chat = Chat::new(group_id, time, &name, &message);
   let group: Group = find_group(group_id);
   let encodeddata: String = encoding::encode(&name, &group.decrypt_password(), &message);
   let serializeddata: String = encoding::group_encode(group.name, encodeddata);
+  // TODO: encrypt message with user password
+  let chat: Chat = Chat::new(group_id, time, &name, &message);
 
-  encoding::encode(&name, &group.encrypted_password, &message);
+  // encoding::encode(&name, &group.encrypted_password, &message);
   database::save_chat(&chat);
   chat
 }
