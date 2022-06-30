@@ -13,6 +13,7 @@ export default function InputField(props) {
       oninput={props.oninput || null}
       onclick={props.onclick || null}
       ref={props.ref || null}
+      maxlength={props.maxlength || null}
     />
   )
 }

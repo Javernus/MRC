@@ -152,7 +152,7 @@ body {
   font-size: 1.5rem;
   font-weight: bold;
   width: 14rem;
-  word-wrap: break-all;
+  word-wrap: break-word;
   overflow-wrap: break-word;
   margin: 0;
   padding-left: 1rem;
@@ -160,7 +160,7 @@ body {
   p {
     margin: 0;
     width: 100%;
-    word-wrap: break-all;
+    word-wrap: break-word;
     overflow-wrap: break-word;
   }
 }
