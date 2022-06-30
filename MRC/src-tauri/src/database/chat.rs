@@ -1,3 +1,5 @@
+use crate::encryption::{encrypt, decrypt};
+use crate::config::{read_password};
 use serde::{Serialize, Deserialize};
 
 #[derive(Serialize, Deserialize, Clone, Debug, PartialEq)]
@@ -5,7 +7,7 @@ pub struct Chat {
     group_id: i32,
     time: i64,
     name: String,
-    message: String,
+    encrypted_message: String,
 }
 
 impl Chat {
@@ -24,7 +26,7 @@ impl Chat {
             group_id,
             time,
             name: String::from(name),
-            message: String::from(message),
+            encrypted_message: encrypt(message, &read_password()),
         }
     }
 
@@ -50,12 +52,20 @@ impl Chat {
         self.name.to_string()
     }
 
-    /// Returns message of chat.
+    /// Returns encrypted message of chat.
     ///
     /// result: String
     #[allow(dead_code)]
-    pub fn get_message(&self) -> String {
-        self.message.to_string()
+    pub fn get_encrypted_message(&self) -> String {
+        self.encrypted_message.to_string()
+    }
+
+    /// Returns decrypted message of chat.
+    ///
+    /// result: String
+    #[allow(dead_code)]
+    pub fn get_decrypted_message(&self) -> String {
+        decrypt(&self.get_encrypted_message(), &read_password())
     }
 }
 
@@ -93,10 +103,10 @@ fn test_chat() {
     ];
 
     let ser: String = serialize(&chats).unwrap();
-    assert_eq!(ser, "[{\"group_id\":1,\"time\":1000,\"name\":\"Alice\",\"message\":\"Hi Bob!\"},{\"group_id\":1,\"time\":1200,\"name\":\"Bob\",\"message\":\"Hi Alice!\"}]");
     let deser: Vec<Chat> = deserialize(&ser).unwrap();
 
     for i in 0..2 {
         assert_eq!(chats[i], deser[i]);
+        assert_eq!(chats[i].get_decrypted_message(), deser[i].get_decrypted_message());
     }
 }

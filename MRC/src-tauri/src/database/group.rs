@@ -104,7 +104,6 @@ fn test_group() {
 
     for i in 0..2 {
         assert_eq!(groups[i], deser[i]);
+        assert_eq!(groups[i].get_decrypted_password(), deser[i].get_decrypted_password());
     }
-
-    assert_eq!(groups[1].get_decrypted_password(), "very strong password");
 }

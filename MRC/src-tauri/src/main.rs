@@ -55,8 +55,6 @@ fn send_chat(group_id: i32, time: i64, message: String) {
   let group: Group = find_group(group_id);
   let encodeddata: String = encoding::encode(&name, &group.get_decrypted_password(), &message);
   let serializeddata: String = encoding::group_encode(group.get_name(), encodeddata);
-
-  // TODO: encrypt message with user password
   let chat: Chat = Chat::new(group_id, time, &name, &message);
 
   // encoding::encode(&name, &group.encrypted_password, &message);
@@ -144,7 +142,6 @@ fn create_group(name: String, password: String) -> Group {
 #[tauri::command]
 fn join_group(name: String, password: String) -> Group {
   // todo!("retrieve id");
-  // todo!("retrieve bio");
   // todo!("retrieve password");
   // todo!("check password");
 
