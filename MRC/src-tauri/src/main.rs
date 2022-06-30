@@ -6,6 +6,7 @@
 
 extern crate magic_crypt;
 extern crate core;
+extern crate global;
 
 use tauri::{Menu, MenuItem, Submenu, Window};
 use tauri::async_runtime;
@@ -23,10 +24,14 @@ mod hashing;
 mod encoding;
 mod cmd;
 mod interface;
+
 use interface::send_message;
 use database::chat::Chat;
 use database::group::Group;
 use database::io::{read_chats, read_groups};
+use global::Global;
+
+static USER_PASSWORD: Global<String> = Global::new();
 
 /// Returns groups in vector format.
 ///
@@ -217,6 +222,8 @@ fn start_client(window: Window) {
 #[tauri::command]
 fn set_m_password(password: String) {
   // TODO: change function name to set_user_password().
+  *USER_PASSWORD.lock_mut().unwrap() = password.clone();
+
   match config::write_password(&password) {
     Ok(_) => {}
     Err(_) => {}

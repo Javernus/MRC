@@ -1,5 +1,7 @@
-use argon2::password_hash::{PasswordHash, PasswordHasher, PasswordVerifier, SaltString, rand_core::OsRng};
+use argon2::password_hash::{PasswordHash, PasswordHasher, PasswordVerifier, SaltString};
 use argon2::Argon2;
+
+const SALT: &str = "E4YVUY1J2hTG9q8dFZHWRQ";
 
 /// Hashes the password.
 ///
@@ -9,9 +11,7 @@ use argon2::Argon2;
 ///
 /// returns: String
 pub fn hash_password(password: &str) -> String {
-  // TODO: change to use the same salt when verifying.
-  let salt: SaltString = SaltString::generate(&mut OsRng);
-  println!("{}", salt);
+  let salt: SaltString = SaltString::new(SALT).unwrap();
   let argon2: Argon2 = Argon2::default();
   match argon2.hash_password(password.as_ref(), &salt) {
     Ok(hash) => hash.to_string(),

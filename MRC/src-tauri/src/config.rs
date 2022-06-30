@@ -1,6 +1,6 @@
-use crate::config::config_struct::{Config, DEFAULT_PASSWORD, DEFAULT_USERNAME};
+use crate::config::config_struct::{Config, DEFAULT_PASSWORD, DEFAULT_USERNAME, EMPTY_PASSWORD};
 use crate::config::io::{read_config, write_config};
-use crate::hashing::hash_password;
+use crate::hashing::{verify_password};
 use std::io::Error;
 
 pub mod config_struct;
@@ -17,15 +17,33 @@ pub fn read_username() -> String {
     }
 }
 
-/// Returns password from config.
+/// Returns hashed password from config in database.
 /// If no config is found, DEFAULT_PASSWORD is returned.
 ///
 /// returns: String
-pub fn read_password() -> String {
+pub fn read_hashed_password() -> String {
     match read_config() {
         Ok(config) => config.get_password(),
-        Err(_) => DEFAULT_PASSWORD.to_string(),
+        Err(_) => EMPTY_PASSWORD.to_string(),
     }
+}
+
+/// Checks if password is set in config file.
+///
+/// returns: bool
+pub fn is_password_set() -> bool {
+    read_hashed_password() != EMPTY_PASSWORD.to_string()
+}
+
+/// Verifies the given user password against the hashed password in the config file.
+///
+/// # Arguments
+///
+/// * `user_password`: user password to verify.
+///
+/// returns: bool
+pub fn verify_user_password(user_password: &str) -> bool {
+    is_password_set() && verify_password(user_password, &read_hashed_password())
 }
 
 /// Sets username and saves it in config.
@@ -48,7 +66,7 @@ pub fn write_username(username: &str) -> Result<(), Error> {
     write_config(&config)
 }
 
-/// Sets password and saves it in config.
+/// Sets password and saves the hashed version in config.
 ///
 /// # Arguments
 ///
@@ -56,15 +74,14 @@ pub fn write_username(username: &str) -> Result<(), Error> {
 ///
 /// returns: Result<(), Error>
 pub fn write_password(password: &str) -> Result<(), Error> {
-    let hashed_password: String = hash_password(password);
     let config: Config = match read_config() {
         Ok(old_config) => {
             let mut new_config = old_config;
-            new_config.set_password(&hashed_password);
+            new_config.set_password(&password);
             new_config
         },
         Err(_) => {
-            Config::new(DEFAULT_USERNAME, &hashed_password)
+            Config::new(DEFAULT_USERNAME, password)
         },
     };
 
@@ -73,9 +90,9 @@ pub fn write_password(password: &str) -> Result<(), Error> {
 
 #[cfg(test)]
 mod tests {
-    use crate::config::config_struct::{DEFAULT_PASSWORD, DEFAULT_USERNAME};
+    use crate::config::config_struct::{DEFAULT_USERNAME, EMPTY_PASSWORD};
     use crate::config::io::delete_config;
-    use crate::config::{read_password, read_username, write_password, write_username};
+    use crate::config::{is_password_set, read_hashed_password, read_username, verify_user_password, write_password, write_username};
     use crate::hashing::hash_password;
 
     #[test]
@@ -91,17 +108,27 @@ mod tests {
     }
 
     #[test]
-    #[should_panic] // TODO: fix bug
     fn test_config_password() {
         let password: String = "Not Alice's password".to_string();
         let hashed_password: String = hash_password(&password);
 
         assert!(delete_config().is_ok());
         assert!(write_password(&password).is_ok());
-        let r_hashed_password: String = read_password();
+        let r_hashed_password: String = read_hashed_password();
 
         assert!(delete_config().is_ok());
         assert_eq!(&hashed_password, &r_hashed_password);
+    }
+
+    #[test]
+    fn test_config_user_password() {
+        let password: String = "Not Alice's password".to_string();
+
+        assert!(delete_config().is_ok());
+        assert!(write_password(&password).is_ok());
+
+        assert!(is_password_set());
+        assert!(verify_user_password(&password));
     }
 
     #[test]
@@ -124,9 +151,21 @@ mod tests {
             Err(_) => {}
         };
 
-        let r_password: String = read_password();
+        let r_password: String = read_hashed_password();
 
         assert!(delete_config().is_ok());
-        assert_eq!(&r_password, DEFAULT_PASSWORD);
+        assert_eq!(&r_password, EMPTY_PASSWORD);
+    }
+
+    #[test]
+    fn test_config_user_password_empty() {
+        match delete_config() {
+            Ok(_) => {}
+            Err(_) => {}
+        };
+
+        assert!(!is_password_set());
+        assert_eq!(read_hashed_password(), EMPTY_PASSWORD);
+        assert!(!verify_user_password(EMPTY_PASSWORD));
     }
 }

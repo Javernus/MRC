@@ -1,5 +1,5 @@
 use crate::encryption::{encrypt, decrypt};
-use crate::config::{read_password};
+use crate::USER_PASSWORD;
 use nanoid::nanoid;
 use serde::{Serialize, Deserialize};
 
@@ -33,7 +33,7 @@ impl Group {
                     },
                 },
             name: String::from(name),
-            encrypted_password: encrypt(password, &read_password()),
+            encrypted_password: encrypt(password, &*USER_PASSWORD.lock().unwrap()),
         }
     }
 
@@ -62,7 +62,7 @@ impl Group {
     ///
     /// result: String
     pub fn get_decrypted_password(&self) -> String {
-        decrypt(&self.get_encrypted_password(), &read_password())
+        decrypt(&self.get_encrypted_password(), &*USER_PASSWORD.lock().unwrap())
     }
 }
 

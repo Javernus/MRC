@@ -1,5 +1,5 @@
 use crate::encryption::{encrypt, decrypt};
-use crate::config::{read_password};
+use crate::USER_PASSWORD;
 use serde::{Serialize, Deserialize};
 
 #[derive(Serialize, Deserialize, Clone, Debug, PartialEq)]
@@ -26,7 +26,7 @@ impl Chat {
             group_id,
             time,
             name: String::from(name),
-            encrypted_message: encrypt(message, &read_password()),
+            encrypted_message: encrypt(message, &*USER_PASSWORD.lock().unwrap()),
         }
     }
 
@@ -65,7 +65,7 @@ impl Chat {
     /// result: String
     #[allow(dead_code)]
     pub fn get_decrypted_message(&self) -> String {
-        decrypt(&self.get_encrypted_message(), &read_password())
+        decrypt(&self.get_encrypted_message(), &*USER_PASSWORD.lock().unwrap())
     }
 }
 

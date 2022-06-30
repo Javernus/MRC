@@ -1,6 +1,7 @@
-use std::io::Error;
 use crate::config::config_struct::{Config, deserialize, serialize};
 use crate::file;
+use crate::hashing::hash_password;
+use std::io::Error;
 
 /// Returns string representation of path to config file.
 ///
@@ -22,7 +23,7 @@ pub fn read_config() -> Result<Config, Error> {
     }
 }
 
-/// Writes config to database.
+/// Writes config to database after hashing the password.
 ///
 /// # Arguments
 ///
@@ -30,7 +31,11 @@ pub fn read_config() -> Result<Config, Error> {
 ///
 /// returns: Result<(), std::io::Error>
 pub fn write_config(config: &Config) -> Result<(), Error> {
-    match serialize(&config) {
+    let hashed_password: String = hash_password(&config.get_password());
+    let mut hashed_config: Config = config.clone();
+    hashed_config.set_password(&hashed_password);
+
+    match serialize(&hashed_config) {
         Ok(serialized) => {
             match file::write_file(&config_path(), &serialized) {
                 Ok(_) => Ok(()),
@@ -56,7 +61,8 @@ fn test_config_io() {
     match read_config() {
         Ok(r_config) => {
             assert!(delete_config().is_ok());
-            assert_eq!(&config, &r_config);
+            assert_eq!(&config.get_username(), &r_config.get_username());
+            assert_ne!(&config.get_password(), &r_config.get_password());
         },
         Err(why) => panic!("failed to read config: {}", why),
     };
