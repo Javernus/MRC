@@ -7,7 +7,7 @@ import DB from './database/main'
 import cl from 'clsx'
 import { listen } from '@tauri-apps/api/event'
 
-let activeGroups = [1]
+let activeGroups = [604855665, 65065442, 8]
 
 // Return the chat message with the latest timestamp.
 const getLastChats = async (groups: Group[]) => {
@@ -181,23 +181,23 @@ const App: Component = () => {
         <div class={cl('enter-password', { 'enter-password--visible': showMPassword() })}>
           <p class='enter-password__header'>Enter Password</p>
           <p class="enter-password__info">If this is your first time opening the application, type in a new password. Otherwise, enter the password you have previously used.</p>
-          <InputField placeholder="Master Password" type="password" oninput={() => setMPasswordWrong(false)} ref={MPasswordElement} error={MPasswordWrong()} />
+          <InputField placeholder="Password" type="password" oninput={() => setMPasswordWrong(false)} ref={MPasswordElement} error={MPasswordWrong()} />
           <Button onclick={sendMPassword} type="submit">Submit</Button>
         </div>
         <div class={cl('change-username', { 'change-username--visible': showChangeUsername() })}>
           <p class='change-username__header'>Set Username</p>
-          <InputField placeholder="Username" value={username()} oninput={(event) => setUsername(event.target.value)} />
+          <InputField placeholder="Username" maxlength="24" value={username()} oninput={(event) => setUsername(event.target.value)} />
           <Button onclick={updateUsername} type="submit">Change</Button>
         </div>
         <div class={cl('join-group', { 'join-group--visible': showJoinGroup() })}>
           <p class='join-group__header'>Join Group</p>
-          <InputField placeholder="Group Name" value={groupName()} oninput={(event) => { setGroupName(event.target.value); setJoinGroupError(false) }} error={joinGroupError()} />
+          <InputField placeholder="Group Name" maxlength="24" value={groupName()} oninput={(event) => { setGroupName(event.target.value); setJoinGroupError(false) }} error={joinGroupError()} />
           <InputField placeholder="Password" type="password" oninput={(event) => { setGroupPassword(event.target.value); setJoinGroupError(false) }} value={groupPassword()} error={joinGroupError()} />
           <Button onclick={joinGroup} type="submit">Join</Button>
         </div>
         <div class={cl('create-group', { 'create-group--visible': showCreateGroup() })}>
           <p class='create-group__header'>Create Group</p>
-          <InputField placeholder="Group Name" oninput={(event) => setGroupName(event.target.value)} value={groupName()} />
+          <InputField placeholder="Group Name" maxlength="24" oninput={(event) => setGroupName(event.target.value)} value={groupName()} />
           <InputField placeholder="Password" type="password" oninput={(event) => setGroupPassword(event.target.value)} value={groupPassword()} />
           <Button onclick={createGroup} type="submit">Create</Button>
         </div>
