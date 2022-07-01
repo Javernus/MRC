@@ -21,8 +21,6 @@ pub fn get_group(encodedstring:String) -> (String, String) {
 // encode data with name as a string seperated by a comma.
 // maybe add an extra value for header for different types of information.
 pub fn encode(name:&str, password:&str, data:&str) -> String {
-    println!("{}", password);
-
     let datatoencode = format!("{},{}", name, data);
     let mcrypt = magic_crypt::new_magic_crypt!(password, 256);
     let encrypted_string = mcrypt.encrypt_str_to_base64(datatoencode);
