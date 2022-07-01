@@ -4,10 +4,10 @@ use serde::{Serialize, Deserialize};
 
 #[derive(Serialize, Deserialize, Clone, Debug, PartialEq)]
 pub struct Chat {
-    group_id: i32,
-    time: i64,
-    name: String,
-    encrypted_message: String,
+    pub group_id: i32,
+    pub time: i64,
+    pub name: String,
+    pub encrypted_message: String,
 }
 
 impl Chat {

@@ -5,9 +5,9 @@ use serde::{Serialize, Deserialize};
 
 #[derive(Serialize, Deserialize, Clone, Debug, PartialEq)]
 pub struct Group {
-    id: i32,
-    name: String,
-    encrypted_password: String,
+    pub id: i32,
+    pub name: String,
+    pub encrypted_password: String,
 }
 
 impl Group {
