@@ -1,5 +1,5 @@
 use crate::config::config_struct::{Config, deserialize, serialize};
-use crate::file;
+use crate::{file, USER_PASSWORD};
 use crate::hashing::hash_password;
 use std::io::Error;
 
@@ -31,7 +31,7 @@ pub fn read_config() -> Result<Config, Error> {
 ///
 /// returns: Result<(), std::io::Error>
 pub fn write_config(config: &Config) -> Result<(), Error> {
-    let hashed_password: String = hash_password(&config.get_password());
+    let hashed_password: String = hash_password(&*USER_PASSWORD.lock().unwrap());
     let mut hashed_config: Config = config.clone();
     hashed_config.set_password(&hashed_password);
 
