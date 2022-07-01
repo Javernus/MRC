@@ -6,8 +6,8 @@ pub const EMPTY_PASSWORD: &str = "";
 
 #[derive(Serialize, Deserialize, Clone, Debug, PartialEq)]
 pub struct Config {
-    username: String,
-    password: String,
+    pub username: String,
+    pub password: String,
 }
 
 impl Config {
