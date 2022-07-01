@@ -131,7 +131,6 @@ const App: Component = () => {
   requestUsername()
 
   let chatElement
-  let MPasswordElement
 
   const scrollDown = () => {
     setTimeout(() => chatElement.scrollTop = chatElement.scrollHeight, 25)

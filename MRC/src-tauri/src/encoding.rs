@@ -21,6 +21,7 @@ pub fn get_group(encodedstring:String) -> (String, String) {
 // encode data with name as a string seperated by a comma.
 // maybe add an extra value for header for different types of information.
 pub fn encode(name:&str, password:&str, data:&str) -> String {
+    println!("{}", password);
 
     let datatoencode = format!("{},{}", name, data);
     let mcrypt = magic_crypt::new_magic_crypt!(password, 256);
@@ -29,9 +30,9 @@ pub fn encode(name:&str, password:&str, data:&str) -> String {
 }
 
 // decodes the data with a given password.
-pub fn decode(password:&str, data:&str) -> (bool, String, String) {
-    let mcrypt = magic_crypt::new_magic_crypt!(password, 256);
-    let decrypted_string = mcrypt.decrypt_base64_to_string(&data);
+pub fn decode(password: &str, data: &str) -> (bool, String, String) {
+    let mcrypt = magic_crypt::new_magic_crypt!(&password, 256);
+    let decrypted_string = mcrypt.decrypt_base64_to_string(data.trim_matches(char::from(0)));
     match decrypted_string {
         Ok(data) => {
             let re = Regex::new("^([^,]*),(.*)").unwrap();

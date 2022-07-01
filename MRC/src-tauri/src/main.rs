@@ -92,13 +92,17 @@ fn find_group(group_id: i32) -> Group {
 
 // #[allow(dead_code)]
 pub fn find_correct_group(serializeddata: String) -> (i32, String, String) {
+  println!("{}", serializeddata);
   let groupdata: (String, String) = encoding::get_group(serializeddata);
+  println!("1: {} , 2: {}", groupdata.0, groupdata.1);
+
   let groups: Vec<Group> = match read_groups() {
     Ok(g) => g,
     Err(_) => vec![],
   };
 
   if groups.is_empty() {
+    println!("No groups found.");
     return (-1, "".to_string(), "".to_string());
   }
 
