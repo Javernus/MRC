@@ -29,8 +29,7 @@ pub fn encode(name:&str, password:&str, data:&str) -> String {
 }
 
 // decodes the data with a given password.
-#[allow(dead_code)]
-pub fn decode(password:&str, data:String) -> (bool, String, String){
+pub fn decode(password:&str, data:&str) -> (bool, String, String) {
     let mcrypt = magic_crypt::new_magic_crypt!(password, 256);
     let decrypted_string = mcrypt.decrypt_base64_to_string(&data);
     match decrypted_string {

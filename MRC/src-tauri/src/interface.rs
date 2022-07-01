@@ -5,6 +5,8 @@ use crate::database;
 extern crate queues;
 use queues::*;
 
+use crate::find_correct_group;
+
 extern crate global;
 use global::Global;
 
@@ -58,12 +60,17 @@ pub async fn start_client(window: Window) -> Result<(), Box<dyn Error>> {
             if !incoming_message.is_empty() {
                 println!("read {incoming_message} from socket");
 
-                // TODO: Deserialisation by Scott
+                let correct_group = find_correct_group(incoming_message.to_string());
 
-                let chat: Chat = Chat::new(8, 123456789012, "Name", &incoming_message);
-                if database::append_chat(&chat).is_err() {
-                    // TODO: throw error perhaps?
+                if correct_group.0 != -1 {
+
+                    let chat: Chat = Chat::new(correct_group.0, 123456789012, &correct_group.1, &correct_group.2);
+
+                    if database::append_chat(&chat).is_err() {
+                        // TODO: throw error perhaps?
+                    }
                 }
+                // let chat: Chat = Chat::new(8, 123456789012, "Name", &incoming_message);
 
                 window.emit(
                     "refetch_chat",

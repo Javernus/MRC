@@ -90,26 +90,28 @@ fn find_group(group_id: i32) -> Group {
   return Group::new(Some(0), "", "");
 }
 
-#[allow(dead_code)]
-fn find_group_ids(serializeddata: String) -> Vec<Group> {
+// #[allow(dead_code)]
+pub fn find_correct_group(serializeddata: String) -> (i32, String, String) {
   let groupdata: (String, String) = encoding::get_group(serializeddata);
   let groups: Vec<Group> = match read_groups() {
     Ok(g) => g,
     Err(_) => vec![],
   };
-  let mut groupvec = Vec::new();
 
   if groups.is_empty() {
-    return groupvec;
+    return (-1, "".to_string(), "".to_string());
   }
 
   for group in &groups {
     if group.get_name() == groupdata.0 {
-      groupvec.push(group.clone());
+      let correct_group = encoding::decode(&group.get_decrypted_password(), &groupdata.1);
+      if correct_group.0 == true {
+        return (group.get_id(), correct_group.1, correct_group.2);
+      }
     }
   }
 
-  return groupvec;
+  return (-1, "".to_string(), "".to_string());
 
 }
 /// Removes group and all its chats from database.
