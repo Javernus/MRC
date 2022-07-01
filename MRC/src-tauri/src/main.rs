@@ -222,14 +222,24 @@ fn start_client(window: Window) {
 }
 
 #[tauri::command]
-fn set_m_password(password: String) {
-  // TODO: change function name to set_user_password().
+fn set_m_password(password: String) -> bool {
+  if config::is_password_set() {
+    if !config::verify_user_password(&password) {
+      return false;
+    } else {
+      *USER_PASSWORD.lock_mut().unwrap() = password.clone();
+      return true;
+    }
+  }
+
   *USER_PASSWORD.lock_mut().unwrap() = password.clone();
 
   match config::write_password(&password) {
     Ok(_) => {}
     Err(_) => {}
   };
+
+  return true
 }
 
 fn main() {

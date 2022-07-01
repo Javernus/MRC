@@ -1,7 +1,7 @@
 use serde::{Serialize, Deserialize};
 
-pub const DEFAULT_USERNAME: &str = "default-username";
-pub const DEFAULT_PASSWORD: &str = "default-password";
+pub const DEFAULT_USERNAME: &str = "";
+pub const DEFAULT_PASSWORD: &str = "";
 pub const EMPTY_PASSWORD: &str = "";
 
 #[derive(Serialize, Deserialize, Clone, Debug, PartialEq)]

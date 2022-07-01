@@ -34,7 +34,8 @@ const App: Component = () => {
   let [plusMenu, setPlusMenu] = createSignal(false)
   let [groups, setGroups] = createSignal([])
   let [username, setUsername] = createSignal('')
-  let [showMPassword, setShowMPassword] = createSignal(false)
+  let [mPassword, setMPassword] = createSignal('')
+  let [showMPassword, setShowMPassword] = createSignal(true)
   let [MPasswordWrong, setMPasswordWrong] = createSignal(false)
   let [showChangeUsername, setShowChangeUsername] = createSignal(false)
   let [showJoinGroup, setShowJoinGroup] = createSignal(false)
@@ -129,7 +130,8 @@ const App: Component = () => {
   requestGroups(setGroups)
   requestUsername()
 
-  let chatElement, MPasswordElement
+  let chatElement
+  let MPasswordElement
 
   const scrollDown = () => {
     setTimeout(() => chatElement.scrollTop = chatElement.scrollHeight, 25)
@@ -143,9 +145,10 @@ const App: Component = () => {
   })
 
   const sendMPassword = async () => {
-    const success = await DB.setMPassword(MPasswordElement.value)
+    const success = await DB.setMPassword(mPassword())
 
     if (success) {
+      setMPassword('')
       setShowMPassword(false)
       setMPasswordWrong(false)
     } else {
@@ -181,7 +184,7 @@ const App: Component = () => {
         <div class={cl('enter-password', { 'enter-password--visible': showMPassword() })}>
           <p class='enter-password__header'>Enter Password</p>
           <p class="enter-password__info">If this is your first time opening the application, type in a new password. Otherwise, enter the password you have previously used.</p>
-          <InputField placeholder="Password" type="password" oninput={() => setMPasswordWrong(false)} ref={MPasswordElement} error={MPasswordWrong()} />
+          <InputField placeholder="Password" type="password" oninput={(event) => { setMPassword(event.target.value); setMPasswordWrong(false) }} error={MPasswordWrong()} />
           <Button onclick={sendMPassword} type="submit">Submit</Button>
         </div>
         <div class={cl('change-username', { 'change-username--visible': showChangeUsername() })}>
