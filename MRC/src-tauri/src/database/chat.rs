@@ -10,6 +10,25 @@ pub struct Chat {
     pub encrypted_message: String,
 }
 
+#[derive(Serialize, Deserialize, Clone, Debug, PartialEq)]
+pub struct DChat {
+    pub group_id: i32,
+    pub time: i64,
+    pub name: String,
+    pub message: String,
+}
+
+impl DChat {
+    pub fn new(chat: Chat) -> DChat {
+        DChat {
+            group_id: chat.clone().group_id,
+            time: chat.clone().time,
+            name: String::from(chat.clone().name),
+            message: String::from(chat.clone().get_decrypted_message()),
+        }
+    }
+}
+
 impl Chat {
     /// Returns a new chat object.
     ///

@@ -151,6 +151,8 @@ const App: Component = () => {
       setMPassword('')
       setShowMPassword(false)
       setMPasswordWrong(false)
+      chatRefetch.refetch()
+      lastChatsRefetch.refetch()
     } else {
       setMPasswordWrong(true)
     }

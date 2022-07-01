@@ -26,7 +26,7 @@ mod cmd;
 mod interface;
 
 use interface::send_message;
-use database::chat::Chat;
+use database::chat::{Chat, DChat};
 use database::group::Group;
 use database::io::{read_chats, read_groups};
 use global::Global;
@@ -167,10 +167,10 @@ fn join_group(name: String, password: String) -> Group {
 ///
 /// returns: Chat
 #[tauri::command]
-fn get_newest_chat(group_id: i32) -> Chat {
+fn get_newest_chat(group_id: i32) -> DChat {
   match database::read_last_chat(group_id) {
-    Ok(chat) => chat,
-    Err(_) => Chat::new(-1, 0, "", ""),
+    Ok(chat) => DChat::new(chat),
+    Err(_) => DChat::new(Chat::new(-1, 0, "", "")),
   }
 }
 
@@ -182,9 +182,13 @@ fn get_newest_chat(group_id: i32) -> Chat {
 ///
 /// returns: Vec<Chat, Global>
 #[tauri::command]
-fn get_chats(group_id: i32) -> Vec<Chat> {
+fn get_chats(group_id: i32) -> Vec<DChat> {
   match read_chats(group_id) {
-    Ok(chats) => chats,
+    Ok(chats) => {
+      let mut dchats: Vec<DChat> = vec![];
+      for chat in chats { dchats.push(DChat::new(chat)) };
+      return dchats;
+    },
     Err(_) => vec![],
   }
 }
