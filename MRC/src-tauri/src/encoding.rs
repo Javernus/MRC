@@ -39,6 +39,7 @@ pub fn decode(password: &str, data: &str) -> (bool, String, String) {
             return datatosend;
         },
         Err(_msg) => {
+            println!("{}", _msg);
             return(false, "".to_string(), "".to_string())
         }
     }
