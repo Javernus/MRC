@@ -3,6 +3,7 @@ use tauri::Window;
 use crate::database::chat::Chat;
 use crate::database;
 extern crate queues;
+extern crate time;
 use queues::*;
 
 use crate::find_correct_group;
@@ -16,6 +17,7 @@ use std::error::Error;
 use std::io;
 use std::str;
 use std::time::Duration;
+use time::get_time;
 use tokio::time::sleep;
 
 
@@ -39,7 +41,7 @@ pub async fn start_client(window: Window) -> Result<(), Box<dyn Error>> {
     let stream = UnixStream::connect("/tmp/ipc.sock").await?;
 
     loop {
-        let _ = sleep(Duration::from_millis(1000)).await;
+        let _ = sleep(Duration::from_millis(5000)).await;
         let ready = stream.ready(Interest::READABLE | Interest::WRITABLE).await?;
 
         if ready.is_readable() {
@@ -63,8 +65,11 @@ pub async fn start_client(window: Window) -> Result<(), Box<dyn Error>> {
                 let correct_group = find_correct_group(incoming_message.to_string());
 
                 if correct_group.0 != -1 {
+                    let time = get_time();
 
-                    let chat: Chat = Chat::new(correct_group.0, 123456789012, &correct_group.1, &correct_group.2);
+                    let ftime: i64 = i64::try_from(time.sec * 1000).unwrap() + i64::try_from(time.nsec / 1000).unwrap();
+
+                    let chat: Chat = Chat::new(correct_group.0, ftime, &correct_group.1, &correct_group.2);
 
                     if database::append_chat(&chat).is_err() {
                         // TODO: throw error perhaps?
