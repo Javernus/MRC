@@ -94,6 +94,7 @@ mod tests {
     use crate::config::io::delete_config;
     use crate::config::{is_password_set, read_hashed_password, read_username, verify_user_password, write_password, write_username};
     use crate::hashing::hash_password;
+    use crate::USER_PASSWORD;
 
     #[test]
     fn test_config_username() {
@@ -112,11 +113,13 @@ mod tests {
         let password: String = "Not Alice's password".to_string();
         let hashed_password: String = hash_password(&password);
 
+        *USER_PASSWORD.lock_mut().unwrap() = password.clone();
         assert!(delete_config().is_ok());
         assert!(write_password(&password).is_ok());
         let r_hashed_password: String = read_hashed_password();
 
         assert!(delete_config().is_ok());
+
         assert_eq!(&hashed_password, &r_hashed_password);
     }
 
@@ -124,10 +127,12 @@ mod tests {
     fn test_config_user_password() {
         let password: String = "Not Alice's password".to_string();
 
+        *USER_PASSWORD.lock_mut().unwrap() = password.clone();
         assert!(delete_config().is_ok());
         assert!(write_password(&password).is_ok());
 
         assert!(is_password_set());
+
         assert!(verify_user_password(&password));
     }
 

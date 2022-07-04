@@ -232,11 +232,17 @@ fn start_client(window: Window) {
 #[tauri::command]
 fn set_m_password(password: String) -> bool {
   if config::is_password_set() {
-    if !config::verify_user_password(&password) {
-      return false;
+    return if !config::verify_user_password(&password) {
+      false
     } else {
       *USER_PASSWORD.lock_mut().unwrap() = password.clone();
-      return true;
+
+      match config::write_password(&password) {
+        Ok(_) => {}
+        Err(_) => {}
+      };
+
+      true
     }
   }
 
@@ -247,7 +253,7 @@ fn set_m_password(password: String) -> bool {
     Err(_) => {}
   };
 
-  return true
+  true
 }
 
 fn main() {
